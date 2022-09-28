@@ -1,15 +1,18 @@
 # When & Where
-The user is able to:
-- use third-party services for authentication
+**Marek Šoška, Dominik Kozubík, Marek Kadlečík**
+
+## A user is able to:
+- register via the register form
+- view the meetup details (meetup initiator, meetup options (place and date))
+
+## A registered user is able to:
 - create new meetup
-- create new event
-- vote for events
+- create new meetup options
+- vote for meetup options
+- accept an invitation
+- view the meetup details (meetup owner, meetup options (place and date))
 
-
-The event owner:
-- delete meetup
-- add meetup participants
-- manage meetup (alter label, icon, place, location, events)
-
-
-Marek Šoška, Dominik Kozubík, Marek Kadlečík
+## The meetup initiator:
+- add meetup participants by sending an invitation
+- manage meetup parameters (label, icon)
+- cancel meetup and its options
