@@ -17,3 +17,5 @@
 - add meetup participants by sending an invitation
 - manage meetup parameters (label, icon)
 - cancel meetup and its options
+
+![ERD diagram](https://github.com/mksoska/when-and-where/blob/main/WhenWhere_DAL_mockup_NEW.svg)
