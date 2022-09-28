@@ -9,8 +9,9 @@
 - create new meetup
 - create new meetup options
 - vote for meetup options
-- accept an invitation
+- respond to a meetup invitation (accept / decline / maybe)
 - view the meetup details (meetup owner, meetup options (place and date))
+- change personal information (name, surname, email, phone number, avatar)
 
 ## The meetup initiator:
 - add meetup participants by sending an invitation
