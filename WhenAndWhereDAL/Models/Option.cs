@@ -18,6 +18,5 @@ public class Option
     public Address Address { get; set; }
     public String Label { get; set; }
     public DateTime Time { get; set; }
-    public String Type { get; set; }
     public List<UserOption> UserOptions { get; set; }
 }
