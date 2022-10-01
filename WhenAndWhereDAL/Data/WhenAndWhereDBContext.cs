@@ -29,7 +29,43 @@ public class WhenAndWhereDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // TODO setup constraints
+        modelBuilder.Entity<UserMeetup>()
+            .HasOne(um => um.User)
+            .WithMany(user => user.JoinnedMeetups)
+            .HasForeignKey(um => um.UserId);
+        
+        modelBuilder.Entity<UserMeetup>()
+            .HasOne(um => um.Meetup)
+            .WithMany(meetup => meetup.JoinnedUsers)
+            .HasForeignKey(um => um.MeetupId);
+
+        modelBuilder.Entity<Meetup>()
+            .HasOne(meetup => meetup.User)
+            .WithMany(user => user.CreatedMeetups)
+            .HasForeignKey(meetup => meetup.UserId);        
+        
+        modelBuilder.Entity<UserOption>()
+            .HasOne(userOption => userOption.User)
+            .WithMany(user => user.UserOptions)
+            .HasForeignKey(userOption => userOption.UserId);
+        
+        modelBuilder.Entity<UserOption>()
+            .HasOne(userOption => userOption.Option)
+            .WithMany(option => option.UserOptions)
+            .HasForeignKey(userOption => userOption.OptionId);
+
+        modelBuilder.Entity<Option>()
+            .HasOne(option => option.User)
+            .WithMany(user => user.Options)
+            .HasForeignKey(option => option.UserId);
+        
+        modelBuilder.Entity<Option>()
+            .HasOne(option => option.Meetup)
+            .WithMany(meetup => meetup.Options)
+            .HasForeignKey(option => option.MeetupId);
+
+        modelBuilder.Entity<Address>()
+            .HasOne(address => address.Option);
 
         modelBuilder.Seed();
 

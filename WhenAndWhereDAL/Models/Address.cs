@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PizzaShopDAL.Models;
 
 public class Address
 {
+    [Key]
     public int Id { get; set; }
     public int OptionId { get; set; }
     
