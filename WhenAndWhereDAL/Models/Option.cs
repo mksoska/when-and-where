@@ -9,16 +9,16 @@ public class Option
     public int Id { get; set; }
     public int MeetupId { get; set; }
     
-    [ForeignKey(nameof(MeetupId))]
-    public Meetup Meetup { get; set; }
+    //[ForeignKey(nameof(MeetupId))]
+    public virtual Meetup Meetup { get; set; }
     
     public int UserId { get; set; }
     
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; }
+    //[ForeignKey(nameof(UserId))]
+    public virtual User User { get; set; }
     
-    public Address Address { get; set; }
+    public virtual Address Address { get; set; }
     public String Label { get; set; }
     public DateTime Time { get; set; }
-    public List<UserOption> UserOptions { get; set; }
+    public virtual List<UserOption> UserOptions { get; set; }
 }

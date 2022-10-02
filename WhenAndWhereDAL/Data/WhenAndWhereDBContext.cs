@@ -5,10 +5,10 @@ namespace PizzaShopDAL.Data;
 
 public class WhenAndWhereDBContext : DbContext
 {
-    private const string DatabaseName = "When&Where";
+    //private const string DatabaseName = "When&Where";
 
-    private const string ConnectionString =  // TODO change string
-        $"Server=(localdb)\\mssqllocaldb;Integrated Security=True;MultipleActiveResultSets=True;Database={DatabaseName};Trusted_Connection=True;";
+    //private const string ConnectionString =  // TODO change string
+      
 
     public DbSet<Address> Address { get; set; }
     public DbSet<Admin> Admin { get; set; }
@@ -21,7 +21,7 @@ public class WhenAndWhereDBContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder
-            .UseSqlite(ConnectionString)
+            .UseSqlite(@"Data Source=C:\School\PV179 C#2\when-and-where\WhenAndWhereDB.sqlite")
             .UseLazyLoadingProxies();
     }
 
@@ -29,6 +29,9 @@ public class WhenAndWhereDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<UserMeetup>()
+            .HasKey(userMeetup => new {userMeetup.MeetupId, userMeetup.UserId});
+
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.User)
             .WithMany(user => user.JoinnedMeetups)
@@ -42,13 +45,17 @@ public class WhenAndWhereDBContext : DbContext
         modelBuilder.Entity<Meetup>()
             .HasOne(meetup => meetup.User)
             .WithMany(user => user.CreatedMeetups)
-            .HasForeignKey(meetup => meetup.UserId);        
-        
+            .HasForeignKey(meetup => meetup.UserId);
+
+        modelBuilder.Entity<UserOption>()
+            .HasKey(userOption => new { userOption.OptionId, userOption.UserId });
+
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.User)
             .WithMany(user => user.UserOptions)
             .HasForeignKey(userOption => userOption.UserId);
-        
+
+
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
             .WithMany(option => option.UserOptions)

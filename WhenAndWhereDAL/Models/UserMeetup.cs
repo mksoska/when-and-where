@@ -7,12 +7,12 @@ public class UserMeetup
 {
     public int UserId { get; set; }
     
-    [ForeignKey(nameof(UserId))]
-    public User User { get; set; }
+    //[ForeignKey(nameof(UserId))]
+    public virtual User User { get; set; }
     public int MeetupId { get; set; }
     
-    [ForeignKey(nameof(MeetupId))]
-    public Meetup Meetup { get; set; }
+    //[ForeignKey(nameof(MeetupId))]
+    public virtual Meetup Meetup { get; set; }
     
     public StateEnum State { get; set; }
     

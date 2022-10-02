@@ -13,7 +13,7 @@ public class Meetup
     public byte[] Logo { get; set; }
     public MeetupType Type { get; set; }
     public int UserId { get; set; }
-    public User User { get; set; }
-    public List<Option> Options { get; set; }
-    public List<UserMeetup> JoinnedUsers { get; set; }
+    public virtual User User { get; set; }
+    public virtual List<Option> Options { get; set; }
+    public virtual List<UserMeetup> JoinnedUsers { get; set; }
 }

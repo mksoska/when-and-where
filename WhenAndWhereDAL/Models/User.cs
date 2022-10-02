@@ -11,8 +11,8 @@ public class User
     public String Email { get; set; }
     public String PhoneNumber { get; set; }
     public byte[] Avatar { get; set; }
-    public List<Meetup> CreatedMeetups { get; set; }
-    public List<UserMeetup> JoinnedMeetups { get; set; }
-    public List<UserOption> UserOptions { get; set; }
-    public List<Option> Options { get; set; }
+    public virtual List<Meetup> CreatedMeetups { get; set; }
+    public virtual List<UserMeetup> JoinnedMeetups { get; set; }
+    public virtual List<UserOption> UserOptions { get; set; }
+    public virtual List<Option> Options { get; set; }
 }
