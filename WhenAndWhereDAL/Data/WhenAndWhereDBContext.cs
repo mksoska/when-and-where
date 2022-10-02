@@ -6,7 +6,7 @@ namespace WhenAndWhereDAL.Data;
 public class WhenAndWhereDBContext : DbContext
 {
     private const string DatabaseName = "WhenAndWhereDB";
-    private const string ConnectionString = "";
+    private const string ConnectionString = "Data Source=WhenAndWhere.sqlite;Cache=Shared";
 
     public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
