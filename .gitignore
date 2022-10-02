@@ -2,3 +2,4 @@
 .vs/
 WhenAndWhereDAL/bin/
 WhenAndWhereDAL/obj/
+WhenAndWhereDAL/*.sqlite
