@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PizzaShopDAL.Models;
+using WhenAndWhereDAL.Models;
 
-namespace PizzaShopDAL.Data
+namespace WhenAndWhereDAL.Data
 {
     public static class DataInitializer
     {

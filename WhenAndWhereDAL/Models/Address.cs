@@ -1,19 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PizzaShopDAL.Models;
+namespace WhenAndWhereDAL.Models;
 
 public class Address
 {
     [Key]
     public int Id { get; set; }
+
     public int OptionId { get; set; }
     
-    //[ForeignKey(nameof(OptionId))]
+    [ForeignKey(nameof(OptionId))]
     public virtual Option Option { get; set; }
-    public String State { get; set; }
-    public String City { get; set; }
-    public String Street { get; set; }
-    public String Number { get; set; }
-    public String ZipCode { get; set; }
+
+    public string State { get; set; }
+    public string City { get; set; }
+    public string Street { get; set; }
+    public string Number { get; set; }
+    public string ZipCode { get; set; }
 }

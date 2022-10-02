@@ -1,18 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PizzaShopDAL.Models;
+namespace WhenAndWhereDAL.Models;
 
 public class User
 {
     [Key]
     public int Id { get; set; }
-    public String Name { get; set; }
-    public String Surname { get; set; }
-    public String Email { get; set; }
-    public String PhoneNumber { get; set; }
+
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Email { get; set; }
+    public string PhoneNumber { get; set; }
     public byte[] Avatar { get; set; }
-    public virtual List<Meetup> CreatedMeetups { get; set; }
-    public virtual List<UserMeetup> JoinnedMeetups { get; set; }
-    public virtual List<UserOption> UserOptions { get; set; }
-    public virtual List<Option> Options { get; set; }
+
+    public virtual List<Meetup> OwnedMeetups { get; set; }
+    public virtual List<UserMeetup> JoinedMeetups { get; set; }
+    public virtual List<UserOption> VotedOptions { get; set; }
+    public virtual List<Option> CreatedOptions { get; set; }
+
+    public virtual List<UserRole> AssignedRoles { get; set; }
 }

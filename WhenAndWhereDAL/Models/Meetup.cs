@@ -1,19 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using PizzaShopDAL.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
+using WhenAndWhereDAL.Enums;
 
-namespace PizzaShopDAL.Models;
+namespace WhenAndWhereDAL.Models;
 
 public class Meetup
 {
     [Key]
     public int Id { get; set; }
-    public String Name { get; set; }
-    public DateTime OptionFrom { get; set; }
-    public DateTime OptionTo { get; set; }
+
+    public string Name { get; set; }
+    public DateTime OptionsFrom { get; set; }
+    public DateTime OptionsTo { get; set; }
     public byte[] Logo { get; set; }
     public MeetupType Type { get; set; }
-    public int UserId { get; set; }
-    public virtual User User { get; set; }
+
+    public int OwnerId { get; set; }
+
+    [ForeignKey(nameof(OwnerId))]
+    public virtual User Owner { get; set; }
+
     public virtual List<Option> Options { get; set; }
-    public virtual List<UserMeetup> JoinnedUsers { get; set; }
+
+    public virtual List<Role> Roles { get; set; }
+
+    public virtual List<UserMeetup> JoinedUsers { get; set; }
 }

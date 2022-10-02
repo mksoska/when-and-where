@@ -1,4 +1,4 @@
-﻿namespace PizzaShopDAL.Enums;
+﻿namespace WhenAndWhereDAL.Enums;
 
 public enum MeetupType
 {

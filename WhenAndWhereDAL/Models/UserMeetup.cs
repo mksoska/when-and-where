@@ -1,17 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using PizzaShopDAL.Enums;
+using WhenAndWhereDAL.Enums;
 
-namespace PizzaShopDAL.Models;
+namespace WhenAndWhereDAL.Models;
 
 public class UserMeetup
 {
     public int UserId { get; set; }
     
-    //[ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; }
+
     public int MeetupId { get; set; }
     
-    //[ForeignKey(nameof(MeetupId))]
+    [ForeignKey(nameof(MeetupId))]
     public virtual Meetup Meetup { get; set; }
     
     public StateEnum State { get; set; }
