@@ -22,5 +22,5 @@
 - view and delete meetups he does not own/he is not participating 
 - view global meetup statistics  
 
-![ERD diagram](https://github.com/mksoska/when-and-where/blob/main/WhenAndWhere_DAL_ERD.svg)
+![ERD diagram](https://github.com/mksoska/when-and-where/blob/dal/WhenAndWhere_DAL_ERD.svg)
 
