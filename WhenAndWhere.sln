@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhereDAL", "WhenAndWhereDAL\WhenAndWhereDAL.csproj", "{9DC798A7-9240-4ECD-AFED-8BE89C4ABF13}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhereInfrastructure", "WhenAndWhereInfrastructure\WhenAndWhereInfrastructure.csproj", "{B02451F4-EE9E-4A06-9327-381D1014D2C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9DC798A7-9240-4ECD-AFED-8BE89C4ABF13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DC798A7-9240-4ECD-AFED-8BE89C4ABF13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DC798A7-9240-4ECD-AFED-8BE89C4ABF13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B02451F4-EE9E-4A06-9327-381D1014D2C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B02451F4-EE9E-4A06-9327-381D1014D2C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B02451F4-EE9E-4A06-9327-381D1014D2C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B02451F4-EE9E-4A06-9327-381D1014D2C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

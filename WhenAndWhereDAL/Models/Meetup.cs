@@ -4,7 +4,7 @@ using WhenAndWhereDAL.Enums;
 
 namespace WhenAndWhereDAL.Models;
 
-public class Meetup
+public class Meetup : IEntity
 {
     [Key]
     public int Id { get; set; }

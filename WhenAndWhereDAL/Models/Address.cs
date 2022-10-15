@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WhenAndWhereDAL.Models;
 
-public class Address
+public class Address : IEntity
 {
     [Key]
     public int Id { get; set; }

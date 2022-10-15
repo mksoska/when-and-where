@@ -5,7 +5,7 @@ using WhenAndWhereDAL.Enums;
 
 namespace WhenAndWhereDAL.Models
 {
-    public class Role
+    public class Role : IEntity
     {
         [Key]
         public int Id { get; set; }

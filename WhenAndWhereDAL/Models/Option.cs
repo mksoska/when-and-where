@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WhenAndWhereDAL.Models;
 
-public class Option
+public class Option : IEntity
 {
     [Key]
     public int Id { get; set; }
