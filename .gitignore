@@ -1,5 +1,5 @@
-﻿.idea/
-.vs/
-WhenAndWhereDAL/bin/
-WhenAndWhereDAL/obj/
-WhenAndWhereDAL/*.sqlite
+﻿.vs/
+bin/
+obj/
+WhenAndWhere.DAL/*.sqlite
+.editorconfig
