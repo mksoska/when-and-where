@@ -1,4 +1,4 @@
-﻿namespace WhenAndWhereDAL.Enums;
+﻿namespace WhenAndWhere.DAL.Enums;
 
 public enum StateEnum
 {

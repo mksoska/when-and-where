@@ -4,22 +4,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WhenAndWhereDAL.Data;
+using WhenAndWhere.DAL;
 
 #nullable disable
 
-namespace WhenAndWhereDAL.Migrations
+namespace WhenAndWhere.DAL.Migrations
 {
     [DbContext(typeof(WhenAndWhereDBContext))]
-    [Migration("20221002211227_BasicDataSeeded")]
-    partial class BasicDataSeeded
+    [Migration("20221016144824_InitSchema")]
+    partial class InitSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Address", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,7 +55,7 @@ namespace WhenAndWhereDAL.Migrations
                     b.ToTable("Address");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Meetup", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Meetup", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,7 +110,7 @@ namespace WhenAndWhereDAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Option", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Option", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -143,7 +143,7 @@ namespace WhenAndWhereDAL.Migrations
                     b.ToTable("Option");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Role", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -162,7 +162,7 @@ namespace WhenAndWhereDAL.Migrations
                     b.ToTable("Role");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.User", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,12 +213,12 @@ namespace WhenAndWhereDAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserMeetup", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserMeetup", b =>
                 {
-                    b.Property<int>("MeetupId")
+                    b.Property<int>("FirstId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("SecondId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateInvited")
@@ -227,65 +227,65 @@ namespace WhenAndWhereDAL.Migrations
                     b.Property<int>("State")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("MeetupId", "UserId");
+                    b.HasKey("FirstId", "SecondId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SecondId");
 
                     b.ToTable("UserMeetup");
 
                     b.HasData(
                         new
                         {
-                            MeetupId = 2,
-                            UserId = 1,
+                            FirstId = 1,
+                            SecondId = 2,
                             DateInvited = new DateTime(2022, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             State = 0
                         },
                         new
                         {
-                            MeetupId = 2,
-                            UserId = 150,
+                            FirstId = 150,
+                            SecondId = 2,
                             DateInvited = new DateTime(2022, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified),
                             State = 0
                         });
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserOption", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserOption", b =>
                 {
-                    b.Property<int>("OptionId")
+                    b.Property<int>("FirstId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("SecondId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TimeVoted")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("OptionId", "UserId");
+                    b.HasKey("FirstId", "SecondId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("SecondId");
 
                     b.ToTable("UserOption");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserRole", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("FirstId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int>("SecondId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.HasKey("FirstId", "SecondId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("SecondId");
 
                     b.ToTable("UserRole");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Address", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Address", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Option", "Option")
+                    b.HasOne("WhenAndWhere.DAL.Models.Option", "Option")
                         .WithMany()
                         .HasForeignKey("OptionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,9 +294,9 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("Option");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Meetup", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Meetup", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.User", "Owner")
+                    b.HasOne("WhenAndWhere.DAL.Models.User", "Owner")
                         .WithMany("OwnedMeetups")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -305,21 +305,21 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Option", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Option", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Address", "Address")
+                    b.HasOne("WhenAndWhere.DAL.Models.Address", "Address")
                         .WithMany()
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhenAndWhereDAL.Models.Meetup", "Meetup")
+                    b.HasOne("WhenAndWhere.DAL.Models.Meetup", "Meetup")
                         .WithMany("Options")
                         .HasForeignKey("MeetupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhenAndWhereDAL.Models.User", "User")
+                    b.HasOne("WhenAndWhere.DAL.Models.User", "User")
                         .WithMany("CreatedOptions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -332,24 +332,24 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Role", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Role", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Meetup", null)
+                    b.HasOne("WhenAndWhere.DAL.Models.Meetup", null)
                         .WithMany("Roles")
                         .HasForeignKey("MeetupId");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserMeetup", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserMeetup", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Meetup", "Meetup")
-                        .WithMany("JoinedUsers")
-                        .HasForeignKey("MeetupId")
+                    b.HasOne("WhenAndWhere.DAL.Models.User", "User")
+                        .WithMany("JoinedMeetups")
+                        .HasForeignKey("FirstId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhenAndWhereDAL.Models.User", "User")
-                        .WithMany("JoinedMeetups")
-                        .HasForeignKey("UserId")
+                    b.HasOne("WhenAndWhere.DAL.Models.Meetup", "Meetup")
+                        .WithMany("JoinedUsers")
+                        .HasForeignKey("SecondId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -358,17 +358,17 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserOption", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserOption", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Option", "Option")
-                        .WithMany("UserOptions")
-                        .HasForeignKey("OptionId")
+                    b.HasOne("WhenAndWhere.DAL.Models.User", "User")
+                        .WithMany("VotedOptions")
+                        .HasForeignKey("FirstId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhenAndWhereDAL.Models.User", "User")
-                        .WithMany("VotedOptions")
-                        .HasForeignKey("UserId")
+                    b.HasOne("WhenAndWhere.DAL.Models.Option", "Option")
+                        .WithMany("UserOptions")
+                        .HasForeignKey("SecondId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -377,17 +377,17 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.UserRole", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.UserRole", b =>
                 {
-                    b.HasOne("WhenAndWhereDAL.Models.Role", "Role")
-                        .WithMany("AssignedUsers")
-                        .HasForeignKey("RoleId")
+                    b.HasOne("WhenAndWhere.DAL.Models.User", "User")
+                        .WithMany("AssignedRoles")
+                        .HasForeignKey("FirstId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhenAndWhereDAL.Models.User", "User")
-                        .WithMany("AssignedRoles")
-                        .HasForeignKey("UserId")
+                    b.HasOne("WhenAndWhere.DAL.Models.Role", "Role")
+                        .WithMany("AssignedUsers")
+                        .HasForeignKey("SecondId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -396,7 +396,7 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Meetup", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Meetup", b =>
                 {
                     b.Navigation("JoinedUsers");
 
@@ -405,17 +405,17 @@ namespace WhenAndWhereDAL.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Option", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Option", b =>
                 {
                     b.Navigation("UserOptions");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.Role", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.Role", b =>
                 {
                     b.Navigation("AssignedUsers");
                 });
 
-            modelBuilder.Entity("WhenAndWhereDAL.Models.User", b =>
+            modelBuilder.Entity("WhenAndWhere.DAL.Models.User", b =>
                 {
                     b.Navigation("AssignedRoles");
 

@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WhenAndWhereDAL.Models
+namespace WhenAndWhere.DAL.Models
 {
     public interface IEntity
     {

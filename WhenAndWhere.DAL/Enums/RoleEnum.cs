@@ -1,5 +1,5 @@
 ﻿using System;
-namespace WhenAndWhereDAL.Enums;
+namespace WhenAndWhere.DAL.Enums;
 
 public enum RoleEnum
 {

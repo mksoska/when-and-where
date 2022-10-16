@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WhenAndWhereDAL.Enums;
-using WhenAndWhereDAL.Models;
+using WhenAndWhere.DAL.Enums;
+using WhenAndWhere.DAL.Models;
 
-namespace WhenAndWhereDAL.Data
+namespace WhenAndWhere.DAL.Data
 {
     public static class DataInitializer
     {
@@ -53,16 +53,16 @@ namespace WhenAndWhereDAL.Data
 
             modelBuilder.Entity<UserMeetup>().HasData(new
             {
-                UserId = 1,
-                MeetupId = 2,
+                FirstId = 1,
+                SecondId = 2,
                 State = StateEnum.Accepted,
                 DateInvited = new DateTime(2022, 11, 11, 12, 00, 00)
             });
             
             modelBuilder.Entity<UserMeetup>().HasData(new
             {
-                UserId = 150,
-                MeetupId = 2,
+                FirstId = 150,
+                SecondId = 2,
                 State = StateEnum.Accepted,
                 DateInvited = new DateTime(2022, 11, 11, 12, 00, 00)
             });

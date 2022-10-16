@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using WhenAndWhereDAL.Enums;
+using WhenAndWhere.DAL.Enums;
 
-namespace WhenAndWhereDAL.Models;
+namespace WhenAndWhere.DAL.Models;
 
-public class UserMeetup
+public class UserMeetup : IEntityLink
 {
-    public int UserId { get; set; }
+    public int FirstId { get; set; }
     
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(FirstId))]
     public virtual User User { get; set; }
 
-    public int MeetupId { get; set; }
+    public int SecondId { get; set; }
     
-    [ForeignKey(nameof(MeetupId))]
+    [ForeignKey(nameof(SecondId))]
     public virtual Meetup Meetup { get; set; }
     
     public StateEnum State { get; set; }

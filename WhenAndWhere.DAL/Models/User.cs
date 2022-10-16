@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WhenAndWhereDAL.Models;
+namespace WhenAndWhere.DAL.Models;
 
 public class User : IEntity
 {

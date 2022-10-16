@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WhenAndWhereDAL.Migrations
+namespace WhenAndWhere.DAL.Migrations
 {
     public partial class InitSchema : Migration
     {
@@ -73,23 +73,23 @@ namespace WhenAndWhereDAL.Migrations
                 name: "UserMeetup",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    MeetupId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FirstId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SecondId = table.Column<int>(type: "INTEGER", nullable: false),
                     State = table.Column<int>(type: "INTEGER", nullable: false),
                     DateInvited = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserMeetup", x => new { x.MeetupId, x.UserId });
+                    table.PrimaryKey("PK_UserMeetup", x => new { x.FirstId, x.SecondId });
                     table.ForeignKey(
-                        name: "FK_UserMeetup_Meetup_MeetupId",
-                        column: x => x.MeetupId,
+                        name: "FK_UserMeetup_Meetup_SecondId",
+                        column: x => x.SecondId,
                         principalTable: "Meetup",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserMeetup_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserMeetup_User_FirstId",
+                        column: x => x.FirstId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -99,21 +99,21 @@ namespace WhenAndWhereDAL.Migrations
                 name: "UserRole",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    FirstId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SecondId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_UserRole", x => new { x.FirstId, x.SecondId });
                     table.ForeignKey(
-                        name: "FK_UserRole_Role_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_UserRole_Role_SecondId",
+                        column: x => x.SecondId,
                         principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRole_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserRole_User_FirstId",
+                        column: x => x.FirstId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -176,26 +176,56 @@ namespace WhenAndWhereDAL.Migrations
                 name: "UserOption",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OptionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FirstId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SecondId = table.Column<int>(type: "INTEGER", nullable: false),
                     TimeVoted = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserOption", x => new { x.OptionId, x.UserId });
+                    table.PrimaryKey("PK_UserOption", x => new { x.FirstId, x.SecondId });
                     table.ForeignKey(
-                        name: "FK_UserOption_Option_OptionId",
-                        column: x => x.OptionId,
+                        name: "FK_UserOption_Option_SecondId",
+                        column: x => x.SecondId,
                         principalTable: "Option",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserOption_User_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UserOption_User_FirstId",
+                        column: x => x.FirstId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "Avatar", "Email", "Name", "PhoneNumber", "Surname" },
+                values: new object[] { 1, new byte[] { 171, 205, 239 }, "palenka@kde.je", "Jozef", "+421123456789", "Kovalcik" });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "Avatar", "Email", "Name", "PhoneNumber", "Surname" },
+                values: new object[] { 150, new byte[] { 254, 220, 186 }, "raz@vyrastiem.dufam", "Matus", "+421987654321", "Valkovic" });
+
+            migrationBuilder.InsertData(
+                table: "Meetup",
+                columns: new[] { "Id", "Logo", "Name", "OptionsFrom", "OptionsTo", "OwnerId", "Type" },
+                values: new object[] { 1, new byte[] { 0 }, "Bowling", new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 0 });
+
+            migrationBuilder.InsertData(
+                table: "Meetup",
+                columns: new[] { "Id", "Logo", "Name", "OptionsFrom", "OptionsTo", "OwnerId", "Type" },
+                values: new object[] { 2, new byte[] { 0 }, "Snem Tvrdosinskych Alkoholikov", new DateTime(2022, 11, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2022, 11, 11, 23, 59, 59, 0, DateTimeKind.Unspecified), 150, 1 });
+
+            migrationBuilder.InsertData(
+                table: "UserMeetup",
+                columns: new[] { "FirstId", "SecondId", "DateInvited", "State" },
+                values: new object[] { 1, 2, new DateTime(2022, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified), 0 });
+
+            migrationBuilder.InsertData(
+                table: "UserMeetup",
+                columns: new[] { "FirstId", "SecondId", "DateInvited", "State" },
+                values: new object[] { 150, 2, new DateTime(2022, 11, 11, 12, 0, 0, 0, DateTimeKind.Unspecified), 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Address_OptionId",
@@ -228,19 +258,19 @@ namespace WhenAndWhereDAL.Migrations
                 column: "MeetupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserMeetup_UserId",
+                name: "IX_UserMeetup_SecondId",
                 table: "UserMeetup",
-                column: "UserId");
+                column: "SecondId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserOption_UserId",
+                name: "IX_UserOption_SecondId",
                 table: "UserOption",
-                column: "UserId");
+                column: "SecondId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_RoleId",
+                name: "IX_UserRole_SecondId",
                 table: "UserRole",
-                column: "RoleId");
+                column: "SecondId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Address_Option_OptionId",

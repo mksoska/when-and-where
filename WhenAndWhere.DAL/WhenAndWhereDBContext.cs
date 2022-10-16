@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WhenAndWhereDAL.Models;
+using WhenAndWhere.DAL.Data;
+using WhenAndWhere.DAL.Models;
 
-namespace WhenAndWhereDAL.Data;
+namespace WhenAndWhere.DAL;
 
 public class WhenAndWhereDBContext : DbContext
 {
@@ -27,17 +28,17 @@ public class WhenAndWhereDBContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserMeetup>()
-            .HasKey(userMeetup => new {userMeetup.MeetupId, userMeetup.UserId});
+            .HasKey(userMeetup => new {userMeetup.FirstId, userMeetup.SecondId});
 
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.User)
             .WithMany(user => user.JoinedMeetups)
-            .HasForeignKey(um => um.UserId);
+            .HasForeignKey(um => um.FirstId);
         
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.Meetup)
             .WithMany(meetup => meetup.JoinedUsers)
-            .HasForeignKey(um => um.MeetupId);
+            .HasForeignKey(um => um.SecondId);
 
         modelBuilder.Entity<Meetup>()
             .HasOne(meetup => meetup.Owner)
@@ -45,18 +46,18 @@ public class WhenAndWhereDBContext : DbContext
             .HasForeignKey(meetup => meetup.OwnerId);
 
         modelBuilder.Entity<UserOption>()
-            .HasKey(userOption => new { userOption.OptionId, userOption.UserId });
+            .HasKey(userOption => new { userOption.FirstId, userOption.SecondId });
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.User)
             .WithMany(user => user.VotedOptions)
-            .HasForeignKey(userOption => userOption.UserId);
+            .HasForeignKey(userOption => userOption.FirstId);
 
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
             .WithMany(option => option.UserOptions)
-            .HasForeignKey(userOption => userOption.OptionId);
+            .HasForeignKey(userOption => userOption.SecondId);
 
         modelBuilder.Entity<Option>()
             .HasOne(option => option.User)
@@ -72,17 +73,17 @@ public class WhenAndWhereDBContext : DbContext
             .HasOne(address => address.Option);
 
         modelBuilder.Entity<UserRole>()
-            .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
+            .HasKey(userRole => new { userRole.FirstId, userRole.SecondId });
 
         modelBuilder.Entity<UserRole>()
             .HasOne(um => um.User)
             .WithMany(user => user.AssignedRoles)
-            .HasForeignKey(um => um.UserId);
+            .HasForeignKey(um => um.FirstId);
 
         modelBuilder.Entity<UserRole>()
             .HasOne(um => um.Role)
             .WithMany(meetup => meetup.AssignedUsers)
-            .HasForeignKey(um => um.RoleId);
+            .HasForeignKey(um => um.SecondId);
 
         modelBuilder.Seed();
 

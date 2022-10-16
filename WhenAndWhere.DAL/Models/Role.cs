@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using WhenAndWhereDAL.Enums;
+using WhenAndWhere.DAL.Enums;
 
-namespace WhenAndWhereDAL.Models
+namespace WhenAndWhere.DAL.Models
 {
     public class Role : IEntity
     {
