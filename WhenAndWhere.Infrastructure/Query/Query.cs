@@ -1,4 +1,4 @@
-﻿using WhenAndWhereDAL.Models;
+﻿using WhenAndWhere.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Query
+namespace WhenAndWhere.Infrastructure.Query
 {
     public abstract class Query<TEntity> : IQuery<TEntity> where TEntity : class, IEntity, new()
     {

@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repository
+namespace WhenAndWhere.Infrastructure.Repository
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        TEntity GetByID(object id);
+        TEntity GetById(object id);
+
+        List<TEntity> GetAll();
 
         void Insert(TEntity entity);
 

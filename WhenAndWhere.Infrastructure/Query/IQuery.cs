@@ -1,4 +1,4 @@
-﻿using WhenAndWhereDAL.Models;
+﻿using WhenAndWhere.DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Query
+namespace WhenAndWhere.Infrastructure.Query
 {
     public interface IQuery<TEntity> where TEntity : class, IEntity, new()
     {
@@ -23,7 +23,7 @@ namespace Infrastructure.Query
         /// <summary>
         /// Adds a posibility to paginate the result
         /// </summary>
-        IQuery<TEntity> Page(int pageToFetch, int pageSize = 10);
+        IQuery<TEntity> Page(int pageToFetch, int pageSize = 20);
 
         /// <summary>
         /// Executes the query and returns the results.
