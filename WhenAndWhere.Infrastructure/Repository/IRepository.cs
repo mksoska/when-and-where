@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace WhenAndWhere.Infrastructure.Repository;
 
-namespace WhenAndWhere.Infrastructure.Repository
+public interface IRepository<TEntity> where TEntity : class
 {
-    public interface IRepository<TEntity> where TEntity : class
-    {
-        TEntity GetById(object id);
+    TEntity GetById(object id);
 
-        List<TEntity> GetAll();
+    List<TEntity> GetAll();
 
-        void Insert(TEntity entity);
+    void Insert(TEntity entity);
 
-        void Delete(object id);
+    void Delete(object id);
 
-        void Delete(TEntity entityToDelete);
+    void Delete(TEntity entityToDelete);
 
-        void Update(TEntity entityToUpdate);
-    }
+    void Update(TEntity entityToUpdate);
 }
