@@ -1,4 +1,5 @@
-﻿.vs/
+﻿.idea/
+.vs/
 bin/
 obj/
 WhenAndWhere.DAL/*.sqlite
