@@ -57,38 +57,27 @@ namespace Infrastructure.EFCore.Test
             Assert.True(result.First().Name == "Johan");
         }
 
-        /*
         [Fact]
-        public void ClassroomsThatStartWithBExists_QueryWhere_Test()
+        public void UsersWithLetter_ch_Exists_QueryWhere_Test()
         {
-            var efquery = new EntityFrameworkQuery<Classroom>(dbContext);
-            efquery.Where<string>(a => a.StartsWith("B"), "Name");
+            var efquery = new EntityFrameworkQuery<User>(dbContext);
+            efquery.Where<string>(a => a.Contains("ch"), "Surname");
             var result = efquery.Execute();
 
             Assert.True(result.Count() == 2);
         }
 
         [Fact]
-        public void ClassroomsWithIDLessThan2_QueryWhere_Test()
+        public void UsersOrderedAscending_QueryOrderBySurname_Test()
         {
-            var efquery = new EntityFrameworkQuery<Classroom>(dbContext);
-            efquery.Where<int>(a => a < 3, "Id");
-            var result = efquery.Execute();
-
-            Assert.True(result.Count() == 2);
-        }
-
-        [Fact]
-        public void ClassroomsOrderedAscending_QueryOrderBy_Test()
-        {
-            var efquery = new EntityFrameworkQuery<Classroom>(dbContext);
-            efquery.OrderBy<int>("Id", true);
+            var efquery = new EntityFrameworkQuery<User>(dbContext);
+            efquery.OrderBy<string>("Surname", true);
             var result = efquery.Execute()
-                .Select(a => a.Id)
+                .Select(a => a.Surname)
                 .ToList();
 
-            var ExpectedResult = dbContext.Classrooms
-                .Select(a => a.Id)
+            var ExpectedResult = dbContext.User
+                .Select(a => a.Surname)
                 .OrderBy(a => a)
                 .ToList();
 
@@ -96,15 +85,15 @@ namespace Infrastructure.EFCore.Test
         }
 
         [Fact]
-        public void ClassroomsOrderedDescending_QueryOrderBy_Test()
+        public void UsersOrderedDescending_QueryOrderBySurname_Test()
         {
-            var efquery = new EntityFrameworkQuery<Classroom>(dbContext);
+            var efquery = new EntityFrameworkQuery<User>(dbContext);
             efquery.OrderBy<int>("Id", false);
             var result = efquery.Execute()
                 .Select(a => a.Id)
                 .ToList();
 
-            var ExpectedResult = dbContext.Classrooms
+            var ExpectedResult = dbContext.User
                 .Select(a => a.Id)
                 .OrderByDescending(a => a)
                 .ToList();
@@ -113,16 +102,16 @@ namespace Infrastructure.EFCore.Test
         }
 
         [Fact]
-        public void StudentsSimplePagination_QueryPagination_Test()
+        public void UsersSimplePagination_QueryPagination_Test()
         {
-            var efquery = new EntityFrameworkQuery<Student>(dbContext);
-            efquery.Page(3, 3);
+            var efquery = new EntityFrameworkQuery<User>(dbContext);
+            efquery.Page(1, 3);
             var result = efquery.Execute()
                 .Select(a => a.Id)
                 .ToList();
 
-            var ExpectedResult = dbContext.Students
-                .Skip(6)
+            var ExpectedResult = dbContext.User
+                .Skip(0)
                 .Take(3)
                 .Select(a => a.Id)
                 .ToList();
@@ -131,22 +120,21 @@ namespace Infrastructure.EFCore.Test
         }
 
         [Fact]
-        public void QueryAdvancedTest1()
+        public void UsersAdvancedPagination_QueryPagination_Test()
         {
-            var efquery = new EntityFrameworkQuery<Student>(dbContext);
-            efquery.Where<int>(a => a < 7, "Id");
-            efquery.OrderBy<string>("Name", true);
-            efquery.Page(1, 4);
-            var result = efquery.Execute().ToList();
+            var efquery = new EntityFrameworkQuery<User>(dbContext);
+            efquery.Page(2, 2);
+            var result = efquery.Execute()
+                .Select(a => a.Id)
+                .ToList();
 
-            var ExpectedResult = dbContext.Students
-                .Where(a => a.Id < 7)
-                .OrderBy(a => a.Name)
-                .Take(4)
+            var ExpectedResult = dbContext.User
+                .Skip(2)
+                .Take(1)
+                .Select(a => a.Id)
                 .ToList();
 
             Assert.Equal(ExpectedResult, result);
         }
-        */
     }
 }
