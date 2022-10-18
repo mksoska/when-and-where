@@ -18,11 +18,22 @@ public class WhenAndWhereDBContext : DbContext
     public DbSet<UserOption> UserOption { get; set; }
     public DbSet<UserRole> UserRole { get; set; }
 
+    public WhenAndWhereDBContext(DbContextOptions<WhenAndWhereDBContext> options) : base(options)
+    {
+    }
+
+    public WhenAndWhereDBContext()
+    {
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder
-            .UseSqlite(ConnectionString)
-            .UseLazyLoadingProxies();
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder
+                .UseSqlite(ConnectionString)
+                .UseLazyLoadingProxies();
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

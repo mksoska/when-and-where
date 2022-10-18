@@ -1,18 +1,19 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.DAL", "WhenAndWhere.DAL\WhenAndWhere.DAL.csproj", "{9DC798A7-9240-4ECD-AFED-8BE89C4ABF13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.Infrastructure", "WhenAndWhere.Infrastructure\WhenAndWhere.Infrastructure.csproj", "{B02451F4-EE9E-4A06-9327-381D1014D2C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.Infrastructure", "WhenAndWhere.Infrastructure\WhenAndWhere.Infrastructure.csproj", "{B02451F4-EE9E-4A06-9327-381D1014D2C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.Infrastructure.EFCore", "WhenAndWhere.Infrastructure.EFCore\WhenAndWhere.Infrastructure.EFCore.csproj", "{40A746E3-5F52-43D0-8D09-EA42C1123126}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.Infrastructure.EFCore", "WhenAndWhere.Infrastructure.EFCore\WhenAndWhere.Infrastructure.EFCore.csproj", "{40A746E3-5F52-43D0-8D09-EA42C1123126}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9692A58A-97C0-492E-A3DC-A6BC24249511}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.Infrastructure.EFCore.Test", "WhenAndWhere.Infrastructure.EFCore.Test\WhenAndWhere.Infrastructure.EFCore.Test.csproj", "{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +33,10 @@ Global
 		{40A746E3-5F52-43D0-8D09-EA42C1123126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40A746E3-5F52-43D0-8D09-EA42C1123126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40A746E3-5F52-43D0-8D09-EA42C1123126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
