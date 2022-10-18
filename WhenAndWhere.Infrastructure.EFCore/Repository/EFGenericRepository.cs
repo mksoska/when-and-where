@@ -1,4 +1,5 @@
 ﻿using WhenAndWhere.DAL;
+using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -24,6 +25,11 @@ namespace WhenAndWhere.Infrastructure.EFCore.Repository
         public virtual TEntity GetById(object id)
         {
             return dbSet.Find(id);
+        }
+
+        public virtual TEntity GetById(object firstId, object secondId)
+        {
+            return dbSet.Find(firstId, secondId);
         }
 
         public virtual List<TEntity> GetAll()
