@@ -132,4 +132,11 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
             .Skip((page - 1) * pageSize)
             .Take(pageSize);
     }
+
+    //TODO
+    //Struggling to implement using Reflexion
+    private IQuery<TEntity> Select(IQueryable<TEntity> query)
+    {
+        throw new NotImplementedException();
+    }
 }
