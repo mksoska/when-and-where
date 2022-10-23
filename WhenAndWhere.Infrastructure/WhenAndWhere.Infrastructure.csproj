@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>WhenAndWhere.Infrastructure</RootNamespace>
+    <AssemblyName>WhenAndWhere.Infrastructure</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WhenAndWhere.DAL\WhenAndWhere.DAL.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="..\.editorconfig" />
+  </ItemGroup>
+</Project>
