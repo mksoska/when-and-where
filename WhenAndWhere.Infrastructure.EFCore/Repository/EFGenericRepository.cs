@@ -55,4 +55,9 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         dbSet.Attach(entityToUpdate);
         context.Entry(entityToUpdate).State = EntityState.Modified;
     }
+
+    public virtual async Task Save()
+    {
+        await context.SaveChangesAsync();
+    }
 }
