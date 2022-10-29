@@ -96,4 +96,11 @@ public class QueryTests : TestContextInitializer
 
         Assert.Equal(ExpectedResult, result);
     }
+
+    [Fact]
+    public void MeetupOwnersSelection_QuerySelect_Test()
+    {
+        var efquery = new EntityFrameworkQuery<Meetup>(dbContext);
+        efquery.Select("Id", "Owner");
+    }
 }
