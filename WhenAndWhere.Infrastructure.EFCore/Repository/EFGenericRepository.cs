@@ -48,11 +48,17 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
             dbSet.Attach(entityToDelete);
         }
         dbSet.Remove(entityToDelete);
+        context.Entry(entityToDelete).State = EntityState.Deleted;
     }
 
     public virtual void Update(TEntity entityToUpdate)
     {
         dbSet.Attach(entityToUpdate);
         context.Entry(entityToUpdate).State = EntityState.Modified;
+    }
+
+    public virtual async Task Save()
+    {
+        await context.SaveChangesAsync();
     }
 }

@@ -3,7 +3,7 @@ using WhenAndWhere.DAL.Models;
 
 namespace WhenAndWhere.Infrastructure.Query;
 
-public interface IQuery<TEntity> where TEntity : class, IEntity, new()
+public interface IQuery<TEntity> where TEntity : class
 {
     /// <summary>
     /// Adds a possiblity to filter the result
@@ -23,7 +23,7 @@ public interface IQuery<TEntity> where TEntity : class, IEntity, new()
     /// <summary>
     /// Adds a posibility to select attributes from query
     /// </summary>
-    IQuery<TEntity> Select<T>(Expression<Func<T, int, object>> selector, params string[] columnNames) where T : class;
+    IQuery<TEntity> Select(params string[] columnNames);
 
     /// <summary>
     /// Executes the query and returns the results.

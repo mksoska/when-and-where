@@ -13,4 +13,6 @@ public interface IRepository<TEntity> where TEntity : class
     void Delete(TEntity entityToDelete);
 
     void Update(TEntity entityToUpdate);
+
+    Task Save();
 }

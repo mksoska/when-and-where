@@ -71,10 +71,11 @@ public class RepositoryTests : TestContextInitializer
     }
     
     [Fact]
-    public void DeleteUser_Test()
+    public async Task DeleteUser_Test()
     {
         var efrepository = new EFGenericRepository<User>(dbContext);
         efrepository.Delete(3);
+        await efrepository.Save();
         var user = efrepository.GetById(3);
         User ExpectedUser = null;
 

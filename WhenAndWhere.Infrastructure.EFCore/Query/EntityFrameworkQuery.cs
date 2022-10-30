@@ -7,7 +7,7 @@ using WhenAndWhere.Infrastructure.Query;
 
 namespace WhenAndWhere.Infrastructure.EFCore.Query;
 
-public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : class, IEntity, new()
+public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : class
 {
     protected WhenAndWhereDBContext Dbcontext { get; set; }
 
@@ -48,6 +48,11 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
         if (PaginationContainer.HasValue)
         {
             query = Pagination(query);
+        }
+
+        if (SelectSelector != null)
+        {
+            query = ApplySelect(query);
         }
 
         return query.ToList();
@@ -133,10 +138,21 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
             .Take(pageSize);
     }
 
-    //TODO
-    //Struggling to implement using Reflexion
-    private IQuery<TEntity> Select(IQueryable<TEntity> query)
+    private IQueryable<TEntity> ApplySelect(IQueryable<TEntity> query)
     {
-        throw new NotImplementedException();
+        //foreach (var selc in SelectSelector)
+        //{
+        //    query = (IQueryable<TEntity>)query.Select(e => new { wtf = e.GetType().GetProperty(selc[0]).GetValue(e) });
+        //    //query = (IQueryable<TEntity>)typeof(IQueryable).GetMethod("Select").MakeGenericMethod(expr.modelType).Invoke(query, new object[] {expr.expression});
+        //    var p = Expression.Parameter(typeof(TEntity), "p");
+
+        //    var columnNameFromObject = typeof(TEntity)
+        //        .GetProperty(orderByColumn)
+        //        ?.Name;
+
+        //    var exprProp = Expression.Property()
+        //    var lambda = Expression.Lambda()
+        //}
+        return query;
     }
 }
