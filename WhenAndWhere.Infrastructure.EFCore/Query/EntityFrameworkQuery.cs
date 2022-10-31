@@ -51,7 +51,7 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
             query = Pagination(query);
         }
 
-        if (SelectSelector != null)
+        if (SelectSelector.Capacity != 0)
         {
             query = ApplySelect(query);
         }
@@ -140,26 +140,7 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
 
     private IQueryable<TEntity> ApplySelect(IQueryable<TEntity> query)
     {
-        //foreach (var selc in SelectSelector)
-        //{
-        //    query = (IQueryable<TEntity>)query.Select(e => new { wtf = e.GetType().GetProperty(selc[0]).GetValue(e) });
-        //    //query = (IQueryable<TEntity>)typeof(IQueryable).GetMethod("Select").MakeGenericMethod(expr.modelType).Invoke(query, new object[] {expr.expression});
-        //    var p = Expression.Parameter(typeof(TEntity), "p");
-
-        //    var columnNameFromObject = typeof(TEntity)
-        //        .GetProperty(orderByColumn)
-        //        ?.Name;
-
-        //    var exprProp = Expression.Property()
-        //    var lambda = Expression.Lambda()
-        //}
-
         var selectHelper = new SelectEntityAttributes<TEntity>(SelectSelector);
-        
-        foreach (var colNames in SelectSelector)
-        { 
-            query = query.Select(e => selectHelper.InstantiateNewEntity(e));
-        }
-        return query;
+        return query.Select(e => selectHelper.InstantiateNewEntity(e));
     }
 }
