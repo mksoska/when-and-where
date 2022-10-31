@@ -3,7 +3,7 @@ using WhenAndWhere.DAL.Models;
 
 namespace WhenAndWhere.Infrastructure.Query;
 
-public interface IQuery<TEntity> where TEntity : class
+public interface IQuery<TEntity> where TEntity : class, new()
 {
     /// <summary>
     /// Adds a possiblity to filter the result

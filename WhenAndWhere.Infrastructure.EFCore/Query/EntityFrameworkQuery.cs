@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore.ExpressionHelpers;
@@ -7,7 +8,7 @@ using WhenAndWhere.Infrastructure.Query;
 
 namespace WhenAndWhere.Infrastructure.EFCore.Query;
 
-public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : class
+public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 {
     protected WhenAndWhereDBContext Dbcontext { get; set; }
 
@@ -56,7 +57,6 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
         }
 
         return query.ToList();
-
     }
 
     private IQueryable<TEntity> ApplyWhere(IQueryable<TEntity> query)
@@ -66,7 +66,7 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
             // parameter for new lambda
             var p = Expression.Parameter(typeof(TEntity), "p");
 
-            // get the property name from the etity. For instance, its the same as calling `nameof(Subject.Name)`
+            // get the property name from the entity. For instance, its the same as calling `nameof(Subject.Name)`
             var columnNameFromObject = typeof(TEntity)
                 .GetProperty(expr.columnName)
                 ?.Name;
@@ -153,6 +153,13 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
         //    var exprProp = Expression.Property()
         //    var lambda = Expression.Lambda()
         //}
+
+        var selectHelper = new SelectEntityAttributes<TEntity>(SelectSelector);
+        
+        foreach (var colNames in SelectSelector)
+        { 
+            query = query.Select(e => selectHelper.InstantiateNewEntity(e));
+        }
         return query;
     }
 }

@@ -3,7 +3,7 @@ using WhenAndWhere.DAL.Models;
 
 namespace WhenAndWhere.Infrastructure.Query;
 
-public abstract class Query<TEntity> : IQuery<TEntity> where TEntity : class
+public abstract class Query<TEntity> : IQuery<TEntity> where TEntity : class, new()
 {
     public List<(Expression expression, Type argumentType, string columnName)> WherePredicate { get; set; } = new();
     public (string tableName, bool isAscending, Type argumentType)? OrderByContainer { get; set; }

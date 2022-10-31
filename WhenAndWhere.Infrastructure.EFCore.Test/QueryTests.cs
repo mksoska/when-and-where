@@ -101,6 +101,15 @@ public class QueryTests : TestContextInitializer
     public void MeetupOwnersSelection_QuerySelect_Test()
     {
         var efquery = new EntityFrameworkQuery<Meetup>(dbContext);
-        efquery.Select("Id", "Owner");
+        efquery.Select("Id", "OwnerId");
+        var result = efquery.Execute()
+            .Select(m => m.Id)
+            .ToList();
+            
+        var ExpectedResult = dbContext.Meetup
+            .Select(m => m.OwnerId)
+            .ToList();
+
+        Assert.Equal(ExpectedResult, result);
     }
 }
