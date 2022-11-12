@@ -5,12 +5,9 @@ namespace WhenAndWhere.Infrastructure.EFCore.ExpressionHelpers
     {
         private List<string> columnNames = new();
 
-        public SelectEntityAttributes(List<string[]> selector)
+        public SelectEntityAttributes(List<string> selector)
         {
-            foreach (var colNames in selector)
-            {
-                this.columnNames.AddRange(colNames);
-            }
+            columnNames = selector;
         }
 
         public TEntity InstantiateNewEntity(TEntity entity)

@@ -103,7 +103,7 @@ public class QueryTests : TestContextInitializer
         var efquery = new EntityFrameworkQuery<Meetup>(dbContext);
         efquery.Select("Id", "OwnerId");
         var result = efquery.Execute()
-            .Select(m => m.Id)
+            .Select(m => m.OwnerId)
             .ToList();
             
         var ExpectedResult = dbContext.Meetup

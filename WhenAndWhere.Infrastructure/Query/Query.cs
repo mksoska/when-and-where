@@ -8,7 +8,7 @@ public abstract class Query<TEntity> : IQuery<TEntity> where TEntity : class, ne
     public List<(Expression expression, Type argumentType, string columnName)> WherePredicate { get; set; } = new();
     public (string tableName, bool isAscending, Type argumentType)? OrderByContainer { get; set; }
     public (int PageToFetch, int PageSize)? PaginationContainer { get; set; }
-    public List<string[]> SelectSelector { get; set; } = new();
+    public List<string> SelectSelector { get; set; } = new();
 
     public IQuery<TEntity> Page(int pageToFetch, int pageSize = 10)
     {
@@ -31,7 +31,7 @@ public abstract class Query<TEntity> : IQuery<TEntity> where TEntity : class, ne
 
     public IQuery<TEntity> Select(params string[] columnNames)
     {
-        SelectSelector.Add(columnNames);
+        SelectSelector.AddRange(columnNames);
         return this;
     }
 
