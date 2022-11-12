@@ -4,3 +4,7 @@ bin/
 obj/
 WhenAndWhere.DAL/*.sqlite
 .editorconfig
+/WhenAndWhereDB.sqlite
+/WhenAndWhere.DAL/Properties
+/WhenAndWhere/Properties
+/WhenAndWhere/WhenAndWhere.csproj.user

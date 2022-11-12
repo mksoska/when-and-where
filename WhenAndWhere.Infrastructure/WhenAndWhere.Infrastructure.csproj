@@ -14,4 +14,11 @@
   <ItemGroup>
     <None Remove="..\.editorconfig" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Ardalis.GuardClauses" Version="4.0.1" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Contrib.Autofac.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="SimpleInjector" Version="5.4.1" />
+  </ItemGroup>
 </Project>
