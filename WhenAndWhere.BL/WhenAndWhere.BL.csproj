@@ -14,4 +14,10 @@
     <PackageReference Include="SimpleInjector" Version="5.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WhenAndWhere.DAL\WhenAndWhere.DAL.csproj" />
+    <ProjectReference Include="..\WhenAndWhere.DTO\WhenAndWhere.DTO.csproj" />
+    <ProjectReference Include="..\WhenAndWhere.Infrastructure\WhenAndWhere.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
