@@ -9,20 +9,35 @@ namespace WhenAndWhere.BL.Services
 {
     public class AddressService : IAddressService
     {
-        private readonly IRepository<Address> _addressRepository;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddressService(IRepository<Address> addressRepository)
+        public AddressService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _addressRepository = addressRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public Address CreateAddress(AddressDTO addressDTO)
+        public Task<Address> FindById(int id)
         {
-            var address = _mapper.Map<Address>(addressDTO);
-            _addressRepository.Insert(address);
-            return address;
+            throw new NotImplementedException();
+        }
+
+        public async Task CreateAddress(AddressDTO addressDto)
+        {
+            var address = _mapper.Map<Address>(addressDto);
+            _unitOfWork.AddressRepository.Insert(address);
+            await _unitOfWork.Commit();
+        }
+
+        public Address UpdateAddress(AddressDTO addressDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteAdress(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

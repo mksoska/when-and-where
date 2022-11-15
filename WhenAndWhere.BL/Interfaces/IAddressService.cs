@@ -5,6 +5,12 @@ namespace WhenAndWhere.BL.Interfaces
 {
     public interface IAddressService
     {
-        Address CreateAddress(AddressDTO address);
+        Task<Address> FindById(int id);
+
+        Task CreateAddress(AddressDTO addressDto);
+
+        Address UpdateAddress(AddressDTO addressDto);
+        
+        void DeleteAdress(int id);
     }
 }

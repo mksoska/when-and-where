@@ -9,15 +9,28 @@ namespace WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 public class EFUnitOfWork : IUnitOfWork
 {
     public WhenAndWhereDBContext Context { get; } = new();
-    private IRepository<Address> addressRepository;
-    private IRepository<Meetup> meetupRepository;
-    private IRepository<Option> optionRepository;
-    private IRepository<Role> roleRepository;
-    private IRepository<User> userRepository;
 
-    public EFUnitOfWork(WhenAndWhereDBContext dbContext)
+    public EFUnitOfWork(
+        WhenAndWhereDBContext dbContext,
+        IRepository<Address> addressRepository,
+        IRepository<Meetup> meetupRepository,
+        IRepository<UserRole> userRoleRepository,
+        IRepository<Option> optionRepository,
+        IRepository<Role> roleRepository,
+        IRepository<User> userRepository,
+        IRepository<UserMeetup> userMeetupRepository,
+        IRepository<UserOption> userOptionRepository
+    ) 
     {
         Context = dbContext;
+        AddressRepository = addressRepository;
+        MeetupRepository = meetupRepository;
+        UserRoleRepository = userRoleRepository;
+        OptionRepository = optionRepository;
+        RoleRepository = roleRepository;
+        UserRepository = userRepository;
+        UserMeetupRepository = userMeetupRepository;
+        UserOptionRepository = userOptionRepository;
     }
 
     public IRepository<TEntity> TEntityRepository<TEntity>(IRepository<TEntity> repository) where TEntity : class
@@ -29,15 +42,14 @@ public class EFUnitOfWork : IUnitOfWork
         return repository;
     }
 
-    public IRepository<Address> AddressRepository { get { return TEntityRepository(addressRepository); } }
-
-    public IRepository<Meetup> MeetupRepository { get { return TEntityRepository(meetupRepository); } }
-
-    public IRepository<Option> OptionRepository { get { return TEntityRepository(optionRepository); } }
-
-    public IRepository<Role> RoleRepository { get { return TEntityRepository(roleRepository); } }
-
-    public IRepository<User> UserRepository { get { return TEntityRepository(userRepository); } }
+    public IRepository<Address> AddressRepository { get; }
+    public IRepository<Meetup> MeetupRepository { get; }
+    public IRepository<UserRole> UserRoleRepository { get; }
+    public IRepository<Option> OptionRepository { get; }
+    public IRepository<Role> RoleRepository { get; }
+    public IRepository<User> UserRepository { get; }
+    public IRepository<UserMeetup> UserMeetupRepository { get; }
+    public IRepository<UserOption> UserOptionRepository { get; }
 
     public async Task Commit()
     {
