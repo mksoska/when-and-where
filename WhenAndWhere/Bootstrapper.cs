@@ -5,69 +5,70 @@ using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore;
 
-namespace WhenAndWhere
+namespace WhenAndWhere;
+
+public class Bootstrapper : IDisposable
 {
-    public class Bootstrapper : IDisposable
+    private SqliteConnection _sqliteConnection;
+    public IContainer Container { get; init; }
+
+    public Bootstrapper(Provider provider)
     {
-        private SqliteConnection _sqliteConnection;
-        public IContainer Container { get; init; }
+        // This configures in-memory database
+        _sqliteConnection = new SqliteConnection("Data Source=WhenAndWhere.sqlite;Cache=Shared");
+        _sqliteConnection.Open();
 
-        public Bootstrapper(Provider provider)
+        var builder = new ContainerBuilder();
+
+        // Coose ORM
+        Module module = provider switch
         {
-            // This configures in-memory database
-            _sqliteConnection = new SqliteConnection("Data Source=WhenAndWhere.sqlite;Cache=Shared");
-            _sqliteConnection.Open();
+            Provider.EFCore => new EFCoreModule(_sqliteConnection),
+        };
+        builder.RegisterModule(module);
 
-            var builder = new ContainerBuilder();
+        // Register BL Services
+        builder.RegisterType<AddressService>()
+            .As<IAddressService>();
 
-            // Coose ORM
-            Module module = provider switch
-            {
-                Provider.EFCore => new EFCoreModule(_sqliteConnection),
-            };
-            builder.RegisterModule(module);
-
-            // Register BL Services
-            builder.RegisterType<AddressService>()
-                .As<IAddressService>();
+        builder.RegisterType<MeetupService>()
+            .As<IMeetupService>();
 
 
-            // Email
-            //builder.RegisterType<EmailService>()
-            //    .As<IEmailService>();
-            //var smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587)
-            //{
-            //    Credentials = new System.Net.NetworkCredential("", "")
-            //};
-            //builder.Register(ctx => new SmtpSender(smtpClient))
-            //    .As<ISender>();
+        // Email
+        //builder.RegisterType<EmailService>()
+        //    .As<IEmailService>();
+        //var smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587)
+        //{
+        //    Credentials = new System.Net.NetworkCredential("", "")
+        //};
+        //builder.Register(ctx => new SmtpSender(smtpClient))
+        //    .As<ISender>();
 
-            // See BootstraperExtensions
-            builder.RegisterAutoMapper();
+        // See BootstraperExtensions
+        builder.RegisterAutoMapper();
 
-            Container = builder.Build();
+        Container = builder.Build();
 
-            // Init database
-            InitDatabaseEFCore();
-        }
+        // Init database
+        InitDatabaseEFCore();
+    }
 
-        private void InitDatabaseEFCore()
-        {
-            //using var context = Container.Resolve<DAL.EFCore.CourseContext>();
-            using var context = Container.Resolve<WhenAndWhereDBContext>();
-            context.Database.EnsureCreated();
-        }
+    private void InitDatabaseEFCore()
+    {
+        //using var context = Container.Resolve<DAL.EFCore.CourseContext>();
+        using var context = Container.Resolve<WhenAndWhereDBContext>();
+        context.Database.EnsureCreated();
+    }
 
-        public void Dispose()
-        {
-            _sqliteConnection.Dispose();
-            Container.Dispose();
-        }
+    public void Dispose()
+    {
+        _sqliteConnection.Dispose();
+        Container.Dispose();
+    }
 
-        public enum Provider
-        {
-            EFCore,
-            Dapper
-        }
+    public enum Provider
+    {
+        EFCore
     }
 }
