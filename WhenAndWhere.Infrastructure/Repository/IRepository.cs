@@ -2,7 +2,9 @@
 
 public interface IRepository<TEntity> where TEntity : class
 {
-    TEntity GetById(object id);
+    Task<TEntity> GetById(object id);
+
+    Task<TEntity> GetById(object firstId, object secondId);
 
     List<TEntity> GetAll();
 

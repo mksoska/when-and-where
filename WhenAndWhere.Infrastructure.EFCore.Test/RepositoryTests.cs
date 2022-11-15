@@ -9,7 +9,7 @@ public class RepositoryTests : TestContextInitializer
     public void UsersAttendMeetup_RepositoryGetById_Test()
     {
         var efrepository = new EFGenericRepository<UserMeetup>(dbContext);
-        var result = efrepository.GetById(2, 1);
+        var result = efrepository.GetById(2, 1).Result;
 
         var ExpectedResult = dbContext.UserMeetup
             .First(um => um.FirstId == 2 && um.SecondId == 1);
@@ -21,7 +21,7 @@ public class RepositoryTests : TestContextInitializer
     public void MeetupHasAddress_RepositoryGetById_Test()
     {
         var efrepository = new EFGenericRepository<Meetup>(dbContext);
-        var result = efrepository.GetById(1).Options.First(o => o.Id == 1);
+        var result = efrepository.GetById(1).Result.Options.First(o => o.Id == 1);
 
         var ExpectedResult = dbContext.Option
             .First(o => o.Id == 1);
@@ -62,7 +62,7 @@ public class RepositoryTests : TestContextInitializer
     public void UpdateUser_Test()
     {
         var efrepository = new EFGenericRepository<User>(dbContext);
-        var user = efrepository.GetById(1);
+        var user = efrepository.GetById(1).Result;
         user.PhoneNumber = "4444444444";
         efrepository.Update(user);
         var ExpectedUser = dbContext.User.Find(user.Id);
@@ -76,7 +76,7 @@ public class RepositoryTests : TestContextInitializer
         var efrepository = new EFGenericRepository<User>(dbContext);
         efrepository.Delete(3);
         await efrepository.Save();
-        var user = efrepository.GetById(3);
+        var user = efrepository.GetById(3).Result;
         User ExpectedUser = null;
 
         Assert.Equal(ExpectedUser, user);

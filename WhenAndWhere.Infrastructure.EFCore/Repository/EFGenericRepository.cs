@@ -15,14 +15,14 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         dbSet = context.Set<TEntity>();
     }
 
-    public virtual TEntity GetById(object id)
+    public async virtual Task<TEntity> GetById(object id)
     {
-        return dbSet.Find(id);
+        return await dbSet.FindAsync(id);
     }
 
-    public virtual TEntity GetById(object firstId, object secondId)
+    public async virtual Task<TEntity> GetById(object firstId, object secondId)
     {
-        return dbSet.Find(firstId, secondId);
+        return await dbSet.FindAsync(firstId, secondId);
     }
 
     public virtual List<TEntity> GetAll()
