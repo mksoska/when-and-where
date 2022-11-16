@@ -4,6 +4,8 @@ namespace WhenAndWhere.BL.Interfaces;
 
 public interface IUserService
 {
+    Task<List<UserDTO>> GetAllUsers();
+
     Task<UserDTO> GetUser(int id);
 
     Task CreateUser(UserDTO userDto);

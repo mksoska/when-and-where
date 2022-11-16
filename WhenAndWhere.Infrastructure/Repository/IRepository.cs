@@ -6,7 +6,7 @@ public interface IRepository<TEntity> where TEntity : class
 
     Task<TEntity> GetById(object firstId, object secondId);
 
-    List<TEntity> GetAll();
+    Task<List<TEntity>> GetAll();
 
     void Insert(TEntity entity);
 

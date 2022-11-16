@@ -4,6 +4,8 @@ namespace WhenAndWhere.BL.Interfaces;
 
 public interface IRoleService
 {
+    Task<List<RoleDTO>> GetAllRoles();
+
     Task<RoleDTO> GetRole(int id);
 
     Task CreateRole(RoleDTO roleDto);

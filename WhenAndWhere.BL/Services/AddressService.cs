@@ -18,6 +18,13 @@ public class AddressService : IAddressService
         _mapper = mapper;
     }
 
+    public async Task<List<AddressDTO>> GetAllAddresses()
+    {
+        var addresses = await _unitOfWork.AddressRepository.GetAll();
+        return _mapper.Map<List<AddressDTO>>(addresses);
+    }
+
+
     public async Task<AddressDTO> GetAddress(int id)
     {
         var address = await _unitOfWork.AddressRepository.GetById(id);

@@ -33,7 +33,7 @@ public class RepositoryTests : TestContextInitializer
     public void GetAllMeetups_Test()
     {
         var efrepository = new EFGenericRepository<Meetup>(dbContext);
-        var result = efrepository.GetAll();
+        var result = efrepository.GetAll().Result;
 
         var ExpectedResult = dbContext.Meetup.ToList();
 

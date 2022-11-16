@@ -5,6 +5,8 @@ namespace WhenAndWhere.BL.Interfaces;
 
 public interface IAddressService
 {
+    Task<List<AddressDTO>> GetAllAddresses();
+
     Task<AddressDTO> GetAddress(int id);
 
     Task CreateAddress(AddressDTO addressDto);

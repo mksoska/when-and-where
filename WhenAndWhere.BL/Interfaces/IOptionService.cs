@@ -4,6 +4,8 @@ namespace WhenAndWhere.BL.Interfaces;
 
 public interface IOptionService
 {
+    Task<List<OptionDTO>> GetAllOptions();
+
     Task<OptionDTO> GetOption(int id);
 
     Task CreateOption(OptionDTO optionDto);

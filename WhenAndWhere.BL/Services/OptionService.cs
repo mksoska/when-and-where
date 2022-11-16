@@ -17,6 +17,12 @@ public class OptionService : IOptionService
         _mapper = mapper;
     }
 
+    public async Task<List<OptionDTO>> GetAllOptions()
+    {
+        var options = await _unitOfWork.OptionRepository.GetAll();
+        return _mapper.Map<List<OptionDTO>>(options);
+    }
+
     public async Task<OptionDTO> GetOption(int id)
     {
         var option = await _unitOfWork.OptionRepository.GetById(id);

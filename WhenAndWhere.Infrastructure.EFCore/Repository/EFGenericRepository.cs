@@ -25,9 +25,9 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         return await dbSet.FindAsync(firstId, secondId);
     }
 
-    public virtual List<TEntity> GetAll()
+    public virtual Task<List<TEntity>> GetAll()
     {
-        return dbSet.ToList();
+        return dbSet.ToListAsync();
     }
 
     public virtual void Insert(TEntity entity)

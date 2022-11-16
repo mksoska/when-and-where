@@ -17,6 +17,12 @@ public class MeetupService : IMeetupService
         _mapper = mapper;
     }
 
+    public async Task<List<MeetupDTO>> GetAllMeetups()
+    {
+        var meetups = await _unitOfWork.MeetupRepository.GetAll();
+        return _mapper.Map<List<MeetupDTO>>(meetups);
+    }
+
     public async Task<MeetupDTO> GetMeetup(int id)
     {
         var meetup = await _unitOfWork.MeetupRepository.GetById(id);
