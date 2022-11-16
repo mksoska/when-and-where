@@ -1,6 +1,6 @@
 ﻿namespace WhenAndWhere.BL.Interfaces;
 
-public class IUserMeetupService
+public interface IUserMeetupService
 {
-    
+
 }

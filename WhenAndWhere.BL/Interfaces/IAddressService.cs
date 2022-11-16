@@ -1,16 +1,15 @@
 ﻿using WhenAndWhere.DAL.Models;
 using WhenAndWhere.DTO;
 
-namespace WhenAndWhere.BL.Interfaces
+namespace WhenAndWhere.BL.Interfaces;
+
+public interface IAddressService
 {
-    public interface IAddressService
-    {
-        Task<Address> FindById(int id);
+    Task<AddressDTO> GetAddress(int id);
 
-        Task CreateAddress(AddressDTO addressDto);
+    Task CreateAddress(AddressDTO addressDto);
 
-        Address UpdateAddress(AddressDTO addressDto);
-        
-        void DeleteAdress(int id);
-    }
+    Task UpdateAddress(AddressDTO addressDto);
+    
+    Task DeleteAddress(int id);
 }

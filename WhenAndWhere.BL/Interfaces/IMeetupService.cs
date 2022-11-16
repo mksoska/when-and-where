@@ -1,10 +1,14 @@
 ﻿using WhenAndWhere.DTO;
 
-namespace WhenAndWhere.BL.Interfaces
-{
-    public interface IMeetupService
-    {
+namespace WhenAndWhere.BL.Interfaces;
 
-        Task<MeetupDTO> GetMeetup(int id);
-    }
+public interface IMeetupService
+{
+    Task<MeetupDTO> GetMeetup(int id);
+
+    Task CreateMeetup(MeetupDTO meetupDto);
+
+    Task UpdateMeetup(MeetupDTO meetupDto);
+
+    Task DeleteMeetup(int id);
 }

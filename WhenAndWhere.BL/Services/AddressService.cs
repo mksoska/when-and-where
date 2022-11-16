@@ -5,39 +5,42 @@ using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 
-namespace WhenAndWhere.BL.Services
+namespace WhenAndWhere.BL.Services;
+
+public class AddressService : IAddressService
 {
-    public class AddressService : IAddressService
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AddressService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public AddressService(IUnitOfWork unitOfWork, IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+    public async Task<AddressDTO> GetAddress(int id)
+    {
+        var address = await _unitOfWork.AddressRepository.GetById(id);
+        return _mapper.Map<AddressDTO>(address);
+    }
 
-        public Task<Address> FindById(int id)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task CreateAddress(AddressDTO addressDto)
+    {
+        var address = _mapper.Map<Address>(addressDto);
+        _unitOfWork.AddressRepository.Insert(address);
+        await _unitOfWork.Commit();
+    }
 
-        public async Task CreateAddress(AddressDTO addressDto)
-        {
-            var address = _mapper.Map<Address>(addressDto);
-            _unitOfWork.AddressRepository.Insert(address);
-            await _unitOfWork.Commit();
-        }
+    public async Task UpdateAddress(AddressDTO addressDto)
+    {
+        var address = _mapper.Map<Address>(addressDto);
+        _unitOfWork.AddressRepository.Update(address);
+        await _unitOfWork.Commit();
+    }
 
-        public Address UpdateAddress(AddressDTO addressDto)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteAdress(int id)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task DeleteAddress(int id)
+    {
+        _unitOfWork.AddressRepository.Delete(id);
+        await _unitOfWork.Commit();
     }
 }

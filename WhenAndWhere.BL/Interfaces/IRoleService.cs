@@ -1,6 +1,14 @@
-﻿namespace WhenAndWhere.BL.Interfaces;
+﻿using WhenAndWhere.DTO;
 
-public class IRoleService
+namespace WhenAndWhere.BL.Interfaces;
+
+public interface IRoleService
 {
-    
+    Task<RoleDTO> GetRole(int id);
+
+    Task CreateRole(RoleDTO roleDto);
+
+    Task UpdateRole(RoleDTO roleDto);
+
+    Task DeleteRole(int id);
 }
