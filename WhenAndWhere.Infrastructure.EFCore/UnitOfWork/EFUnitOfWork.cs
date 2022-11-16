@@ -8,38 +8,21 @@ namespace WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 
 public class EFUnitOfWork : IUnitOfWork
 {
-    public WhenAndWhereDBContext Context { get; } = new();
+    public WhenAndWhereDBContext Context { get; }
 
     public EFUnitOfWork(
-        WhenAndWhereDBContext dbContext,
-        IRepository<Address> addressRepository,
-        IRepository<Meetup> meetupRepository,
-        IRepository<UserRole> userRoleRepository,
-        IRepository<Option> optionRepository,
-        IRepository<Role> roleRepository,
-        IRepository<User> userRepository,
-        IRepository<UserMeetup> userMeetupRepository,
-        IRepository<UserOption> userOptionRepository
+        WhenAndWhereDBContext dbContext
     ) 
     {
         Context = dbContext;
-        AddressRepository = addressRepository;
-        MeetupRepository = meetupRepository;
-        UserRoleRepository = userRoleRepository;
-        OptionRepository = optionRepository;
-        RoleRepository = roleRepository;
-        UserRepository = userRepository;
-        UserMeetupRepository = userMeetupRepository;
-        UserOptionRepository = userOptionRepository;
-    }
-
-    public IRepository<TEntity> TEntityRepository<TEntity>(IRepository<TEntity> repository) where TEntity : class
-    {
-        if (repository == null)
-        {
-            repository = new EFGenericRepository<TEntity>(Context);
-        }
-        return repository;
+        AddressRepository = new EFGenericRepository<Address>(dbContext);
+        MeetupRepository = new EFGenericRepository<Meetup>(dbContext);
+        UserRoleRepository = new EFGenericRepository<UserRole>(dbContext);
+        OptionRepository = new EFGenericRepository<Option>(dbContext);
+        RoleRepository = new EFGenericRepository<Role>(dbContext);
+        UserRepository = new EFGenericRepository<User>(dbContext);
+        UserMeetupRepository = new EFGenericRepository<UserMeetup>(dbContext);
+        UserOptionRepository = new EFGenericRepository<UserOption>(dbContext);
     }
 
     public IRepository<Address> AddressRepository { get; }
