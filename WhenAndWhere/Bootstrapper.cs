@@ -3,6 +3,8 @@ using Microsoft.Data.Sqlite;
 using WhenAndWhere.BL.Interfaces;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
+using WhenAndWhere.DAL.Models;
+using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.EFCore;
 
 namespace WhenAndWhere;
@@ -28,12 +30,9 @@ public class Bootstrapper : IDisposable
         builder.RegisterModule(module);
 
         // Register BL Services
-        builder.RegisterType<AddressService>()
-            .As<IAddressService>();
-
-        builder.RegisterType<MeetupService>()
-            .As<IMeetupService>();
-
+        builder.RegisterGeneric(typeof(GenericService<,>))
+            .As(typeof(IGenericService<,>))
+            .InstancePerLifetimeScope();
 
         // Email
         //builder.RegisterType<EmailService>()

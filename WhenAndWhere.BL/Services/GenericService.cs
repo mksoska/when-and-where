@@ -4,7 +4,7 @@ using WhenAndWhere.Infrastructure.Repository;
 
 namespace WhenAndWhere.BL.Services;
 
-public class GenericService<TDto, TEntity> : IGenericService<TDto> where TDto : class where TEntity : class
+public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
 {
     private readonly IMapper _mapper;
     private readonly IRepository<TEntity> _repository;
