@@ -9,6 +9,7 @@ using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 using WhenAndWhere.DAL.Models;
+using WhenAndWhere.DTO.Filter;
 
 namespace WhenAndWhere.Infrastructure.EFCore
 {
@@ -51,15 +52,7 @@ namespace WhenAndWhere.Infrastructure.EFCore
         public EFCoreProfile()
         {
             CreateMap<AddressDTO, Address>().ReverseMap();
-            //createmap<domain.course, entities.course>().reversemap();
-
-            //createmap<domain.enrollment, entities.enrollment>()
-            //    .formember(d => d.canceledtimestamp, m => m.mapfrom(s => s.canceledtimestamp.tonullable()))
-            //    .formember(d => d.courseid, m => m.mapfrom(s => s.course.id))
-            //    .formember(d => d.course, m => m.ignore());
-
-            //createmap<entities.enrollment, domain.enrollment>()
-            //    .formember(d => d.canceledtimestamp, m => m.mapfrom(s => s.canceledtimestamp.tooption()));
+            CreateMap<QueryResultDto<UserDTO>, IEnumerable<User>>().ReverseMap();
         }
     }
 }
