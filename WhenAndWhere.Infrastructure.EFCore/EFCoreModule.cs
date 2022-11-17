@@ -37,7 +37,8 @@ namespace WhenAndWhere.Infrastructure.EFCore
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
 
             builder.RegisterGeneric(typeof(EFGenericRepository<>))
-                .As(typeof(IRepository<>));
+                .As(typeof(IRepository<>))
+                .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
 
             // AutoMapper Profile
             builder.RegisterType<EFCoreProfile>()

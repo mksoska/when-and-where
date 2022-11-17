@@ -10,21 +10,6 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
 {
     protected WhenAndWhereDBContext Dbcontext { get; set; }
 
-    private EFUnitOfWork _unitOfWork;
-
-    protected EFUnitOfWork UnitOfWork 
-    { 
-        get 
-        { 
-            if (_unitOfWork != null)
-            {
-                _unitOfWork = new(Dbcontext);
-            }
-
-            return _unitOfWork;
-        } 
-    }
-
     public EntityFrameworkQuery(WhenAndWhereDBContext dbcontext)
     {
         Dbcontext = dbcontext;

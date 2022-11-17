@@ -2,12 +2,14 @@
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
+using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 
 namespace WhenAndWhere.Infrastructure.EFCore.Test;
 
 public class TestContextInitializer
 {
-    protected readonly WhenAndWhereDBContext dbContext;
+    protected WhenAndWhereDBContext dbContext;
+    protected EFUnitOfWork unitOfWork;
 
     public TestContextInitializer()
     {
@@ -52,5 +54,7 @@ public class TestContextInitializer
         dbContext.UserMeetup.Add(davidSlopanie);
 
         dbContext.SaveChanges();
+
+        unitOfWork = new EFUnitOfWork(dbContext);
     }
 }
