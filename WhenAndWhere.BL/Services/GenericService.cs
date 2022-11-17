@@ -27,20 +27,23 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _mapper.Map<TDto>(address);
     }
 
-    public void Create(TDto addressDto)
+    public async Task Create(TDto addressDto)
     {
         var address = _mapper.Map<TEntity>(addressDto);
         _repository.Insert(address);
+        await _repository.Save();
     }
 
-    public void Update(TDto addressDto)
+    public async Task Update(TDto addressDto)
     {
         var address = _mapper.Map<TEntity>(addressDto);
         _repository.Update(address);
+        await _repository.Save();
     }
 
-    public void Delete(int id)
+    public async Task Delete(int id)
     {
         _repository.Delete(id);
+        await _repository.Save();
     }
 }

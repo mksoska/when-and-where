@@ -14,12 +14,12 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         this.Uow = (EFUnitOfWork) uow;
     }
 
-    public virtual async Task<TEntity> GetById(object id)
+    public virtual async Task<TEntity?> GetById(object id)
     {
         return await Uow.Context.Set<TEntity>().FindAsync(id);
     }
 
-    public virtual async Task<TEntity> GetById(object firstId, object secondId)
+    public virtual async Task<TEntity?> GetById(object firstId, object secondId)
     {
         return await Uow.Context.Set<TEntity>().FindAsync(firstId, secondId);
     }

@@ -7,9 +7,9 @@ public interface IGenericService<TDto, TEntity>
 
     Task<TDto> GetById(int id);
 
-    void Create(TDto addressDto);
+    Task Create(TDto addressDto);
 
-    void Update(TDto addressDto);
+    Task Update(TDto addressDto);
     
-    void Delete(int id);
+    Task Delete(int id);
 }
