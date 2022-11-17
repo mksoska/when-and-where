@@ -46,14 +46,4 @@ namespace WhenAndWhere.Infrastructure.EFCore
                 .AutoActivate();
         }
     }
-
-    // Configuration for AutoMapper
-    internal class EFCoreProfile : Profile
-    {
-        public EFCoreProfile()
-        {
-            CreateMap<AddressDTO, Address>().ReverseMap();
-            CreateMap<QueryResultDto<UserDTO>, IEnumerable<User>>().ReverseMap();
-        }
-    }
 }
