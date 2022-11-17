@@ -1,46 +1,45 @@
-﻿using WhenAndWhere.DAL;
-using WhenAndWhere.DAL.Models;
-using WhenAndWhere.Infrastructure.EFCore.Repository;
-using WhenAndWhere.Infrastructure.Repository;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 
 namespace WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 
 public class EFUnitOfWork : IUnitOfWork
 {
-    public WhenAndWhereDBContext Context { get; }
+    private WhenAndWhereDBContext _context;
+    private IDbContextTransaction _transaction;
 
-    public EFUnitOfWork(
-        WhenAndWhereDBContext dbContext
-    ) 
+    public WhenAndWhereDBContext Context => _context;
+
+    public EFUnitOfWork(WhenAndWhereDBContext context)
     {
-        Context = dbContext;
-        AddressRepository = new EFGenericRepository<Address>(dbContext);
-        MeetupRepository = new EFGenericRepository<Meetup>(dbContext);
-        UserRoleRepository = new EFGenericRepository<UserRole>(dbContext);
-        OptionRepository = new EFGenericRepository<Option>(dbContext);
-        RoleRepository = new EFGenericRepository<Role>(dbContext);
-        UserRepository = new EFGenericRepository<User>(dbContext);
-        UserMeetupRepository = new EFGenericRepository<UserMeetup>(dbContext);
-        UserOptionRepository = new EFGenericRepository<UserOption>(dbContext);
-    }
-
-    public IRepository<Address> AddressRepository { get; }
-    public IRepository<Meetup> MeetupRepository { get; }
-    public IRepository<UserRole> UserRoleRepository { get; }
-    public IRepository<Option> OptionRepository { get; }
-    public IRepository<Role> RoleRepository { get; }
-    public IRepository<User> UserRepository { get; }
-    public IRepository<UserMeetup> UserMeetupRepository { get; }
-    public IRepository<UserOption> UserOptionRepository { get; }
-
-    public async Task Commit()
-    {
-        await Context.SaveChangesAsync();
+        _context = context;
+        _transaction = context.Database.BeginTransaction();
     }
 
     public void Dispose()
     {
-        Context.Dispose();
+        _transaction.Dispose();
+        _context.Dispose();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _transaction.DisposeAsync();
+        _context.DisposeAsync();
+
+        return ValueTask.CompletedTask;
+    }
+
+    public async Task RollbackAsync()
+    {
+        await _transaction.RollbackAsync();
+        _transaction = _context.Database.BeginTransaction();
+    }
+
+    public async Task CommitAsync()
+    {
+        await _transaction.CommitAsync();
+        _transaction = _context.Database.BeginTransaction();
     }
 }
