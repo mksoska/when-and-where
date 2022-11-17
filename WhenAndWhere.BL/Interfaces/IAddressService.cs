@@ -9,9 +9,9 @@ public interface IAddressService
 
     Task<AddressDTO> GetAddress(int id);
 
-    Task CreateAddress(AddressDTO addressDto);
+    void CreateAddress(AddressDTO addressDto);
 
-    Task UpdateAddress(AddressDTO addressDto);
+    void UpdateAddress(AddressDTO addressDto);
     
-    Task DeleteAddress(int id);
+    void DeleteAddress(int id);
 }
