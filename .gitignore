@@ -6,5 +6,6 @@ WhenAndWhere.DAL/*.sqlite
 .editorconfig
 /WhenAndWhereDB.sqlite
 /WhenAndWhere.DAL/Properties
+/WhenAndWhere.DAL/Migrations
 /WhenAndWhere/Properties
 /WhenAndWhere/WhenAndWhere.csproj.user

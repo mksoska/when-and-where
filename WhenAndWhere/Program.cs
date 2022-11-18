@@ -16,6 +16,6 @@ using (var scope = _ioc.Container.BeginLifetimeScope())
 
     Console.WriteLine("Line");
 
-    users.ForEach(u => Console.WriteLine(u));
+    users.ForEach(u => Console.WriteLine(u.Name));
 
 }    

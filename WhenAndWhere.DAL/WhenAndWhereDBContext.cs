@@ -6,9 +6,6 @@ namespace WhenAndWhere.DAL;
 
 public class WhenAndWhereDBContext : DbContext
 {
-    private const string DatabaseName = "WhenAndWhereDB";
-    private const string ConnectionString = "Data Source=WhenAndWhere.sqlite;Cache=Shared";
-
     public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
     public DbSet<Option> Option { get; set; }
@@ -24,16 +21,6 @@ public class WhenAndWhereDBContext : DbContext
 
     public WhenAndWhereDBContext()
     {
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder
-                .UseSqlite(ConnectionString)
-                .UseLazyLoadingProxies();
-        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

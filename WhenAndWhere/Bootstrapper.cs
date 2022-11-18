@@ -16,13 +16,12 @@ public class Bootstrapper : IDisposable
 
     public Bootstrapper(Provider provider)
     {
-        // This configures in-memory database
         _sqliteConnection = new SqliteConnection("Data Source=WhenAndWhere.sqlite;Cache=Shared");
         _sqliteConnection.Open();
 
         var builder = new ContainerBuilder();
 
-        // Coose ORM
+        // Choose ORM
         Module module = provider switch
         {
             Provider.EFCore => new EFCoreModule(_sqliteConnection),
@@ -59,7 +58,6 @@ public class Bootstrapper : IDisposable
 
     private void InitDatabaseEFCore()
     {
-        //using var context = Container.Resolve<DAL.EFCore.CourseContext>();
         using var context = Container.Resolve<WhenAndWhereDBContext>();
         context.Database.EnsureCreated();
     }

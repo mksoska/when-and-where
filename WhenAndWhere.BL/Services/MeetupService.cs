@@ -18,10 +18,11 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
 		return _mapper.Map<List<OptionDTO>>(meetup!.Options);
 	}
 
-	public async Task<List<UserDTO>> GetMeetupJoinedUsers(int id)
+	public async Task<List<UserProfileDTO>> GetMeetupJoinedUsers(int id)
 	{
         var meetup = await _repository.GetById(id);
-        return _mapper.Map<List<UserDTO>>(meetup!.JoinedUsers);
+		var joinedUsers = meetup!.JoinedUsers.Select(u => u.User).ToList();
+        return _mapper.Map<List<UserProfileDTO>>(joinedUsers);
     }
 }
 
