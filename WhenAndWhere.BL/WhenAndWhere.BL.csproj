@@ -21,4 +21,10 @@
     <ProjectReference Include="..\WhenAndWhere.Infrastructure\WhenAndWhere.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Facades\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Facades\" />
+  </ItemGroup>
 </Project>

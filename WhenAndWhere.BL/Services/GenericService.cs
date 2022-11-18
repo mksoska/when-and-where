@@ -6,8 +6,8 @@ namespace WhenAndWhere.BL.Services;
 
 public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
 {
-    private readonly IMapper _mapper;
-    private readonly IRepository<TEntity> _repository;
+    protected readonly IMapper _mapper;
+    protected readonly IRepository<TEntity> _repository;
 
     public GenericService(IRepository<TEntity> repository, IMapper mapper)
     {

@@ -10,6 +10,8 @@ using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 using WhenAndWhere.DAL.Models;
 using WhenAndWhere.DTO.Filter;
+using WhenAndWhere.Infrastructure.EFCore.Query;
+using WhenAndWhere.Infrastructure.Query;
 
 namespace WhenAndWhere.Infrastructure.EFCore
 {
@@ -25,15 +27,25 @@ namespace WhenAndWhere.Infrastructure.EFCore
         {
             var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
                 .UseSqlite(_connection)
+                .UseLazyLoadingProxies()
                 .Options;
 
             builder.Register<WhenAndWhereDBContext>(ctx => new WhenAndWhereDBContext(dbContextOptions))
                 .InstancePerDependency()
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
+
+            builder.RegisterGeneric(typeof(DbContextOptions<>))
+                .As(typeof(DbContextOptions<>))
+                .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
+
             builder.RegisterType<EFUnitOfWork>()
                 .InstancePerLifetimeScope() // This ensures only one UoW per Repos, as SQLite does not support nested transactions
                 .As<IUnitOfWork>()
                 //.As<IEFCoreUnitOfWork>() // This registres UnitOfWork for both interfaces. One "internal" and one "external"
+                .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
+
+            builder.RegisterGeneric(typeof(EntityFrameworkQuery<>))
+                .As(typeof(IQuery<>))
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
 
             builder.RegisterGeneric(typeof(EFGenericRepository<>))

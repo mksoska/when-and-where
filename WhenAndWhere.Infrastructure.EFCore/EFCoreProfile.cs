@@ -12,6 +12,11 @@ namespace WhenAndWhere.Infrastructure.EFCore
         public EFCoreProfile()
         {
             CreateMap<AddressDTO, Address>().ReverseMap();
+            CreateMap<MeetupDTO, Meetup>().ReverseMap();
+            CreateMap<OptionDTO, Option>().ReverseMap();
+            CreateMap<RoleDTO, Role>().ReverseMap();
+            CreateMap<UserDTO, User>().ReverseMap();
+            CreateMap<UserProfileDTO, User>().ReverseMap();
             CreateMap<QueryResultDto<UserDTO>, IEnumerable<User>>().ReverseMap();
         }
     }

@@ -34,6 +34,10 @@ public class Bootstrapper : IDisposable
             .As(typeof(IGenericService<,>))
             .InstancePerLifetimeScope();
 
+        builder.RegisterType<MeetupService>()
+            .As<MeetupService>()
+            .InstancePerLifetimeScope();
+
         // Email
         //builder.RegisterType<EmailService>()
         //    .As<IEmailService>();
