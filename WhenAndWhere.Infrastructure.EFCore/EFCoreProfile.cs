@@ -7,7 +7,7 @@ using WhenAndWhere.DTO.Filter;
 namespace WhenAndWhere.Infrastructure.EFCore
 {
     // Configuration for AutoMapper
-    internal class EFCoreProfile : Profile
+    public class EFCoreProfile : Profile
     {
         public EFCoreProfile()
         {

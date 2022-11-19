@@ -3,13 +3,18 @@ using WhenAndWhere.DAL.Models;
 using WhenAndWhere.BL.Services;
 using AutoMapper;
 using FluentAssertions;
+using WhenAndWhere.DTO;
+using WhenAndWhere.Infrastructure.EFCore;
 
 namespace WhenAndWhere.BL.Tests
 {
     public class UserServiceTests
     {
         Mock<IRepository<User>> _userRepositoryMock;
-        IMapper _mapper;
+        IMapper _mapper = new Mapper(new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new EFCoreProfile());
+        }));
 
         public UserServiceTests()
         {
