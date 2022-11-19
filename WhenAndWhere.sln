@@ -15,11 +15,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.Infrastructure.EFCore.Test", "WhenAndWhere.Infrastructure.EFCore.Test\WhenAndWhere.Infrastructure.EFCore.Test.csproj", "{29AA7BFB-D89E-44D4-B44B-58B9FAF11AAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.BL", "WhenAndWhere.BL\WhenAndWhere.BL.csproj", "{B8FA6FE9-0343-4C02-BBBE-123FF8E48A63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.BL", "WhenAndWhere.BL\WhenAndWhere.BL.csproj", "{B8FA6FE9-0343-4C02-BBBE-123FF8E48A63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere", "WhenAndWhere\WhenAndWhere.csproj", "{71D9B76C-ABB3-476E-BE7D-C62D73CEF39A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere", "WhenAndWhere\WhenAndWhere.csproj", "{71D9B76C-ABB3-476E-BE7D-C62D73CEF39A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.DTO", "WhenAndWhere.DTO\WhenAndWhere.DTO.csproj", "{B1D55E47-5842-45B4-9A34-21E3B99D1179}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere.DTO", "WhenAndWhere.DTO\WhenAndWhere.DTO.csproj", "{B1D55E47-5842-45B4-9A34-21E3B99D1179}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.BL.Tests", "WhenAndWhere.BL.Tests\WhenAndWhere.BL.Tests.csproj", "{5DB90544-D0EB-4B7A-B659-D2FC685BA504}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +57,10 @@ Global
 		{B1D55E47-5842-45B4-9A34-21E3B99D1179}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1D55E47-5842-45B4-9A34-21E3B99D1179}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1D55E47-5842-45B4-9A34-21E3B99D1179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
