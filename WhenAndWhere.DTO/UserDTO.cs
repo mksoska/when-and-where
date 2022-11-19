@@ -8,6 +8,4 @@ public class UserDTO
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
     public byte[] Avatar { get; set; }
-    public List<AddressDTO> OwnedMeetups { get; set; }
-    public List<OptionDTO> CreatedOptions { get; set; }
 }

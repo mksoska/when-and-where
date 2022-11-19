@@ -16,7 +16,6 @@ namespace WhenAndWhere.Infrastructure.EFCore
             CreateMap<OptionDTO, Option>().ReverseMap();
             CreateMap<RoleDTO, Role>().ReverseMap();
             CreateMap<UserDTO, User>().ReverseMap();
-            CreateMap<UserProfileDTO, User>().ReverseMap();
             CreateMap<QueryResultDto<UserDTO>, IEnumerable<User>>().ReverseMap();
         }
     }

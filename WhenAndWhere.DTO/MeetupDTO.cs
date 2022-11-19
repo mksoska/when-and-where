@@ -10,8 +10,5 @@ public class MeetupDTO
     public DateTime OptionsTo { get; set; }
     public byte[] Logo { get; set; }
     public MeetupType Type { get; set; }
-    public UserProfileDTO Owner { get; set; }
-    public List<OptionDTO> Options { get; set; }
-    public List<RoleDTO> Roles { get; set; }
-    public List<UserProfileDTO> users { get; set; }
+    public UserDTO Owner { get; set; }
 }

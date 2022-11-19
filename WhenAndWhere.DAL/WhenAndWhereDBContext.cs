@@ -83,6 +83,11 @@ public class WhenAndWhereDBContext : DbContext
             .WithMany(meetup => meetup.AssignedUsers)
             .HasForeignKey(um => um.SecondId);
 
+        modelBuilder.Entity<Role>()
+            .HasOne(role => role.Meetup)
+            .WithMany(meetup => meetup.Roles)
+            .HasForeignKey(meetup => meetup.MeetupId);
+
         modelBuilder.Seed();
 
         base.OnModelCreating(modelBuilder);
