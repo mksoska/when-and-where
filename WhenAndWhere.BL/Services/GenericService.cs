@@ -22,21 +22,12 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _mapper.Map<List<TDto>>(entities);
     }
 
-    public async Task<List<TPropertyDto>> GetPropertyManyToMany<TPropertyDto>(int id, string associationEntity, string property)
+    public async Task<TPropertyDto> GetProperty<TPropertyDto>(int id, string property)
     {
         var entity = await _repository.GetById(id);
         Guard.Against.Null(entity);
-        var associationEntityList = entity.GetType().GetProperty(associationEntity).GetValue(entity);
-        var propertyList = ((IEnumerable<object>)associationEntityList).Select(ae => ae.GetType().GetProperty(property).GetValue(ae));
-        return _mapper.Map<List<TPropertyDto>>(propertyList);
-    }
-
-    public async Task<List<TPropertyDto>> GetPropertyOnetoMany<TPropertyDto>(int id, string property)
-    {
-        var entity = await _repository.GetById(id);
-        Guard.Against.Null(entity);
-        var propertyList = entity.GetType().GetProperty(property).GetValue(entity);
-        return _mapper.Map<List<TPropertyDto>>(propertyList);
+        var propertyValue = entity.GetType().GetProperty(property).GetValue(entity);
+        return _mapper.Map<TPropertyDto>(propertyValue);
     }
 
     public async Task<TDto> GetById(int id)

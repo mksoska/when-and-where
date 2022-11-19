@@ -15,39 +15,30 @@ public class UserService : GenericService<UserDTO, User>
 
     public async Task<List<MeetupDTO>> GetUserJoinedMeetups(int id)
     {
-        var user = await _repository.GetById(id);
-        Guard.Against.Null(user);
-        var joinedMeetups = user.JoinedMeetups.Select(um => um.Meetup).ToList();
-        return _mapper.Map<List<MeetupDTO>>(joinedMeetups);
+        var joinedMeetups = await GetProperty<List<UserMeetupDTO>>(id, "JoinedMeetups");
+        return joinedMeetups.Select(um => um.Meetup).ToList();
     }
 
     public async Task<List<MeetupDTO>> GetUserOwnedMeetups(int id)
     {
-        var user = await _repository.GetById(id);
-        Guard.Against.Null(user);
-        return _mapper.Map<List<MeetupDTO>>(user.OwnedMeetups);
+        return await GetProperty<List<MeetupDTO>>(id, "OwnedMeetups");
     }
 
     public async Task<List<OptionDTO>> GetUserCreatedOptions(int id)
     {
-        var user = await _repository.GetById(id);
-        Guard.Against.Null(user);
-        return _mapper.Map<List<OptionDTO>>(user.CreatedOptions);
+        return await GetProperty<List<OptionDTO>>(id, "CreatedOptions");
     }
 
     public async Task<List<OptionDTO>> GetUserVotedOptions(int id)
     {
-        var user = await _repository.GetById(id);
-        Guard.Against.Null(user);
-        var votedOptions = user.VotedOptions.Select(uo => uo.Option);
-        return _mapper.Map<List<OptionDTO>>(votedOptions);
+        var votedOptions = await GetProperty<List<UserOptionDTO>>(id, "VotedOptions");
+        return votedOptions.Select(uo => uo.Option).ToList();
     }
 
     public async Task<List<RoleDTO>> GetUserAssignedRoles(int id)
     {
-        var user = await _repository.GetById(id);
-        Guard.Against.Null(user);
-        return _mapper.Map<List<RoleDTO>>(user.AssignedRoles);
+        var assignedRoles = await GetProperty<List<UserRoleDTO>>(id, "AssignedRoles");
+        return assignedRoles.Select(ur => ur.Role).ToList();
     }
 }
 

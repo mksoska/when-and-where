@@ -14,8 +14,8 @@ public class RoleService : GenericService<RoleDTO, Role>
 
     public async Task<List<UserDTO>> GetAssignedUsers(int id)
     {
-        var role = await _repository.GetById(id);
-        return _mapper.Map<List<UserDTO>>(role.AssignedUsers);
+        var assignedUsers = await GetProperty<List<UserRoleDTO>>(id, "AssignedUsers");
+        return assignedUsers.Select(ur => ur.User).ToList();
     }
 
     public async Task<List<RoleDTO>> GetRoleByName(RoleEnum name)
@@ -24,5 +24,6 @@ public class RoleService : GenericService<RoleDTO, Role>
         var filtered = roles.Where(role => role.RoleName == name);
 
         return _mapper.Map<List<RoleDTO>>(filtered);
+        //Use Query with QueryObject instead
     }
 }

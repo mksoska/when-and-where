@@ -15,22 +15,18 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
 
 	public async Task<List<OptionDTO>> GetMeetupOptions(int id)
 	{
-		var meetup = await _repository.GetById(id);
-        Guard.Against.Null(meetup);
-        return _mapper.Map<List<OptionDTO>>(meetup.Options);
-	}
-
-	public async Task<List<UserDTO>> GetMeetupJoinedUsers(int id)
-	{
-		return await GetPropertyManyToMany<UserDTO>(id, "JoinedUsers", "User");
+        return await GetProperty<List<OptionDTO>>(id, "Options");
     }
 
-	public async Task<List<RoleDTO>> GetMeetupRoles(int id)
+    public async Task<List<UserDTO>> GetMeetupJoinedUsers(int id)
 	{
-		return await GetPropertyOnetoMany<RoleDTO>(id, "Roles");
-		//var meetup = await _repository.GetById(id);
-  //      Guard.Against.Null(meetup);
-  //      return _mapper.Map<List<RoleDTO>>(meetup.Roles);
+        var joinedUsers = await GetProperty<List<UserMeetupDTO>>(id, "JoinedUsers");
+		return joinedUsers.Select(um => um.User).ToList();
+    }
+
+    public async Task<List<RoleDTO>> GetMeetupRoles(int id)
+	{
+		return await GetProperty<List<RoleDTO>>(id, "Roles");
 	}
 }
 

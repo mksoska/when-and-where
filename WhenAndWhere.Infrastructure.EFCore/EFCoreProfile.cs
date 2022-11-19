@@ -7,7 +7,7 @@ using WhenAndWhere.DTO.Filter;
 namespace WhenAndWhere.Infrastructure.EFCore
 {
     // Configuration for AutoMapper
-    internal class EFCoreProfile : Profile
+    public class EFCoreProfile : Profile
     {
         public EFCoreProfile()
         {
@@ -17,6 +17,9 @@ namespace WhenAndWhere.Infrastructure.EFCore
             CreateMap<RoleDTO, Role>().ReverseMap();
             CreateMap<UserDTO, User>().ReverseMap();
             CreateMap<QueryResultDto<UserDTO>, IEnumerable<User>>().ReverseMap();
+            CreateMap<UserMeetupDTO, UserMeetup>().ReverseMap();
+            CreateMap<UserOptionDTO, UserOption>().ReverseMap();
+            CreateMap<UserRoleDTO, UserRole>().ReverseMap();
         }
     }
 }
