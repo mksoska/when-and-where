@@ -2,6 +2,7 @@
 using FluentAssertions;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL.Models;
+using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.EFCore;
 using WhenAndWhere.Infrastructure.Repository;
 
@@ -53,5 +54,39 @@ public class UserServiceTests
         actual.Should().HaveCount(2);
             
         _userRepositoryMock.Verify(x => x.GetAll(), Times.Once());
+    }
+    
+    [Fact]
+    public async Task GetUserById()
+    {
+        var user = new User
+        {
+            Id = 3,
+            Name = "Pepek",
+            Surname = "Bezlepek",
+            Email = "laktoza@akoze.vobec",
+            PhoneNumber = "1234567892",
+            Avatar = new byte[] {0xFE, 0xDC, 0xEA}
+        };
+        var expected = new UserDTO
+        {
+            Id = 3,
+            Name = "Pepek",
+            Surname = "Bezlepek",
+            Email = "laktoza@akoze.vobec",
+            PhoneNumber = "1234567892",
+            Avatar = new byte[] {0xFE, 0xDC, 0xEA}
+        };
+        
+        _userRepositoryMock
+            .Setup(x => x.GetById(3).Result)
+            .Returns(user);
+
+        var service = new UserService(_userRepositoryMock.Object, _mapper);
+        var actual = await service.GetById(3);
+
+        actual.Should().Be(expected);
+            
+        _userRepositoryMock.Verify(x => x.GetById(3), Times.Once());
     }
 }
