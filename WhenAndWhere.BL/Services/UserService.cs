@@ -13,29 +13,29 @@ public class UserService : GenericService<UserDTO, User>
     {
     }
 
-    public async Task<List<MeetupDTO>> GetUserJoinedMeetups(int id)
+    public async Task<List<MeetupDTO>> GetJoinedMeetups(int id)
     {
         var joinedMeetups = await GetProperty<List<UserMeetupDTO>>(id, "JoinedMeetups");
         return joinedMeetups.Select(um => um.Meetup).ToList();
     }
 
-    public async Task<List<MeetupDTO>> GetUserOwnedMeetups(int id)
+    public async Task<List<MeetupDTO>> GetOwnedMeetups(int id)
     {
         return await GetProperty<List<MeetupDTO>>(id, "OwnedMeetups");
     }
 
-    public async Task<List<OptionDTO>> GetUserCreatedOptions(int id)
+    public async Task<List<OptionDTO>> GetCreatedOptions(int id)
     {
         return await GetProperty<List<OptionDTO>>(id, "CreatedOptions");
     }
 
-    public async Task<List<OptionDTO>> GetUserVotedOptions(int id)
+    public async Task<List<OptionDTO>> GetVotedOptions(int id)
     {
         var votedOptions = await GetProperty<List<UserOptionDTO>>(id, "VotedOptions");
         return votedOptions.Select(uo => uo.Option).ToList();
     }
 
-    public async Task<List<RoleDTO>> GetUserAssignedRoles(int id)
+    public async Task<List<RoleDTO>> GetAssignedRoles(int id)
     {
         var assignedRoles = await GetProperty<List<UserRoleDTO>>(id, "AssignedRoles");
         return assignedRoles.Select(ur => ur.Role).ToList();

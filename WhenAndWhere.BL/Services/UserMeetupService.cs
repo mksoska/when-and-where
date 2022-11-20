@@ -27,15 +27,15 @@ public class UserMeetupService : GenericService<UserMeetupDTO, UserMeetup>
 
     public async Task AcceptInvitation(int userId, int meetupId)
     { 
-        await UpdateInvitationState(userId, meetupId, StateEnum.Accepted);
+        await UpdateState(userId, meetupId, StateEnum.Accepted);
     }
 
     public async Task DeclineInvitation(int userId, int meetupId)
     {
-        await UpdateInvitationState(userId, meetupId, StateEnum.Declined);
+        await UpdateState(userId, meetupId, StateEnum.Declined);
     }
 
-    private async Task UpdateInvitationState(int userId, int meetupId, StateEnum newState)
+    private async Task UpdateState(int userId, int meetupId, StateEnum newState)
     {
         var userMeetup = await GetById(userId, meetupId);
         Guard.Against.Null(userMeetup);
