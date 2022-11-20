@@ -8,7 +8,7 @@ namespace WhenAndWhere.BL.Services;
 // Make abstract and change methods from public to protected?
 // Or use dependency injection instead of inheritance?
 // Or leave as it is?
-public abstract class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
+public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> where TDto : class where TEntity : class
 {
     private readonly IMapper _mapper;
     private readonly IRepository<TEntity> _repository;
@@ -25,7 +25,7 @@ public abstract class GenericService<TDto, TEntity> : IGenericService<TDto, TEnt
         return _mapper.Map<List<TDto>>(entities);
     }
 
-    public async Task<TPropertyDto> GetProperty<TPropertyDto>(int id, string property)
+    protected async Task<TPropertyDto> GetProperty<TPropertyDto>(int id, string property)
     {
         var entity = await _repository.GetById(id);
         Guard.Against.Null(entity);

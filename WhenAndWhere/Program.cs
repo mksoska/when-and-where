@@ -12,8 +12,8 @@ using var _ioc = new Bootstrapper(Bootstrapper.Provider.EFCore);
 using (var scope = _ioc.Container.BeginLifetimeScope())
 {
     var meetupService = scope.Resolve<MeetupService>();
-    var users = meetupService.GetMeetupJoinedUsers(2).Result;
-    var roles = meetupService.GetMeetupRoles(2).Result;
+    var users = meetupService.GetJoinedUsers(2).Result;
+    var roles = meetupService.GetRoles(2).Result;
 
     Console.WriteLine("Line");
 
