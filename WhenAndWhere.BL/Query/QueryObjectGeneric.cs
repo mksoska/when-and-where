@@ -1,7 +1,4 @@
-﻿using System;
-using AutoMapper;
-using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
+﻿using AutoMapper;
 using WhenAndWhere.DTO.Filter;
 using WhenAndWhere.Infrastructure.Query;
 
@@ -22,22 +19,20 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
     {
         var query = myQuery;
 
-        foreach (var col in filter.WhereColumns)
-        {
+        foreach (var col in filter.WhereColumns) {
             var propType = filter.GetType().GetProperty(col).GetType();
             var propValue = filter.GetType().GetProperty(col).GetValue(filter);
             Func<object, bool> predicate = obj => obj == col;
-            query = (IQuery<TEntity>?)query.GetType().GetMethod("Where")
+            query = (IQuery<TEntity>?) query.GetType().GetMethod("Where")
                 .MakeGenericMethod(propType)
-                .Invoke(query, new object[] { predicate, col });
+                .Invoke(query, new object[] {predicate, propValue});
         }
 
-        if (!string.IsNullOrWhiteSpace(filter.SortCriteria))
-        {
+        if (!string.IsNullOrWhiteSpace(filter.SortCriteria)) {
             query = query.OrderBy<string>(filter.SortCriteria, filter.SortAscending);
         }
-        if (filter.RequestedPageNumber.HasValue)
-        {
+
+        if (filter.RequestedPageNumber.HasValue) {
             query = query.Page(filter.RequestedPageNumber.Value, filter.PageSize);
         }
 
@@ -46,4 +41,3 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
         return mapper.Map<QueryResultDto<TEntityDto>>(query.Execute());
     }
 }
-
