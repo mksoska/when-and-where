@@ -20,10 +20,8 @@ public class RoleService : GenericService<RoleDTO, Role>
 
     public async Task<List<RoleDTO>> GetRoleByName(RoleEnum name)
     {
-        var roles = await _repository.GetAll();
-        var filtered = roles.Where(role => role.RoleName == name);
-
-        return _mapper.Map<List<RoleDTO>>(filtered);
+        var roles = await GetAll();
+        return roles.Where(role => role.RoleName == name).ToList();
         //Use Query with QueryObject instead
     }
 }

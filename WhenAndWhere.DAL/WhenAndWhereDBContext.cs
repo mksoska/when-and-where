@@ -54,7 +54,7 @@ public class WhenAndWhereDBContext : DbContext
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
-            .WithMany(option => option.UserOptions)
+            .WithMany(option => option.Voters)
             .HasForeignKey(userOption => userOption.SecondId);
 
         modelBuilder.Entity<Option>()

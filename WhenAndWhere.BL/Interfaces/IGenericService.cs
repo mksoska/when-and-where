@@ -7,9 +7,15 @@ public interface IGenericService<TDto, TEntity>
 
     Task<TDto> GetById(int id);
 
+    Task<TDto> GetById(int firstId, int secondId);
+
+    Task<TPropertyDto> GetProperty<TPropertyDto>(int id, string property);
+
     Task Create(TDto addressDto);
 
     Task Update(TDto addressDto);
     
     Task Delete(int id);
+
+    Task Delete(int firstId, int secondId);
 }

@@ -25,5 +25,5 @@ public class Option : IEntity
 
     public string Label { get; set; }
     public DateTime Time { get; set; }
-    public virtual List<UserOption> UserOptions { get; set; }
+    public virtual List<UserOption> Voters { get; set; }
 }

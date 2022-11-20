@@ -12,6 +12,8 @@ public interface IRepository<TEntity> where TEntity : class
 
     void Delete(object id);
 
+    void Delete(object firstId, object secondId);
+
     void Delete(TEntity entityToDelete);
 
     void Update(TEntity entityToUpdate);

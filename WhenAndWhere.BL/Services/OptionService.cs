@@ -12,6 +12,10 @@ public class OptionService : GenericService<OptionDTO, Option>
     {
     }
 
-
+    public async Task<List<UserDTO>> GetOptionVoters(int id)
+    {
+        var voters = await GetProperty<List<UserOptionDTO>>(id, "Voters");
+        return voters.Select(v => v.User).ToList();
+    }
 }
 

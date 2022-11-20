@@ -40,6 +40,12 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         Delete(entityToDelete);
     }
 
+    public virtual void Delete(object firstId, object secondId)
+    {
+        var entityToDelete = Uow.Context.Set<TEntity>().Find(firstId, secondId);
+        Delete(entityToDelete);
+    }
+
     public virtual void Delete(TEntity entityToDelete)
     {
         if (Uow.Context.Entry(entityToDelete).State == EntityState.Detached)
