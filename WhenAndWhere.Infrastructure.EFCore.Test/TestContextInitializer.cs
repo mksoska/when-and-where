@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
@@ -17,6 +18,7 @@ public class TestContextInitializer
 
         var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
             .UseInMemoryDatabase(databaseName: myDatabaseName)
+            .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .UseLazyLoadingProxies()
             .Options;
 

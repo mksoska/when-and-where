@@ -69,11 +69,13 @@ public class RepositoryTests : TestContextInitializer
 
         Assert.Equal(ExpectedUser, user);
     }
-    
+
+    //The EF Core in-memory database does not currently support cascade deletes in the database.
     [Fact]
     public async Task DeleteUser_Test()
     {
         var efrepository = new EFGenericRepository<User>(unitOfWork);
+        var efrepositoryUserMeetup = new EFGenericRepository<User>(unitOfWork);
         efrepository.Delete(3);
         await efrepository.Save();
         var user = efrepository.GetById(3).Result;
