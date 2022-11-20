@@ -1,5 +1,6 @@
 ﻿using System;
 using WhenAndWhere.BL.Services;
+using WhenAndWhere.DTO;
 
 namespace WhenAndWhere.BL.Facades;
 
@@ -16,6 +17,10 @@ public class AdministratorFacade
 
     public AdministratorFacade()
 	{
+        //public async Task<List<MeetupDTO>> GetAllMeetupsWhereAdmin(int userId)
+        //{
+
+        //}
 	}
 }
 
