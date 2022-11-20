@@ -85,7 +85,7 @@ public class UserServiceTests
         var service = new UserService(_userRepositoryMock.Object, _mapper);
         var actual = await service.GetById(3);
 
-        actual.Should().Be(expected);
+        actual.Should().BeEquivalentTo(expected);
             
         _userRepositoryMock.Verify(x => x.GetById(3), Times.Once());
     }
