@@ -1,50 +1,57 @@
-﻿using WhenAndWhere.Infrastructure.Repository;
-using WhenAndWhere.DAL.Models;
-using WhenAndWhere.BL.Services;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentAssertions;
-using WhenAndWhere.DTO;
+using WhenAndWhere.BL.Services;
+using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore;
+using WhenAndWhere.Infrastructure.Repository;
 
-namespace WhenAndWhere.BL.Tests
+namespace WhenAndWhere.BL.Tests;
+
+public class UserServiceTests
 {
-    public class UserServiceTests
+    Mock<IRepository<User>> _userRepositoryMock;
+    IMapper _mapper = new Mapper(new MapperConfiguration(cfg =>
     {
-        Mock<IRepository<User>> _userRepositoryMock;
-        IMapper _mapper = new Mapper(new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new EFCoreProfile());
-        }));
+        cfg.AddProfile(new EFCoreProfile());
+    }));
 
-        public UserServiceTests()
-        {
-            _userRepositoryMock = new Mock<IRepository<User>>();
-        }
+    public UserServiceTests()
+    {
+        _userRepositoryMock = new Mock<IRepository<User>>();
+    }
 
-        [Fact]
-        public async Task GetUserExisting()
-        {
-            var expected = new User
+    [Fact]
+    public async Task GetAllUsers()
+    {
+        _userRepositoryMock
+            .Setup(x => x.GetAll().Result)
+            .Returns(new List<User>
             {
-                Id = 9,
-                Name = "Jozo",
-                Surname = "Beznadejny",
-                Email = "jozko@coso.mnou",
-                PhoneNumber = "1234567890",
-                Avatar = new byte[] { 0xFE, 0xDC, 0xEA }
-            };
-
-            _userRepositoryMock
-                .Setup(x => x.GetAll().Result)
-                .Returns(new List<User>
+                new()
                 {
-                    expected,
-                });
+                    Id = 9,
+                    Name = "Jozo",
+                    Surname = "Beznadejny",
+                    Email = "jozko@coso.mnou",
+                    PhoneNumber = "1234567890",
+                    Avatar = new byte[] {0xFE, 0xDC, 0xEA}
+                },
+                new()
+                {
+                    Id = 10,
+                    Name = "Milan",
+                    Surname = "Beznadejny",
+                    Email = "milanko@byvaloaj.lepsie",
+                    PhoneNumber = "1234567891",
+                    Avatar = new byte[] {0xFE, 0xDC, 0xEA}
+                }
+            });
 
-            var service = new UserService(_userRepositoryMock.Object, _mapper);
-            var actual = await service.GetAll();
+        var service = new UserService(_userRepositoryMock.Object, _mapper);
+        var actual = await service.GetAll();
 
-            actual.Should().HaveCount(1);
-        }
+        actual.Should().HaveCount(2);
+            
+        _userRepositoryMock.Verify(x => x.GetAll(), Times.Once());
     }
 }
