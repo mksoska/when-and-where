@@ -12,11 +12,11 @@ using var _ioc = new Bootstrapper(Bootstrapper.Provider.EFCore);
 using (var scope = _ioc.Container.BeginLifetimeScope())
 {
     var meetupService = scope.Resolve<MeetupService>();
-    var users = meetupService.GetJoinedUsers(2).Result;
+    var users = meetupService.GetInvitedUsers(2).Result;
     var roles = meetupService.GetRoles(2).Result;
 
     Console.WriteLine("Line");
 
-    users.ForEach(u => Console.WriteLine(u.Name));
+    users.ForEach(um => Console.WriteLine(um.Meetup.Name));
     roles.ForEach(r => Console.WriteLine(r.RoleName));
 }

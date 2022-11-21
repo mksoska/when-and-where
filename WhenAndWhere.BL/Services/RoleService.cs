@@ -12,16 +12,8 @@ public class RoleService : GenericService<RoleDTO, Role>
     {
     }
 
-    public async Task<List<UserDTO>> GetAssignedUsers(int id)
+    public async Task<List<UserRoleDTO>> GetAssignedUsers(int id)
     {
-        var assignedUsers = await GetProperty<List<UserRoleDTO>>(id, "AssignedUsers");
-        return assignedUsers.Select(ur => ur.User).ToList();
-    }
-
-    public async Task<List<RoleDTO>> GetRoleByName(RoleEnum name)
-    {
-        var roles = await GetAll();
-        return roles.Where(role => role.RoleName == name).ToList();
-        //Use Query with QueryObject instead
+        return await GetProperty<List<UserRoleDTO>>(id, "AssignedUsers");
     }
 }

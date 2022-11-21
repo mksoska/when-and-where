@@ -17,13 +17,11 @@ public class Option : IEntity
     
     [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; }
-
-    public int AddressId { get; set; }
-
-    [ForeignKey(nameof(AddressId))]
+    
     public virtual Address Address { get; set; }
 
     public string Label { get; set; }
-    public DateTime Time { get; set; }
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
     public virtual List<UserOption> Voters { get; set; }
 }

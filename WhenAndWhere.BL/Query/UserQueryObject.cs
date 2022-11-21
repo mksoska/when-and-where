@@ -8,15 +8,7 @@ namespace WhenAndWhere.BL.Query;
 
 public class UserQueryObject : QueryObjectGeneric<UserDTO, User>
 {
-    public UserQueryObject(IMapper mapper, IQuery<User> myQuery) : base(mapper, myQuery) { }
-
-    public QueryResultDto<UserDTO> UserNameFilter(string name)
+    public UserQueryObject(IMapper mapper, IQuery<User> myQuery) : base(mapper, myQuery)
     {
-        var queryDto = new QueryFilterDto<UserDTO>
-        {
-            Values = new UserDTO {Name = name}, 
-            WhereColumns = new List<string> {"Name"}
-        };
-        return ExecuteQuery(queryDto);
     }
 }

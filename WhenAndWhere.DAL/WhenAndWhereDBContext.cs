@@ -30,12 +30,12 @@ public class WhenAndWhereDBContext : DbContext
 
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.User)
-            .WithMany(user => user.JoinedMeetups)
+            .WithMany(user => user.InvitedMeetups)
             .HasForeignKey(um => um.FirstId);
         
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.Meetup)
-            .WithMany(meetup => meetup.JoinedUsers)
+            .WithMany(meetup => meetup.InvitedUsers)
             .HasForeignKey(um => um.SecondId);
 
         modelBuilder.Entity<Meetup>()

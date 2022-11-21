@@ -18,10 +18,9 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
         return await GetProperty<List<OptionDTO>>(id, "Options");
     }
 
-    public async Task<List<UserDTO>> GetJoinedUsers(int id)
+    public async Task<List<UserMeetupDTO>> GetInvitedUsers(int id)
 	{
-        var joinedUsers = await GetProperty<List<UserMeetupDTO>>(id, "JoinedUsers");
-		return joinedUsers.Select(um => um.User).ToList();
+        return await GetProperty<List<UserMeetupDTO>>(id, "InvitedUsers");
     }
 
     public async Task<List<RoleDTO>> GetRoles(int id)

@@ -53,6 +53,14 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
             query = query.Select(filter.SelectColumns);    
         }
 
-        return mapper.Map<QueryResultDto<TEntityDto>>(query.Execute());
+        var items = mapper.Map<IEnumerable<TEntityDto>>(query.Execute());
+
+        return new QueryResultDto<TEntityDto>
+        {
+            Items = items,
+            PageSize = filter.PageSize,
+            RequestedPageNumber = filter.RequestedPageNumber,
+            TotalItemsCount = items.Count()
+        };
     }
 }

@@ -14,7 +14,7 @@ public class User : IEntity
     public byte[] Avatar { get; set; }
 
     public virtual List<Meetup> OwnedMeetups { get; set; }
-    public virtual List<UserMeetup> JoinedMeetups { get; set; }
+    public virtual List<UserMeetup> InvitedMeetups { get; set; }
     public virtual List<UserOption> VotedOptions { get; set; }
     public virtual List<Option> CreatedOptions { get; set; }
 
