@@ -24,5 +24,5 @@ public class Meetup : IEntity
 
     public virtual List<Role> Roles { get; set; }
 
-    public virtual List<UserMeetup> JoinedUsers { get; set; }
+    public virtual List<UserMeetup> InvitedUsers { get; set; }
 }

@@ -1,13 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
+using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 
 namespace WhenAndWhere.Infrastructure.EFCore.Test;
 
 public class TestContextInitializer
 {
-    protected readonly WhenAndWhereDBContext dbContext;
+    protected WhenAndWhereDBContext dbContext;
+    protected EFUnitOfWork unitOfWork;
 
     public TestContextInitializer()
     {
@@ -15,6 +18,7 @@ public class TestContextInitializer
 
         var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
             .UseInMemoryDatabase(databaseName: myDatabaseName)
+            .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
             .UseLazyLoadingProxies()
             .Options;
 
@@ -27,7 +31,7 @@ public class TestContextInitializer
         var addressBrno = new Address { Id = 1, City = "Brno", Number = "9", State = "CZE", Street = "Ryšánková", ZipCode = "61300" };
         var addressBratislava = new Address { Id = 2, City = "Bratislava", Number = "7", State = "SK", Street = "Obchodná", ZipCode = "987654" };
 
-        var option1 = new Option { Id = 1, Label = "Spravna volba", Time = new DateTime(2022, 10, 12), Address = addressBrno };
+        var option1 = new Option { Id = 1, Label = "Spravna volba", Start = new DateTime(2022, 10, 12), Address = addressBrno };
 
         var meetupSlopanie = new Meetup { Id = 1, Name = "Slopanie", OptionsFrom = new DateTime(2022, 10, 9), OptionsTo = new DateTime(2022, 10, 18), Owner = userJohan, Type = MeetupType.Drinking, Options = new List<Option> { option1 }, Logo = new byte[] { 0xFE, 0xDC, 0xEA } };
 
@@ -35,7 +39,7 @@ public class TestContextInitializer
         var matysSlopanie = new UserMeetup { FirstId = userMatys.Id, SecondId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
         var davidSlopanie = new UserMeetup { FirstId = userDavid.Id, SecondId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
 
-        meetupSlopanie.JoinedUsers = new List<UserMeetup> { johanSlopanie, matysSlopanie, davidSlopanie };
+        meetupSlopanie.InvitedUsers = new List<UserMeetup> { johanSlopanie, matysSlopanie, davidSlopanie };
 
 
         dbContext.User.Add(userJohan);
@@ -52,5 +56,7 @@ public class TestContextInitializer
         dbContext.UserMeetup.Add(davidSlopanie);
 
         dbContext.SaveChanges();
+
+        unitOfWork = new EFUnitOfWork(dbContext);
     }
 }

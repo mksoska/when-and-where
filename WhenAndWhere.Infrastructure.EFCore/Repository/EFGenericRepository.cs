@@ -1,64 +1,69 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WhenAndWhere.DAL;
+using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
+using WhenAndWhere.Infrastructure.UnitOfWork;
 
 namespace WhenAndWhere.Infrastructure.EFCore.Repository;
 
 public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    internal WhenAndWhereDBContext context;
-    internal DbSet<TEntity> dbSet;
+    internal readonly EFUnitOfWork Uow;
 
-    public EFGenericRepository(WhenAndWhereDBContext dbcontext)
+    public EFGenericRepository(IUnitOfWork uow)
     {
-        context = dbcontext;
-        dbSet = context.Set<TEntity>();
+        this.Uow = (EFUnitOfWork) uow;
     }
 
-    public virtual TEntity GetById(object id)
+    public virtual async Task<TEntity?> GetById(object id)
     {
-        return dbSet.Find(id);
+        return await Uow.Context.Set<TEntity>().FindAsync(id);
     }
 
-    public virtual TEntity GetById(object firstId, object secondId)
+    public virtual async Task<TEntity?> GetById(object firstId, object secondId)
     {
-        return dbSet.Find(firstId, secondId);
+        return await Uow.Context.Set<TEntity>().FindAsync(firstId, secondId);
     }
 
-    public virtual List<TEntity> GetAll()
+    public virtual Task<List<TEntity>> GetAll()
     {
-        return dbSet.ToList();
+        return Uow.Context.Set<TEntity>().ToListAsync();
     }
 
     public virtual void Insert(TEntity entity)
     {
-        dbSet.Add(entity);
+        Uow.Context.Set<TEntity>().Add(entity);
     }
 
     public virtual void Delete(object id)
     {
-        TEntity entityToDelete = dbSet.Find(id);
+        var entityToDelete = Uow.Context.Set<TEntity>().Find(id);
+        Delete(entityToDelete);
+    }
+
+    public virtual void Delete(object firstId, object secondId)
+    {
+        var entityToDelete = Uow.Context.Set<TEntity>().Find(firstId, secondId);
         Delete(entityToDelete);
     }
 
     public virtual void Delete(TEntity entityToDelete)
     {
-        if (context.Entry(entityToDelete).State == EntityState.Detached)
+        if (Uow.Context.Entry(entityToDelete).State == EntityState.Detached)
         {
-            dbSet.Attach(entityToDelete);
+            Uow.Context.Attach(entityToDelete);
         }
-        dbSet.Remove(entityToDelete);
-        context.Entry(entityToDelete).State = EntityState.Deleted;
+        Uow.Context.Remove(entityToDelete);
+        Uow.Context.Entry(entityToDelete).State = EntityState.Deleted;
     }
 
     public virtual void Update(TEntity entityToUpdate)
     {
-        dbSet.Attach(entityToUpdate);
-        context.Entry(entityToUpdate).State = EntityState.Modified;
+        Uow.Context.Set<TEntity>().Attach(entityToUpdate);
+        Uow.Context.Entry(entityToUpdate).State = EntityState.Modified;
     }
 
     public virtual async Task Save()
     {
-        await context.SaveChangesAsync();
+        await Uow.CommitAsync();
     }
 }

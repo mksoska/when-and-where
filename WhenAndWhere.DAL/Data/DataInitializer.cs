@@ -16,7 +16,7 @@ public static class DataInitializer
             Surname = "Kovalcik",
             Email = "palenka@kde.je",
             PhoneNumber = "+421123456789",
-            Avatar = new byte[] {0xAB, 0xCD, 0xEF}
+            Avatar = new byte[] { 0xAB, 0xCD, 0xEF }
         });
 
         modelBuilder.Entity<User>().HasData(new
@@ -26,7 +26,7 @@ public static class DataInitializer
             Surname = "Valkovic",
             Email = "raz@vyrastiem.dufam",
             PhoneNumber = "+421987654321",
-            Avatar = new byte[] {0xFE, 0xDC, 0xBA}
+            Avatar = new byte[] { 0xFE, 0xDC, 0xBA }
         });
 
         modelBuilder.Entity<Meetup>().HasData(new
@@ -35,7 +35,7 @@ public static class DataInitializer
             Name = "Bowling",
             OptionsFrom = new DateTime(2022, 1, 1),
             OptionsTo = new DateTime(2022, 1, 1),
-            Logo = new byte[] {0x00},
+            Logo = new byte[] { 0x00 },
             Type = MeetupType.Sport,
             OwnerId = 1
         });
@@ -46,7 +46,7 @@ public static class DataInitializer
             Name = "Snem Tvrdosinskych Alkoholikov",
             OptionsFrom = new DateTime(2022, 11, 11, 00, 00, 00),
             OptionsTo = new DateTime(2022, 11, 11, 23, 59, 59),
-            Logo = new byte[] {0x00},
+            Logo = new byte[] { 0x00 },
             Type = MeetupType.Drinking,
             OwnerId = 150
         });
@@ -58,13 +58,20 @@ public static class DataInitializer
             State = StateEnum.Accepted,
             DateInvited = new DateTime(2022, 11, 11, 12, 00, 00)
         });
-            
+
         modelBuilder.Entity<UserMeetup>().HasData(new
         {
             FirstId = 150,
             SecondId = 2,
             State = StateEnum.Accepted,
             DateInvited = new DateTime(2022, 11, 11, 12, 00, 00)
+        });
+
+        modelBuilder.Entity<Role>().HasData(new
+        {
+            Id = 1,
+            MeetupId = 2,
+            RoleName = RoleEnum.JoinedUser
         });
     }
 }

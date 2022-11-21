@@ -8,10 +8,10 @@ public class RepositoryTests : TestContextInitializer
     [Fact]
     public void UsersAttendMeetup_RepositoryGetById_Test()
     {
-        var efrepository = new EFGenericRepository<UserMeetup>(dbContext);
-        var result = efrepository.GetById(2, 1);
+        var efrepository = new EFGenericRepository<UserMeetup>(unitOfWork);
+        var result = efrepository.GetById(2, 1).Result;
 
-        var ExpectedResult = dbContext.UserMeetup
+        var ExpectedResult = unitOfWork.Context.UserMeetup
             .First(um => um.FirstId == 2 && um.SecondId == 1);
 
         Assert.Equal(ExpectedResult, result);
@@ -20,10 +20,10 @@ public class RepositoryTests : TestContextInitializer
     [Fact]
     public void MeetupHasAddress_RepositoryGetById_Test()
     {
-        var efrepository = new EFGenericRepository<Meetup>(dbContext);
-        var result = efrepository.GetById(1).Options.First(o => o.Id == 1);
+        var efrepository = new EFGenericRepository<Meetup>(unitOfWork);
+        var result = efrepository.GetById(1).Result.Options.First(o => o.Id == 1);
 
-        var ExpectedResult = dbContext.Option
+        var ExpectedResult = unitOfWork.Context.Option
             .First(o => o.Id == 1);
 
         Assert.Equal(ExpectedResult, result);
@@ -32,10 +32,10 @@ public class RepositoryTests : TestContextInitializer
     [Fact]
     public void GetAllMeetups_Test()
     {
-        var efrepository = new EFGenericRepository<Meetup>(dbContext);
-        var result = efrepository.GetAll();
+        var efrepository = new EFGenericRepository<Meetup>(unitOfWork);
+        var result = efrepository.GetAll().Result;
 
-        var ExpectedResult = dbContext.Meetup.ToList();
+        var ExpectedResult = unitOfWork.Context.Meetup.ToList();
 
         Assert.Equal(ExpectedResult, result);
     }
@@ -43,7 +43,7 @@ public class RepositoryTests : TestContextInitializer
     [Fact]
     public void InsertUser_Test()
     {
-        var efrepository = new EFGenericRepository<User>(dbContext);
+        var efrepository = new EFGenericRepository<User>(unitOfWork);
         var user = new User
         {
             Name = "Marek", 
@@ -53,7 +53,7 @@ public class RepositoryTests : TestContextInitializer
             Avatar = new byte[] { 0xFE, 0xDC, 0xEA }
         };
         efrepository.Insert(user);
-        var ExpectedUser = dbContext.User.Find(user.Id);
+        var ExpectedUser = unitOfWork.Context.User.Find(user.Id);
 
         Assert.Equal(ExpectedUser, user);
     }
@@ -61,22 +61,24 @@ public class RepositoryTests : TestContextInitializer
     [Fact]
     public void UpdateUser_Test()
     {
-        var efrepository = new EFGenericRepository<User>(dbContext);
-        var user = efrepository.GetById(1);
+        var efrepository = new EFGenericRepository<User>(unitOfWork);
+        var user = efrepository.GetById(1).Result;
         user.PhoneNumber = "4444444444";
         efrepository.Update(user);
-        var ExpectedUser = dbContext.User.Find(user.Id);
+        var ExpectedUser = unitOfWork.Context.User.Find(user.Id);
 
         Assert.Equal(ExpectedUser, user);
     }
-    
+
+    //The EF Core in-memory database does not currently support cascade deletes in the database.
     [Fact]
     public async Task DeleteUser_Test()
     {
-        var efrepository = new EFGenericRepository<User>(dbContext);
+        var efrepository = new EFGenericRepository<User>(unitOfWork);
+        var efrepositoryUserMeetup = new EFGenericRepository<User>(unitOfWork);
         efrepository.Delete(3);
         await efrepository.Save();
-        var user = efrepository.GetById(3);
+        var user = efrepository.GetById(3).Result;
         User ExpectedUser = null;
 
         Assert.Equal(ExpectedUser, user);

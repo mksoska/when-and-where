@@ -6,9 +6,6 @@ namespace WhenAndWhere.DAL;
 
 public class WhenAndWhereDBContext : DbContext
 {
-    private const string DatabaseName = "WhenAndWhereDB";
-    private const string ConnectionString = "Data Source=WhenAndWhere.sqlite;Cache=Shared";
-
     public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
     public DbSet<Option> Option { get; set; }
@@ -26,16 +23,6 @@ public class WhenAndWhereDBContext : DbContext
     {
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder
-                .UseSqlite(ConnectionString)
-                .UseLazyLoadingProxies();
-        }
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserMeetup>()
@@ -43,12 +30,12 @@ public class WhenAndWhereDBContext : DbContext
 
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.User)
-            .WithMany(user => user.JoinedMeetups)
+            .WithMany(user => user.InvitedMeetups)
             .HasForeignKey(um => um.FirstId);
         
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.Meetup)
-            .WithMany(meetup => meetup.JoinedUsers)
+            .WithMany(meetup => meetup.InvitedUsers)
             .HasForeignKey(um => um.SecondId);
 
         modelBuilder.Entity<Meetup>()
@@ -67,7 +54,7 @@ public class WhenAndWhereDBContext : DbContext
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
-            .WithMany(option => option.UserOptions)
+            .WithMany(option => option.Voters)
             .HasForeignKey(userOption => userOption.SecondId);
 
         modelBuilder.Entity<Option>()
@@ -95,6 +82,11 @@ public class WhenAndWhereDBContext : DbContext
             .HasOne(um => um.Role)
             .WithMany(meetup => meetup.AssignedUsers)
             .HasForeignKey(um => um.SecondId);
+
+        modelBuilder.Entity<Role>()
+            .HasOne(role => role.Meetup)
+            .WithMany(meetup => meetup.Roles)
+            .HasForeignKey(meetup => meetup.MeetupId);
 
         modelBuilder.Seed();
 

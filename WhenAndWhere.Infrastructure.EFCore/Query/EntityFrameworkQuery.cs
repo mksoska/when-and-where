@@ -1,7 +1,5 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection;
 using WhenAndWhere.DAL;
-using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore.ExpressionHelpers;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Query;
@@ -11,21 +9,6 @@ namespace WhenAndWhere.Infrastructure.EFCore.Query;
 public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : class, new()
 {
     protected WhenAndWhereDBContext Dbcontext { get; set; }
-
-    private EFUnitOfWork _unitOfWork;
-
-    protected EFUnitOfWork UnitOfWork 
-    { 
-        get 
-        { 
-            if (_unitOfWork != null)
-            {
-                _unitOfWork = new(Dbcontext);
-            }
-
-            return _unitOfWork;
-        } 
-    }
 
     public EntityFrameworkQuery(WhenAndWhereDBContext dbcontext)
     {

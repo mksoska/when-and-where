@@ -2,7 +2,7 @@
 
 public enum RoleEnum
 {
-    Admin,
+    Administrator,
     JoinedUser
 }
 
