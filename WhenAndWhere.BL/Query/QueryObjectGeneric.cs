@@ -49,7 +49,7 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
             query = query.Page(filter.RequestedPageNumber.Value, filter.PageSize);
         }
 
-        if (!filter.SelectColumns.IsNullOrEmpty()) {
+        if (filter.SelectColumns != null && filter.SelectColumns.Any()) {
             query = query.Select(filter.SelectColumns);    
         }
 
