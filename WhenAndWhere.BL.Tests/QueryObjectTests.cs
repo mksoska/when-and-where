@@ -39,6 +39,24 @@ public class QueryObjectTests : TestContextInitializer
         actual.Items.Should().HaveCount(2);
     }
 
+    //TODO: Discuss on seminar
+    [Fact]
+    public void MeetupOwnerFilterTest()
+    {
+        var meetupDto = new MeetupDTO { Owner = mapper.Map<UserDTO>(dbContext.User.Find(1)) };
+
+        var queryFilterDto = new QueryFilterDto<MeetupDTO>
+        {
+            Values = meetupDto,
+            WhereColumns = new List<string> { "Owner" },
+        };
+
+        var queryObject = new QueryObjectGeneric<MeetupDTO, Meetup>(mapper, new EntityFrameworkQuery<Meetup>(dbContext));
+        var actual = queryObject.ExecuteQuery(queryFilterDto);
+
+        actual.Items.Should().Equal(mapper.Map<MeetupDTO>(dbContext.Meetup.Find(1)));
+    }
+
     [Fact]
     public void UserNameOrderTest()
     {

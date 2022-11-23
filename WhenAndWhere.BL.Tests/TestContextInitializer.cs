@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
+using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore;
 
@@ -34,6 +35,17 @@ public class TestContextInitializer
             PhoneNumber = "0011223344"
         };
 
+        var meetup1 = new Meetup
+        {
+            Id = 1,
+            Name = "Komtr pivo",
+            Logo = new byte[] { 0xAA, 0xAA, 0xAA },
+            OwnerId = 1,
+            Type = MeetupType.Drinking,
+            OptionsFrom = new DateTime(2022, 9, 14),
+            OptionsTo = DateTime.Now
+        };
+
         var user2 = new User
         {
             Id = 2,
@@ -56,6 +68,7 @@ public class TestContextInitializer
         dbContext.User.Add(user1);
         dbContext.User.Add(user2);
         dbContext.User.Add(user3);
+        dbContext.Meetup.Add(meetup1);
 
         dbContext.SaveChanges();
     }
