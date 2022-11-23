@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using WhenAndWhere.BL.Query;
 using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
 using WhenAndWhere.DTO;
@@ -8,7 +9,8 @@ namespace WhenAndWhere.BL.Services;
 
 public class RoleService : GenericService<RoleDTO, Role>
 {
-    public RoleService(IRepository<Role> repository, IMapper mapper) : base(repository, mapper)
+    public RoleService(IRepository<Role> repository, IMapper mapper, 
+        QueryObjectGeneric<RoleDTO, Role> queryObject) : base(repository, mapper, queryObject)
     {
     }
 

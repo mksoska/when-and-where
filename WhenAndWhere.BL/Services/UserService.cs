@@ -4,12 +4,14 @@ using WhenAndWhere.DAL.Models;
 using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.Repository;
 using Ardalis.GuardClauses;
+using WhenAndWhere.BL.Query;
 
 namespace WhenAndWhere.BL.Services;
 
 public class UserService : GenericService<UserDTO, User>
 {
-    public UserService(IRepository<User> repository, IMapper mapper) : base(repository, mapper)
+    public UserService(IRepository<User> repository, IMapper mapper, 
+        QueryObjectGeneric<UserDTO, User> queryObject) : base(repository, mapper, queryObject)
     {
     }
 

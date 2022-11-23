@@ -48,7 +48,7 @@ public class UserServiceTests
                 }
             });
 
-        var service = new UserService(_userRepositoryMock.Object, _mapper);
+        var service = new UserService(_userRepositoryMock.Object, _mapper, null);
         var actual = await service.GetAll();
 
         actual.Should().HaveCount(2);
@@ -82,7 +82,7 @@ public class UserServiceTests
             .Setup(x => x.GetById(3).Result)
             .Returns(user);
 
-        var service = new UserService(_userRepositoryMock.Object, _mapper);
+        var service = new UserService(_userRepositoryMock.Object, _mapper, null);
         var actual = await service.GetById(3);
 
         actual.Should().BeEquivalentTo(expected);

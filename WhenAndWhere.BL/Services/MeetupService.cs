@@ -4,12 +4,15 @@ using WhenAndWhere.DAL.Models;
 using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.Repository;
 using Ardalis.GuardClauses;
+using WhenAndWhere.BL.Query;
+using WhenAndWhere.DTO.Filter;
 
 namespace WhenAndWhere.BL.Services;
 
 public class MeetupService : GenericService<MeetupDTO, Meetup>
 {
-    public MeetupService(IRepository<Meetup> repository, IMapper mapper) : base(repository, mapper)
+    public MeetupService(IRepository<Meetup> repository, IMapper mapper, 
+	    QueryObjectGeneric<MeetupDTO, Meetup> queryObject) : base(repository, mapper, queryObject)
 	{
 	}
 

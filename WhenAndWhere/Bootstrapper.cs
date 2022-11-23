@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Microsoft.Data.Sqlite;
 using WhenAndWhere.BL.Interfaces;
+using WhenAndWhere.BL.Query;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Models;
@@ -31,6 +32,9 @@ public class Bootstrapper : IDisposable
         // Register BL Services
         builder.RegisterGeneric(typeof(GenericService<,>))
             .As(typeof(IGenericService<,>))
+            .InstancePerLifetimeScope();
+
+        builder.RegisterGeneric(typeof(QueryObjectGeneric<,>))
             .InstancePerLifetimeScope();
 
         builder.RegisterType<MeetupService>()
