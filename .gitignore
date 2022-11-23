@@ -9,3 +9,6 @@ WhenAndWhere.DAL/*.sqlite
 /WhenAndWhere.DAL/Migrations
 /WhenAndWhere/Properties
 /WhenAndWhere/WhenAndWhere.csproj.user
+WhenAndWhere.sln.DotSettings.user
+global.json
+

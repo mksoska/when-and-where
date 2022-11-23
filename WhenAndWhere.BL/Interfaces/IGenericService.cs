@@ -1,4 +1,6 @@
-﻿namespace WhenAndWhere.BL.Interfaces;
+﻿using WhenAndWhere.DTO.Filter;
+
+namespace WhenAndWhere.BL.Interfaces;
 
 public interface IGenericService<TDto, TEntity> 
     where TDto : class  // TEntity is not used, but needed for Autofac to properly register component
@@ -16,4 +18,6 @@ public interface IGenericService<TDto, TEntity>
     Task Delete(int id);
 
     Task Delete(int firstId, int secondId);
+
+    QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto);
 }
