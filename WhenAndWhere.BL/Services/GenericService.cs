@@ -39,7 +39,7 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _mapper.Map<TPropertyDto>(propertyValue);
     }
 
-    protected QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto)
+    public QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto)
     {
         return _queryObject.ExecuteQuery(filterDto);
     }
