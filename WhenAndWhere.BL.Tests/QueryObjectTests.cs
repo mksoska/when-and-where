@@ -33,7 +33,7 @@ public class QueryObjectTests : TestContextInitializer
             SelectColumns = null
         };
 
-        var queryObject = new UserQueryObject(mapper, new EntityFrameworkQuery<User>(dbContext));
+        var queryObject = new QueryObjectGeneric<UserDTO, User>(mapper, new EntityFrameworkQuery<User>(dbContext));
         var actual = queryObject.ExecuteQuery(queryFilterDto);
 
         actual.Items.Should().HaveCount(2);
@@ -94,7 +94,7 @@ public class QueryObjectTests : TestContextInitializer
             }
         };
 
-        var queryObject = new UserQueryObject(mapper, new EntityFrameworkQuery<User>(dbContext));
+        var queryObject = new QueryObjectGeneric<UserDTO, User>(mapper, new EntityFrameworkQuery<User>(dbContext));
         var actual = queryObject.ExecuteQuery(queryFilterDto);
 
         actual.Items.Should().BeEquivalentTo(expected);
@@ -137,7 +137,7 @@ public class QueryObjectTests : TestContextInitializer
             }
         };
 
-        var queryObject = new UserQueryObject(mapper, new EntityFrameworkQuery<User>(dbContext));
+        var queryObject = new QueryObjectGeneric<UserDTO, User>(mapper, new EntityFrameworkQuery<User>(dbContext));
         var actual = queryObject.ExecuteQuery(queryFilterDto);
 
         actual.Items.Should().BeEquivalentTo(expected);
@@ -198,7 +198,7 @@ public class QueryObjectTests : TestContextInitializer
             }
         };
 
-        var queryObject = new UserQueryObject(mapper, new EntityFrameworkQuery<User>(dbContext));
+        var queryObject = new QueryObjectGeneric<UserDTO, User>(mapper, new EntityFrameworkQuery<User>(dbContext));
         var actual = queryObject.ExecuteQuery(queryFilterDto);
 
         actual.Items.Should().BeEquivalentTo(expected);
