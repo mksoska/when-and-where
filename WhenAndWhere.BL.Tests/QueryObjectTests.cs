@@ -22,15 +22,7 @@ public class QueryObjectTests : TestContextInitializer
             PhoneNumber = "0011223344"
         };
 
-        var expected = new QueryResultDto<UserDTO>
-        {
-            TotalItemsCount = 0,
-            RequestedPageNumber = null,
-            PageSize = 0,
-            Items = new List<UserDTO> {userDto}
-        };
-
-        var queryFilterDto = new QueryFilterDto<UserDTO>()
+        var queryFilterDto = new QueryFilterDto<UserDTO>
         {
             Values = userDto,
             WhereColumns = new List<string> {"Name"},
