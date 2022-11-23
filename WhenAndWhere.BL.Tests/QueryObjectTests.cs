@@ -99,7 +99,7 @@ public class QueryObjectTests : TestContextInitializer
 
         actual.Items.Should().BeEquivalentTo(expected);
     }
-    
+
     [Fact]
     public void UserPaginationTest()
     {
@@ -123,7 +123,7 @@ public class QueryObjectTests : TestContextInitializer
             SortAscending = true,
             SelectColumns = null
         };
-        
+
         var expected = new List<UserDTO>
         {
             new()
@@ -134,6 +134,67 @@ public class QueryObjectTests : TestContextInitializer
                 Email = "aj@repujem.trosku",
                 Avatar = new byte[] {0xAA, 0xAA, 0xAA},
                 PhoneNumber = "0011223366"
+            }
+        };
+
+        var queryObject = new UserQueryObject(mapper, new EntityFrameworkQuery<User>(dbContext));
+        var actual = queryObject.ExecuteQuery(queryFilterDto);
+
+        actual.Items.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void UserSelectTest()
+    {
+        var userDto = new UserDTO
+        {
+            Id = 3,
+            Name = "Jozef",
+            Surname = "Bohdan",
+            Email = "and@hob.it",
+            Avatar = new byte[] {0xAA, 0xAA, 0xAA},
+            PhoneNumber = "0011223344"
+        };
+
+        var queryFilterDto = new QueryFilterDto<UserDTO>
+        {
+            Values = userDto,
+            WhereColumns = new List<string>(),
+            RequestedPageNumber = 0,
+            PageSize = 10,
+            SortCriteria = null,
+            SortAscending = true,
+            SelectColumns = new[] {"Id", "Name", "Surname"}
+        };
+
+        var expected = new List<UserDTO>
+        {
+            new()
+            {
+                Id = 1,
+                Name = "Jozef",
+                Surname = "Bohdan",
+                Email = null,
+                Avatar = Array.Empty<byte>(),
+                PhoneNumber = null
+            },
+            new()
+            {
+                Id = 2,
+                Name = "Jozef",
+                Surname = "Patrovic",
+                Email = null,
+                Avatar = Array.Empty<byte>(),
+                PhoneNumber = null
+            },
+            new()
+            {
+                Id = 3,
+                Name = "Eugen",
+                Surname = "Patrovic",
+                Email = null,
+                Avatar = Array.Empty<byte>(),
+                PhoneNumber = null
             }
         };
 
