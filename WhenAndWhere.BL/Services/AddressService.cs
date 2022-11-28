@@ -13,4 +13,9 @@ public class AddressService : GenericService<AddressDTO, Address>
         QueryObjectGeneric<AddressDTO, Address> queryObject) : base(repository, mapper, queryObject)
     {
     }
+
+    public async Task<OptionDTO> GetOption(int id)
+    {
+        return await GetProperty<OptionDTO>(id, "Option");
+    }
 }

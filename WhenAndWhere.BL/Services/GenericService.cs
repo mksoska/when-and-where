@@ -38,6 +38,14 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         var propertyValue = entity.GetType().GetProperty(property).GetValue(entity);
         return _mapper.Map<TPropertyDto>(propertyValue);
     }
+    
+    protected async Task<TPropertyDto> GetProperty<TPropertyDto>(int firstId, int secondId, string property)
+    {
+        var entity = await _repository.GetById(firstId, secondId);
+        Guard.Against.Null(entity);
+        var propertyValue = entity.GetType().GetProperty(property).GetValue(entity);
+        return _mapper.Map<TPropertyDto>(propertyValue);
+    }
 
     public QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto)
     {

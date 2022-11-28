@@ -6,8 +6,8 @@ namespace WhenAndWhere.DTO;
 
 public class UserMeetupDTO
 {
-	public UserDTO User { get; set; }
-	public MeetupDTO Meetup { get; set; }
+	public int UserId { get; set; }
+	public int MeetupId { get; set; }
     public StateEnum State { get; set; }
     public DateTime DateInvited { get; set; }
 }

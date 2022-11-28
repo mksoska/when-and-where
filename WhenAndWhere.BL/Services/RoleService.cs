@@ -14,6 +14,11 @@ public class RoleService : GenericService<RoleDTO, Role>
     {
     }
 
+    public async Task<MeetupDTO> GetMeetup(int id)
+    {
+        return await GetProperty<MeetupDTO>(id, "Meetup");
+    }
+
     public async Task<List<UserRoleDTO>> GetAssignedUsers(int id)
     {
         return await GetProperty<List<UserRoleDTO>>(id, "AssignedUsers");
