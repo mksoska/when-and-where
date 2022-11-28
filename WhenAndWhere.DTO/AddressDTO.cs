@@ -5,7 +5,7 @@ namespace WhenAndWhere.DTO;
 public class AddressDTO
 { 
     public int Id { get; set; }
-    public OptionDTO Option { get; set; }
+    public int OptionId { get; set; }
     public string State { get; set; }
     public string City { get; set; }
     public string Street { get; set; }

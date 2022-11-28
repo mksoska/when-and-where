@@ -16,7 +16,7 @@ public class Option : IEntity
     public int UserId { get; set; }
     
     [ForeignKey(nameof(UserId))]
-    public virtual User User { get; set; }
+    public virtual User Owner { get; set; }
     
     public virtual Address Address { get; set; }
 

@@ -6,8 +6,8 @@ namespace WhenAndWhere.DTO;
 
 public class UserOptionDTO
 {
-    public UserDTO User { get; set; }
-    public OptionDTO Option { get; set; }
+    public int UserId { get; set; }
+    public int OptionId { get; set; }
     public DateTime TimeVoted { get; set; }
 }
 

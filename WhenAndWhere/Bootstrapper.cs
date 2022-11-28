@@ -26,6 +26,7 @@ public class Bootstrapper : IDisposable
         Module module = provider switch
         {
             Provider.EFCore => new EFCoreModule(_sqliteConnection),
+            _ => throw new ArgumentOutOfRangeException(nameof(provider), provider, null)
         };
         builder.RegisterModule(module);
 
@@ -39,6 +40,10 @@ public class Bootstrapper : IDisposable
 
         builder.RegisterType<MeetupService>()
             .As<MeetupService>()
+            .InstancePerLifetimeScope();
+        
+        builder.RegisterType<UserMeetupService>()
+            .As<UserMeetupService>()
             .InstancePerLifetimeScope();
 
         // Email

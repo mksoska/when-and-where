@@ -6,6 +6,6 @@ namespace WhenAndWhere.DTO;
 public class RoleDTO
 {
     public int Id { get; set; }
-    public Meetup Meetup { get; set; }
+    public int MeetupId { get; set; }
     public RoleEnum RoleName { get; set; }
 }
