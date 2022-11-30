@@ -1,7 +1,7 @@
 ﻿using System;
 using WhenAndWhere.BL.Services;
-using WhenAndWhere.DTO;
 using System.Linq;
+using WhenAndWhere.BL.DTOs;
 
 namespace WhenAndWhere.BL.Facades;
 

@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WhenAndWhere.DAL\WhenAndWhere.DAL.csproj" />
-    <ProjectReference Include="..\WhenAndWhere.DTO\WhenAndWhere.DTO.csproj" />
     <ProjectReference Include="..\WhenAndWhere.Infrastructure.EFCore\WhenAndWhere.Infrastructure.EFCore.csproj" />
     <ProjectReference Include="..\WhenAndWhere.Infrastructure\WhenAndWhere.Infrastructure.csproj" />
   </ItemGroup>

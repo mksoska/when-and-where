@@ -2,18 +2,16 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using WhenAndWhere.DTO;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO.Filter;
 using WhenAndWhere.Infrastructure.EFCore.Query;
 using WhenAndWhere.Infrastructure.Query;
 
-namespace WhenAndWhere.Infrastructure.EFCore
+namespace WhenAndWhere.BL
 {
     public class EFCoreModule : Module
     {

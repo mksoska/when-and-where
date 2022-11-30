@@ -1,10 +1,10 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using WhenAndWhere.BL;
+using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
-using WhenAndWhere.DTO.Filter;
 
-namespace WhenAndWhere.Infrastructure.EFCore
+
+namespace WhenAndWhere.BL
 {
     // Configuration for AutoMapper
     public class EFCoreProfile : Profile

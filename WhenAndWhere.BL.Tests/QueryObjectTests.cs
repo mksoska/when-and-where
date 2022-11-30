@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
-using WhenAndWhere.DTO.Filter;
 using WhenAndWhere.Infrastructure.EFCore.Query;
 
 namespace WhenAndWhere.BL.Tests;

@@ -1,9 +1,9 @@
 ﻿using System;
 using AutoMapper;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.Repository;
 using Ardalis.GuardClauses;
+using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Query;
 
 namespace WhenAndWhere.BL.Services;

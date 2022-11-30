@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using WhenAndWhere.DAL.Models;
-
-namespace WhenAndWhere.DTO;
+﻿namespace WhenAndWhere.BL.DTOs;
 
 public class UserOptionDTO
 {

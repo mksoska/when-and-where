@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using Castle.Core.Internal;
-using WhenAndWhere.DTO.Filter;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.Infrastructure.Query;
 
 namespace WhenAndWhere.BL.Query;
