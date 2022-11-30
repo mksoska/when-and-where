@@ -1,7 +1,7 @@
 ﻿namespace WhenAndWhere.BL.DTOs;
 
 public class AddressDTO
-{ 
+{
     public int Id { get; set; }
     public int OptionId { get; set; }
     public string State { get; set; }
