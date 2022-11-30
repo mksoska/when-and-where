@@ -1,4 +1,4 @@
-﻿namespace WhenAndWhere.DTO.Filter;
+﻿namespace WhenAndWhere.BL.Filter;
 
 public class QueryResultDto<TDto>
 {

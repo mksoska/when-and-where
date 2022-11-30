@@ -1,4 +1,4 @@
-﻿namespace WhenAndWhere.DTO;
+﻿namespace WhenAndWhere.BL.DTOs;
 
 public class UserDTO
 {

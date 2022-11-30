@@ -2,8 +2,8 @@
 using WhenAndWhere.BL.Interfaces;
 using WhenAndWhere.Infrastructure.Repository;
 using Ardalis.GuardClauses;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
-using WhenAndWhere.DTO.Filter;
 using WhenAndWhere.Infrastructure.Query;
 
 namespace WhenAndWhere.BL.Services;

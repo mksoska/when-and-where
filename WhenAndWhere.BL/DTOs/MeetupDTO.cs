@@ -1,6 +1,6 @@
 ﻿using WhenAndWhere.DAL.Enums;
 
-namespace WhenAndWhere.DTO;
+namespace WhenAndWhere.BL.DTOs;
 
 public class MeetupDTO
 {

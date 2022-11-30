@@ -1,11 +1,11 @@
 ﻿using Autofac;
 using Microsoft.Data.Sqlite;
+using WhenAndWhere.BL;
 using WhenAndWhere.BL.Interfaces;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.EFCore;
 
 namespace WhenAndWhere;

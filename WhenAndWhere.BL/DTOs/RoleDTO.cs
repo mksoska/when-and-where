@@ -1,7 +1,6 @@
 ﻿using WhenAndWhere.DAL.Enums;
-using WhenAndWhere.DAL.Models;
 
-namespace WhenAndWhere.DTO;
+namespace WhenAndWhere.BL.DTOs;
 
 public class RoleDTO
 {

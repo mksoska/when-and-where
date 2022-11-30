@@ -3,7 +3,6 @@ using WhenAndWhere;
 using WhenAndWhere.BL.Interfaces;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL.Models;
-using WhenAndWhere.DTO;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 

@@ -1,8 +1,6 @@
-﻿using System;
-using WhenAndWhere.DAL.Enums;
-using WhenAndWhere.DAL.Models;
+﻿using WhenAndWhere.DAL.Enums;
 
-namespace WhenAndWhere.DTO;
+namespace WhenAndWhere.BL.DTOs;
 
 public class UserMeetupDTO
 {

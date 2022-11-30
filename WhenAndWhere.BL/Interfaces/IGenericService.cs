@@ -1,4 +1,4 @@
-﻿using WhenAndWhere.DTO.Filter;
+﻿using WhenAndWhere.BL.Filter;
 
 namespace WhenAndWhere.BL.Interfaces;
 
