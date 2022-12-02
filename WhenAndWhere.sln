@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.BL.Tests", "Wh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.API", "WhenAndWhere.API\WhenAndWhere.API.csproj", "{C9877AAA-D235-4CFA-978C-66A2EA751083}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.MVC", "WhenAndWhere.MVC\WhenAndWhere.MVC.csproj", "{1273120C-DE98-4931-9735-C01B4E668156}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1273120C-DE98-4931-9735-C01B4E668156}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1273120C-DE98-4931-9735-C01B4E668156}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1273120C-DE98-4931-9735-C01B4E668156}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1273120C-DE98-4931-9735-C01B4E668156}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
