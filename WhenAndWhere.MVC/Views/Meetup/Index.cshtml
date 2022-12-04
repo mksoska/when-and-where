@@ -1,0 +1,20 @@
+﻿@model MeetupsIndexViewModel
+
+<h4>Meetups</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th style="width:70%">Name</th>
+            <th>Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var meetup in Model.MeetupDTOs)
+        {
+            <tr>
+                <td>@meetup.Name</td>
+                <td>@meetup.Type</td>
+            </tr>
+        }
+    </tbody>
+</table>

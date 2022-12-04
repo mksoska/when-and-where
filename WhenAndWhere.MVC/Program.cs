@@ -1,7 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using WhenAndWhere.BL.Services;
+using WhenAndWhere.DAL;
+using WhenAndWhere.DAL.Models;
+using WhenAndWhere.Infrastructure.EFCore.Repository;
+using WhenAndWhere.Infrastructure.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=WhenAndWhere.sqlite;Cache=Shared"));
+builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
+builder.Services.AddTransient<IRepository<Meetup>, EFGenericRepository<Meetup>>();
+builder.Services.AddTransient<MeetupService>();
+//builder.Services.AddTransient<ICourseRepository, CourseRepository>();
+//builder.Services.AddTransient<IRepository<GradeDto>, GradeRepository>();
+//builder.Services.AddTransient<IGradeRepository, GradeRepository>();
+//builder.Services.AddTransient<IRepository<StudentDto>, StudentRepository>();
+//builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 
 var app = builder.Build();
 
@@ -22,5 +38,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.Run();
