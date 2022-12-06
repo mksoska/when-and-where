@@ -19,11 +19,11 @@ namespace WhenAndWhere.MVC.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var model = new MeetupsIndexViewModel()
             {
-                MeetupDTOs = _mapper.Map<IEnumerable<MeetupDTO>>(_meetupRepository.GetAll())
+                MeetupDTOs = _mapper.Map<IEnumerable<MeetupDTO>>(await _meetupRepository.GetAll())
             };
 
             return View(model);
