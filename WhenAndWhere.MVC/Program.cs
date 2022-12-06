@@ -1,5 +1,8 @@
-using AutoMapper;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using WhenAndWhere.BL;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Models;
@@ -9,6 +12,12 @@ using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var _sqliteConnection = new SqliteConnection("Data Source=WhenAndWhere.sqlite;Cache=Shared");
+_sqliteConnection.Open();
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new EFCoreModule(_sqliteConnection)));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
