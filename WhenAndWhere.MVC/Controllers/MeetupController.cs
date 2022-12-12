@@ -28,5 +28,18 @@ namespace WhenAndWhere.MVC.Controllers
 
             return View(model);
         }
+
+        public async Task<ActionResult> Create(MeetupCreateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var dto = model.ToDto();
+            _meetupRepository.Insert(_mapper.Map<Meetup>(dto));
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
