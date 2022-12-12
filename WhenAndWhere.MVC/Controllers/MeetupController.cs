@@ -29,6 +29,7 @@ namespace WhenAndWhere.MVC.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public async Task<ActionResult> Create(MeetupCreateViewModel model)
         {
             if (!ModelState.IsValid)
