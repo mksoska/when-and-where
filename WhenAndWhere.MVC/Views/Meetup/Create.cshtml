@@ -1,16 +1,20 @@
 ﻿@model MeetupCreateViewModel
 @using WhenAndWhere.DAL.Enums
 
-@using (Html.BeginForm())
-{
-    <span>Meetup Name: </span> @Html.TextBoxFor(m => m.Name) <br />
-
+@using (Html.BeginForm()) {
+    <span>Meetup Name: </span>
+    @Html.TextBoxFor(m => m.Name)
+    <br/>
+    <span>Meetup Type: </span>
     @Html.DropDownListFor(m => m.Type,
-    new SelectList(Enum.GetValues(typeof(MeetupType))),
-    "Select meetup type")
-    <br />
-    <span>Options from: </span> @Html.TextBoxFor(m => m.OptionsFrom) <br />
-    <span>Options to: </span> @Html.TextBoxFor(m => m.OptionsTo) <br />
-
+        new SelectList(Enum.GetValues(typeof(MeetupType))),
+        "Select meetup type")
+    <br/>
+    <span>Options from: </span>
+    <input type="datetime-local">
+    <br/>
+    <span>Options to: </span>
+    <input type="datetime-local">
+    <br/>
     <button type="submit" class="btn btn-primary">Create</button>
 }
