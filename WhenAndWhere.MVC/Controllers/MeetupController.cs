@@ -29,6 +29,12 @@ namespace WhenAndWhere.MVC.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View(new MeetupCreateViewModel());
+        }
+
         [HttpPost]
         public async Task<ActionResult> Create(MeetupCreateViewModel model)
         {
