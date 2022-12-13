@@ -20,5 +20,9 @@
     <input type="datetime-local" id="OptionsTo" name="OptionsTo">
     @Html.ValidationMessageFor(m => m.OptionsTo)
     <br/>
+    <span>Logo: </span>
+    <input type="file" id="Logo" name="Logo">
+    @Html.ValidationMessageFor(m => m.Logo)
+    <br/>
     <button type="submit" class="btn btn-primary">Create</button>
 }
