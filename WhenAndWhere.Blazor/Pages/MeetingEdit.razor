@@ -1,0 +1,122 @@
+﻿@page "/meetings/{meetingId:int}/edit"
+
+@using WhenAndWhere.Data;
+@using static WhenAndWhere.Data.StaticService
+
+@inject ApplicationUserService UserService
+@inject MeetingService MeetingService
+@inject NavigationManager NavigationManager
+
+<div class="row justify-content-between my-2 p-1 bg-dark rounded">
+    <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetings"))" />
+    <div></div>
+</div>
+
+<StyledRow Inner="false">
+    <h1>Edit</h1>
+
+    <h4>Meeting</h4>
+    <h5>(no changes are made to fields, which are left blank)</h5>
+</StyledRow>
+
+<hr />
+
+<StyledRow Inner="true">
+    <ValidationPopup IsActive="dataPopup.Item1" ErrorMessage="@dataPopup.Item2"
+                     SuccessMessage="@successMessage" OnClose="() => { dataPopup = (false, null); successMessage = null; }" />
+
+    <EditForm Model="meeting" OnSubmit="UpdateMeeting">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label class="control-label">Title:</label>
+            <InputText class="form-control" @bind-Value="meeting.Title" disabled="@isDisabled" placeholder="title" />
+            <ValidationMessage For="() => meeting.Title" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Description:</label>
+            <InputTextArea class="form-control" @bind-Value="meeting.Description" disabled="@isDisabled" placeholder="description" />
+            <ValidationMessage For="() => meeting.Description" />
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Join approval for participants:</label>
+            <select class="form-control" @onchange="i => OnApprovalChanged(meeting, i.Value)" disabled="@isDisabled">
+                @if (meeting.Private)
+                {
+                    <option>Needed</option>
+                    <option>Not needed</option>
+                }
+                else
+                {
+                    <option>Not needed</option>
+                    <option>Needed</option>
+                }
+            </select>
+        </div>
+        <input type="submit" class="form-control col-3 my-2 btn btn-secondary" disabled="@isDisabled" value="Update" />
+        <input type="reset" class="form-control col-3 my-2 btn btn-secondary" disabled="@isDisabled" value="Clear" />
+    </EditForm>
+    <input type="button" class="col-6 my-2 btn btn-danger" disabled="@isDisabled" value="Delete meeting" @onclick="DeleteMeeting"/>
+</StyledRow>
+
+@code {
+    [Parameter]
+    public int MeetingId { get; set; }
+
+    private Meeting meeting;
+
+    private (bool, string) dataPopup;
+    private Action<string> showPopup;
+
+    private string successMessage;
+
+    private bool isDisabled;
+
+    protected override void OnInitialized()
+    {
+        showPopup = err => dataPopup = (true, err);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        meeting = await MeetingService.GetMeetingAsync(MeetingId);
+    }
+
+    private async Task UpdateMeeting()
+    {
+        if (!await IsValidOwner())
+        {
+            return;
+        }
+        successMessage = "Meeting updated successfully";
+        await IsSuccess(MeetingService.UpdateMeetingAsync(meeting), showPopup);
+    }
+
+    private async Task DeleteMeeting()
+    {
+        if (!await IsValidOwner())
+        {
+            return;
+        }
+        isDisabled = true;
+        successMessage = "Meeting deleted successfully";
+        await IsSuccess(MeetingService.RemoveMeetingAsync(meeting), showPopup);
+    }
+
+    private async Task<bool> IsValidOwner()
+    {
+        if (!await IsSuccess(UserService.CheckUserCurrentAsync(), showPopup))
+        {
+            return false;
+        }
+
+        var isOwner = meeting.Owner == UserService.CurrentUser;
+        if (!isOwner)
+        {
+            showPopup("You are not allowed to make changes to this meeting!");
+        }
+        return isOwner;
+    }
+}

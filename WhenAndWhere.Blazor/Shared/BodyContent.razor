@@ -1,0 +1,40 @@
+﻿@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        @ChildContent
+    </Authorized>
+    <NotAuthorized>
+        @if (IsHomepage())
+        {
+            @ChildContent
+        }
+        else
+        {
+            <div class="text-center">
+                <h4>Not authorized! Please, log in.</h4>
+                <a href="/"><h5>Homepage</h5></a>
+            </div>
+        }
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private bool IsHomepage()
+    {
+        return NavigationManager.ToBaseRelativePath(NavigationManager.Uri) == string.Empty;
+    }
+
+    @*protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (IsHomepage())
+        {
+            NavigationManager.NavigateTo(string.Empty);
+        }
+    }*@
+}
+

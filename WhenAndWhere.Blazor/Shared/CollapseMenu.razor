@@ -1,0 +1,31 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="dropdown">
+            <button class="btn d-lg-none dropdown-toggle" type="button" id="dropdownMenu" data-toggle="dropdown">
+                Meetings
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                @foreach (var item in NavItems)
+                {
+                    <a class="dropdown-item" href="/@item.Item1">@item.Item2</a>
+                }
+            </div>
+        </div>
+
+        <div class="collapse d-lg-block">
+            @foreach (var item in NavItems)
+            {
+                <a href="/@item.Item1">@item.Item2</a>
+                <span class="vertical-line"></span>
+            }
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    public List<(string, string)> NavItems = new List<(string, string)> {
+        ("meetings", "My meetings"),
+        ("", "Join"),
+        ("meeting-create", "Create")
+    };
+}

@@ -1,0 +1,33 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page min-vh-100 d-flex flex-column">
+    <header class="auth top-row px-4">
+        <div class="nav-menu">
+            <CollapseMenu />
+        </div>
+
+        <div class="logo-center-absolute collapse d-lg-block">
+            <h3 class="logo-center-relative">When&Where</h3>
+        </div>
+
+        <div class="sign-menu">
+            <LoginDisplay />
+        </div>
+    </header>
+    
+    <main class="main container flex-grow-1">
+        <div class="content px-4">
+            <BodyContent>
+                @Body
+            </BodyContent>
+        </div>
+    </main>   
+    
+    <footer>
+        <hr />
+
+        <div class="container my-3">
+            <span>&#169 When&Where - Marek Soska - 2021</span>
+        </div>
+    </footer>
+</div>

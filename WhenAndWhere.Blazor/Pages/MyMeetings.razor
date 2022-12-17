@@ -1,0 +1,133 @@
+﻿@page "/meetings"
+
+@using WhenAndWhere.Data
+@using static WhenAndWhere.Data.StaticService
+
+@inject MeetingService MeetingService
+@inject ApplicationUserService UserService
+@inject VoteService VoteService
+@inject NavigationManager NavigationManager
+
+<StyledRow Inner="false">
+    <h1>My</h1>
+
+    <h4>Meetings</h4>
+</StyledRow>
+
+<hr />
+
+<StyledRow Inner="true">
+    <ValidationPopup IsActive="dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, null)" />  
+</StyledRow>
+
+
+<form @onsubmit="SearchMeetings">
+    <div class="form-row">
+        <div class="col-sm-7 input-group my-4">
+            <input type="search" @bind="searchString" class="form-control" placeholder="Search" required />
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">
+                    <img src="Images/search.svg" alt="Search" />
+                </button>
+            </div>
+        </div>
+    </div>       
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="thead-dark">       
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Created by</th>
+                <th scope="col">Participants</th>
+                <th scope="col">Votes</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in searchedMeetings
+  .Select(m => new { Meeting = m, Time = VoteService.GetTopVote(m)?.Time })
+  .OrderBy(m => m.Time))
+            {
+                <tr class="@IsActiveRow(entry.Meeting)">
+                    <th @onclick="e => NavigateToMeeting(entry.Meeting)" scope="row">@entry.Meeting.Title</th>
+                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Time</td>
+                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Owner.UserName</td>
+                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Participants.Count</td>
+                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Votes.Count</td>
+                    <td>
+                        @if (entry.Meeting.Owner == UserService.CurrentUser)
+                        {
+                            <a href="/meetings/@entry.Meeting.Id/edit">
+                                <input type="button" class="btn btn-primary" value="Edit" />
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private IEnumerable<Meeting> myMeetings;
+
+    private string searchString;
+
+    private IEnumerable<Meeting> searchedMeetings;
+
+    private (bool, string) dataPopup;
+    private Action<string> showPopup;
+
+    protected override void OnInitialized()
+    {
+        showPopup = err => dataPopup = (true, err);
+        myMeetings = new List<Meeting>();
+        searchedMeetings = myMeetings;
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!await IsSuccess(UserService.CheckUserCurrentAsync(), showPopup))
+            {
+                StateHasChanged();
+                return;
+            }
+
+            var user = UserService.CurrentUser;
+            myMeetings = user.JoinedMeetings.Union(user.CreatedMeetings);
+            searchedMeetings = myMeetings;
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void SearchMeetings()
+    {
+        searchedMeetings = myMeetings.Where(m => m.Title.Contains(searchString)
+            || m.Description.Contains(searchString)
+            || m.Owner.UserName.Contains(searchString));
+
+        StateHasChanged();
+    }
+
+    private void NavigateToMeeting(Meeting meeting)
+    {
+        NavigationManager.NavigateTo($"/meetings/{meeting.Id}/view");
+    }
+
+
+    private string IsActiveRow(Meeting meeting)
+    {
+        return VoteService.UserVoted(meeting, UserService.CurrentUser) switch
+        {
+            true => "table-secondary",
+            _ => "table-light"
+        };
+    }
+}

@@ -1,0 +1,24 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="form-inline">
+            <a href="Identity/Account/Manage">
+                <input type="button" class="btn btn-outline-info" value="@context.User.Identity.Name" />
+            </a>
+
+            <a href="Identity/Account/LogOut">
+                <input type="button" class="btn btn-outline-info" value="Log out" />
+            </a>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="form-inline">
+            <a href="Identity/Account/Login">
+                <input type="button" class="btn btn-outline-info" value="Log in" />
+            </a>
+
+            <a href="Identity/Account/Register">
+                <input type="button" class="btn btn-outline-primary" value="Register" />
+            </a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
