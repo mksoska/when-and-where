@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\WhenAndWhere.BL\WhenAndWhere.BL.csproj" />
     <ProjectReference Include="..\WhenAndWhere.Infrastructure.EFCore\WhenAndWhere.Infrastructure.EFCore.csproj" />
-    <ProjectReference Include="..\WhenAndWhere.MVC\WhenAndWhere.MVC.csproj" />
   </ItemGroup>
 
 </Project>
