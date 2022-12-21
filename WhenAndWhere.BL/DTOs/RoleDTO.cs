@@ -6,5 +6,5 @@ public class RoleDTO
 {
     public int Id { get; set; }
     public int MeetupId { get; set; }
-    public RoleEnum RoleName { get; set; }
+    public string Name { get; set; }
 }

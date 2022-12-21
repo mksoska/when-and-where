@@ -20,7 +20,7 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
 	    return await GetProperty<UserDTO>(id, "Owner");
     }
 
-	public async Task<List<OptionDTO>> GetOptions(int id)
+    public async Task<List<OptionDTO>> GetOptions(int id)
 	{
         return await GetProperty<List<OptionDTO>>(id, "Options");
     }

@@ -1,0 +1,67 @@
+﻿@page "/meetups/{meetupId:int}/edit"
+@attribute [Authorize(Roles = "Owner, Admin")]
+
+@using WhenAndWhere.BL.DTOs
+@using WhenAndWhere.BL.Services
+
+@inject MeetupService MeetupService
+@inject NavigationManager NavigationManager
+
+<div class="row justify-content-between my-2 p-1 bg-dark rounded">
+    <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetings"))" />
+    <div></div>
+</div>
+
+<StyledRow Inner="false">
+    <h1>Edit</h1>
+
+    <h4>Meetup</h4>
+    <h5>(no changes are made to fields, which are left blank)</h5>
+</StyledRow>
+
+<hr />
+
+<StyledRow Inner="true">
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
+
+    <EditForm Model="meetup" OnSubmit="UpdateMeetup">
+        <DataAnnotationsValidator />
+
+        <div class="form-group">
+            <label class="control-label">Title:</label>
+            <InputText class="form-control" @bind-Value="meetup.Name" placeholder="title" />
+            <ValidationMessage For="() => meetup.Name" />
+        </div>
+
+        <input type="submit" class="form-control col-3 my-2 btn btn-secondary" value="Update" />
+        <input type="reset" class="form-control col-3 my-2 btn btn-secondary" value="Clear" />
+    </EditForm>
+    
+    <input type="button" class="col-6 my-2 btn btn-danger" value="Delete meeting" @onclick="DeleteMeetup"/>
+</StyledRow>
+
+@code {
+    [Parameter]
+    public int MeetupId { get; set; }
+
+    private MeetupDTO meetup;
+    
+    private (bool, string) popup;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        meetup = await MeetupService.GetById(MeetupId);
+    }
+
+    private async Task UpdateMeetup()
+    {
+        await MeetupService.Update(meetup);
+        NavigationManager.NavigateTo($"/meetups/{meetup.Id}");
+    }
+
+    private async Task DeleteMeetup()
+    {
+        await MeetupService.Delete(meetup);
+        NavigationManager.NavigateTo($"/meetups");
+    }
+}

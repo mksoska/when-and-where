@@ -7,9 +7,9 @@ public interface IGenericService<TDto, TEntity>
 {
     Task<List<TDto>> GetAll();
 
-    Task<TDto> GetById(int id);
+    Task<TDto?> GetById(int id);
 
-    Task<TDto> GetById(int firstId, int secondId);
+    Task<TDto?> GetById(int firstId, int secondId);
 
     Task Create(TDto addressDto);
 

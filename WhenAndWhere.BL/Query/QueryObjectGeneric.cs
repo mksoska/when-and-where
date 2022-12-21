@@ -40,6 +40,8 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
                 .MakeGenericMethod(propType)
                 .Invoke(query, new object[] {lambdaExpr, col});
         }
+        
+        //TODO: Page size
 
         if (!string.IsNullOrWhiteSpace(filter.SortCriteria)) {
             query = query.OrderBy<string>(filter.SortCriteria, filter.SortAscending);

@@ -13,7 +13,6 @@
         {
             <div class="text-center">
                 <h4>Not authorized! Please, log in.</h4>
-                <a href="/"><h5>Homepage</h5></a>
             </div>
         }
     </NotAuthorized>
@@ -27,14 +26,5 @@
     {
         return NavigationManager.ToBaseRelativePath(NavigationManager.Uri) == string.Empty;
     }
-
-    @*protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        if (IsHomepage())
-        {
-            NavigationManager.NavigateTo(string.Empty);
-        }
-    }*@
 }
 

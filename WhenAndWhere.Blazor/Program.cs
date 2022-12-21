@@ -1,9 +1,12 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using WhenAndWhere.BL;
+using WhenAndWhere.BL.Facades;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.DAL.Models;
@@ -11,6 +14,8 @@ using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Components;
+using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +23,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-var sqliteConnection = new SqliteConnection("Data Source=WhenAndWhere.sqlite;Cache=Shared");
+var sqliteConnection = new SqliteConnection("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared");
 sqliteConnection.Open();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -28,14 +33,17 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterAutoMapper();
 });
 
-builder.Services.AddDefaultIdentity<User>().AddEntityFrameworkStores<WhenAndWhereDBContext>();
-builder.Services.ConfigureApplicationCookie();
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<WhenAndWhereDBContext>()
+    .AddDefaultUI()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=WhenAndWhere.sqlite;Cache=Shared"));
+builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared"));
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
 builder.Services.AddTransient<IUnitOfWork>(x => x.GetRequiredService<EFUnitOfWork>());
 builder.Services.AddTransient<IRepository<Meetup>, EFGenericRepository<Meetup>>();
 builder.Services.AddTransient<MeetupService>();
+builder.Services.AddTransient<WhenAndWhereFacade>();
 
 var app = builder.Build();
 

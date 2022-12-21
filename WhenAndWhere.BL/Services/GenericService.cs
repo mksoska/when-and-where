@@ -52,16 +52,16 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _queryObject.ExecuteQuery(filterDto);
     }
 
-    public async Task<TDto> GetById(int id)
+    public async Task<TDto?> GetById(int id)
     {
         var entity = await _repository.GetById(id);
-        return _mapper.Map<TDto>(entity);
+        return _mapper.Map<TDto?>(entity);
     }
 
-    public async Task<TDto> GetById(int firstId, int secondId)
+    public async Task<TDto?> GetById(int firstId, int secondId)
     {
         var entity = await _repository.GetById(firstId, secondId);
-        return _mapper.Map<TDto>(entity);
+        return _mapper.Map<TDto?>(entity);
     }
 
     public async Task Create(TDto entityDto)
@@ -84,6 +84,13 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         await _repository.Save();
     }
 
+    public async Task Delete(TDto entityDto)
+    {
+        var entity = _mapper.Map<TEntity>(entityDto);
+        _repository.Delete(entity);
+        await _repository.Save();
+    }
+    
     public async Task Delete(int firstId, int secondId)
     {
         _repository.Delete(firstId, secondId);

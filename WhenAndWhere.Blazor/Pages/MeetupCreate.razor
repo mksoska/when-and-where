@@ -1,23 +1,26 @@
-﻿@page "/meeting-create"
+﻿@page "/meetups/create"
 
-@using WhenAndWhere.BL.Services;
-@using WhenAndWhere.BL.DTOs;
+@using WhenAndWhere.BL.Services
+@using WhenAndWhere.BL.DTOs
+@using Microsoft.AspNetCore.Identity
+@using WhenAndWhere.DAL.Models
 
 @inject MeetupService MeetupService
-@inject UserService UserService
 @inject UserMeetupService UserMeetupService
 @inject NavigationManager NavigationManager
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
 
 <StyledRow Inner="false">
     <h1>Create</h1>
 
-    <h4>Meeting</h4>
+    <h4>Meetup</h4>
 </StyledRow>
 
 <hr />
 
 <StyledRow Inner="true">
-    <ValidationPopup IsActive="dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, null)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
 
     <EditForm Model="meetup" OnSubmit="CreateMeetup">
         <DataAnnotationsValidator />
@@ -38,32 +41,23 @@
 @code {
     private MeetupDTO meetup;
 
-    private (bool, string) dataPopup;
-    private Action<string> showPopup;
+    private (bool, string) popup;
 
     protected override void OnInitialized()
     {
-        showPopup = err => dataPopup = (true, err);
         meetup = new MeetupDTO();
         base.OnInitialized();
     }
 
     private async Task CreateMeetup()
     {
-        meetup.OwnerId = UserService.CurrentUser;
-        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = CurrentUser.Id, MeetupId = meetup.Id };
+        var currentUser = Int32.Parse(UserManager.GetUserId(SignInManager.Context.User));
+        meetup.OwnerId = currentUser;
+        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = currentUser, MeetupId = meetup.Id };
         
-        UserMeetupService.Create(userMeetup);
-        MeetupService.Create(meetup);
-            
-        //meeting.Participants = new List<ApplicationUser> { UserService.CurrentUser };    
-        
+        await MeetupService.Create(meetup);
+        await UserMeetupService.Create(userMeetup);
 
-        if (!await IsSuccess(MeetingService.AddMeetingAsync(meeting), showPopup))
-        {
-            return;
-        }
-
-        NavigationManager.NavigateTo($"/meetings/{meeting.Id}/view");
+        NavigationManager.NavigateTo($"/meetups/{meetup.Id}/view");
     }
 }

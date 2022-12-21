@@ -1,23 +1,23 @@
-﻿@page "/meetings"
+﻿@page "/meetups"
 
-@using WhenAndWhere.Data
-@using static WhenAndWhere.Data.StaticService
+@using WhenAndWhere.BL.Services
+@using WhenAndWhere.BL.DTOs
 
-@inject MeetingService MeetingService
-@inject ApplicationUserService UserService
-@inject VoteService VoteService
+@inject MeetupService MeetupService
+@inject UserService UserService
+@inject OptionService OptionService
 @inject NavigationManager NavigationManager
 
 <StyledRow Inner="false">
     <h1>My</h1>
 
-    <h4>Meetings</h4>
+    <h4>Meetups</h4>
 </StyledRow>
 
 <hr />
 
 <StyledRow Inner="true">
-    <ValidationPopup IsActive="dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, null)" />  
+    <ValidationPopup IsActive="@dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, String.Empty)" />
 </StyledRow>
 
 
@@ -31,12 +31,12 @@
                 </button>
             </div>
         </div>
-    </div>       
+    </div>
 </form>
 
 <div class="table-responsive">
     <table class="table table-hover">
-        <thead class="thead-dark">       
+        <thead class="thead-dark">
             <tr>
                 <th scope="col">Title</th>
                 <th scope="col">Date</th>
@@ -72,11 +72,11 @@
 </div>
 
 @code {
-    private IEnumerable<Meeting> myMeetings;
+    private IEnumerable<MeetupDTO> myMeetings;
 
     private string searchString;
 
-    private IEnumerable<Meeting> searchedMeetings;
+    private IEnumerable<MeetupDTO> searchedMeetings;
 
     private (bool, string) dataPopup;
     private Action<string> showPopup;

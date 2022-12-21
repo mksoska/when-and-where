@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WhenAndWhere.DAL.Data;
 using WhenAndWhere.DAL.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WhenAndWhere.DAL;
 
-public class WhenAndWhereDBContext : DbContext
+public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int>
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
@@ -25,6 +27,8 @@ public class WhenAndWhereDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<UserMeetup>()
             .HasKey(userMeetup => new {userMeetup.FirstId, userMeetup.SecondId});
 
@@ -88,8 +92,6 @@ public class WhenAndWhereDBContext : DbContext
             .WithMany(meetup => meetup.Roles)
             .HasForeignKey(meetup => meetup.MeetupId);
 
-        modelBuilder.Seed();
-
-        base.OnModelCreating(modelBuilder);
+        //modelBuilder.Seed();
     }
 }

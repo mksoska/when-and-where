@@ -1,6 +1,7 @@
 ﻿using System;
 using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Services;
+using WhenAndWhere.DAL.Enums;
 
 namespace WhenAndWhere.BL.Facades;
 
@@ -46,6 +47,27 @@ public class WhenAndWhereFacade
             
         }
         return result;
+    }
+
+    public async Task<bool> IsUserInRole(int meetupId, string userName, string roleName)
+    {
+        var userId = _userService.GetByName(userName).Id;
+        var roleId = _roleService.GetByName(meetupId, roleName).Id;
+
+        if (await _userRoleService.GetById(userId, roleId) != null)
+        {
+            return true;
+        }
+        
+        //if ()
+        return false;
+    }
+
+    public async Task<bool> IsMeetupOwner(int meetupId, string userName)
+    {
+        var userId = _userService.GetByName(userName).Id;
+        var meetup = await _meetupService.GetById(meetupId);
+        return userId == meetup.OwnerId;
     }
 }
 

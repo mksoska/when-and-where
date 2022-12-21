@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.DAL.Enums;
 using WhenAndWhere.DAL.Models;
@@ -12,6 +13,16 @@ public class RoleService : GenericService<RoleDTO, Role>
     public RoleService(IRepository<Role> repository, IMapper mapper, 
         QueryObjectGeneric<RoleDTO, Role> queryObject) : base(repository, mapper, queryObject)
     {
+    }
+    
+    public async Task<RoleDTO> GetByName(int meetupId, string name)
+    {
+        var query = new QueryFilterDto<RoleDTO>
+        {
+            Values = new RoleDTO { MeetupId = meetupId, Name = name },
+            WhereColumns = { "MeetupId", "Name" }
+        };
+        return ExecuteQuery(query).Items.First();
     }
 
     public async Task<MeetupDTO> GetMeetup(int id)

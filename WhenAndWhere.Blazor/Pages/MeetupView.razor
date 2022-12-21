@@ -1,43 +1,33 @@
-﻿@page "/meetings/{meetingId:int}/view"
+﻿@page "/meetups/{meetupId:int}"
+@attribute [MeetupRoleAuthorize()]
 
-@using WhenAndWhere.Data
-@using static WhenAndWhere.Data.StaticService  
+@using WhenAndWhere.BL.Services
+@using Microsoft.AspNetCore.Components
+@using WhenAndWhere.BL.DTOs
 
-@inject MeetingService MeetingService
-@inject VoteService VoteService
-@inject ApplicationUserService UserService
+@inject MeetupService MeetingService
+@inject OptionService OptionService
+@inject UserService UserService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
-@inject UpdatePageService UpdatePageService
 
 @implements IDisposable
 
 <StyledRow Inner="false">
-    <ValidationPopup IsActive="dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, null)" />
+    <ValidationPopup IsActive="@dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, String.Empty)" />
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
     <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetings"))" />
     @if (IsParticipant())
     {
-        <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meeting" @onclick="LeaveMeeting" />
+        <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeeting" />
     }
     else
     {
         <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="Home" @onclick="@(() => NavigationManager.NavigateTo("/"))" />
     }
 </div>
-
-<StyledRow Inner="false">
-    <h2>Meeting ID</h2>
-</StyledRow>
-
-<StyledRow Inner="false">
-    <h4 class="col-6 text-center">
-        @MeetingId
-        <button class="mx-3 btn btn-secondary" @onclick="() => CopyToClipboard(meeting.Id.ToString())">Copy</button>
-    </h4>
-</StyledRow>
 
 <hr />
 
@@ -168,15 +158,15 @@ else
 {
     <div class="row chase-row">
         <Chase Center="true" Size="70px" Color="gray" />
-    </div>    
+    </div>
 }
 
 
 @code {
     [Parameter]
-    public int MeetingId { get; set; }
+    public int MeetupId { get; set; }
 
-    private Meeting meeting;
+    private MeetupDTO meetup;
 
     private UserMeeting currentUserMeeting;
 
@@ -210,7 +200,7 @@ else
 
     public void OnUpdatePage()
     {
-        // somehow reload vote based in VoteId stored in UpdatePageService       
+        // somehow reload vote based in VoteId stored in UpdatePageService
         InvokeAsync(this.StateHasChanged);
     }
 

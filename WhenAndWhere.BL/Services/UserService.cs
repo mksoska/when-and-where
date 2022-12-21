@@ -4,6 +4,7 @@ using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.Repository;
 using Ardalis.GuardClauses;
 using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
 
 namespace WhenAndWhere.BL.Services;
@@ -13,6 +14,17 @@ public class UserService : GenericService<UserDTO, User>
     public UserService(IRepository<User> repository, IMapper mapper, 
         QueryObjectGeneric<UserDTO, User> queryObject) : base(repository, mapper, queryObject)
     {
+    }
+
+    public UserDTO GetByName(string username)
+    {
+        var userFilter = new UserDTO { UserName = username };
+        var query = new QueryFilterDto<UserDTO>
+        {
+            Values = userFilter,
+            WhereColumns = { "UserName" }
+        };
+        return ExecuteQuery(query).Items.First();
     }
 
     public async Task<List<UserMeetupDTO>> GetInvitedMeetups(int id)
