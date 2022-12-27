@@ -53,7 +53,7 @@
     {
         var currentUser = Int32.Parse(UserManager.GetUserId(SignInManager.Context.User));
         meetup.OwnerId = currentUser;
-        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = currentUser, MeetupId = meetup.Id };
+        UserMeetupDTO userMeetup = new UserMeetupDTO { FirstId = currentUser, SecondId = meetup.Id };
         
         await MeetupService.Create(meetup);
         await UserMeetupService.Create(userMeetup);

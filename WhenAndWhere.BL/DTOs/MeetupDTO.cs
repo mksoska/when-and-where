@@ -1,8 +1,9 @@
-﻿using WhenAndWhere.DAL.Enums;
+﻿using WhenAndWhere.BL.Interfaces;
+using WhenAndWhere.DAL.Enums;
 
 namespace WhenAndWhere.BL.DTOs;
 
-public class MeetupDTO
+public class MeetupDTO : IDto
 {
     public int Id { get; set; }
     public int OwnerId { get; set; }

@@ -1,6 +1,8 @@
-﻿namespace WhenAndWhere.BL.DTOs;
+﻿using WhenAndWhere.BL.Interfaces;
 
-public class UserDTO
+namespace WhenAndWhere.BL.DTOs;
+
+public class UserDTO : IDto
 {
     public int Id { get; set; }
     public string Name { get; set; }

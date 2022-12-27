@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WhenAndWhere.DAL;
 
-public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int>
+public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }

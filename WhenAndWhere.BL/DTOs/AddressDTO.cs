@@ -1,6 +1,8 @@
-﻿namespace WhenAndWhere.BL.DTOs;
+﻿using WhenAndWhere.BL.Interfaces;
 
-public class AddressDTO
+namespace WhenAndWhere.BL.DTOs;
+
+public class AddressDTO : IDto
 {
     public int Id { get; set; }
     public int OptionId { get; set; }

@@ -1,6 +1,8 @@
-﻿namespace WhenAndWhere.BL.DTOs;
+﻿using WhenAndWhere.BL.Interfaces;
 
-public class OptionDTO
+namespace WhenAndWhere.BL.DTOs;
+
+public class OptionDTO : IDto
 {
     public int Id { get; set; }
     public int MeetupId { get; set; }

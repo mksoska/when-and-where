@@ -43,10 +43,10 @@ public class AdministratorFacade
 
         foreach (var userMeetup in await _userService.GetInvitedMeetups(userId))
         {
-            var roles = await _meetupService.GetRoles(userMeetup.MeetupId);
+            var roles = await _meetupService.GetRoles(userMeetup.SecondId);
             if (roles.Where(r => _userRoleService.GetById(userId, r.Id) != null).Any())
             {
-                result.Add(await _meetupService.GetById(userMeetup.MeetupId));
+                result.Add(await _meetupService.GetById(userMeetup.SecondId));
             }
         }
         return result;

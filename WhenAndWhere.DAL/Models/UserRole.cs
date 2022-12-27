@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace WhenAndWhere.DAL.Models;
 
-public class UserRole : IEntityLink
+public class UserRole : IdentityUserRole<int>, IEntityLink
 {
     public int FirstId { get; set; }
 

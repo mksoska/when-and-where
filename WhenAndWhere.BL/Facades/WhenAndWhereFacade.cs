@@ -54,13 +54,7 @@ public class WhenAndWhereFacade
         var userId = _userService.GetByName(userName).Id;
         var roleId = _roleService.GetByName(meetupId, roleName).Id;
 
-        if (await _userRoleService.GetById(userId, roleId) != null)
-        {
-            return true;
-        }
-        
-        //if ()
-        return false;
+        return await _userRoleService.GetById(userId, roleId) != null;
     }
 
     public async Task<bool> IsMeetupOwner(int meetupId, string userName)
