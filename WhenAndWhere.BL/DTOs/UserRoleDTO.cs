@@ -2,9 +2,9 @@
 
 namespace WhenAndWhere.BL.DTOs;
 
-public class UserRoleDTO : IDtoLink
+public class UserRoleDTO
 { 
-    public int FirstId { get; set; }
-    public int SecondId { get; set; }
+    public int UserId { get; set; }
+    public int RoleId { get; set; }
 }
 

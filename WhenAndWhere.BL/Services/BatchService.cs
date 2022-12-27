@@ -3,7 +3,7 @@ using WhenAndWhere.Infrastructure.Repository;
 
 namespace WhenAndWhere.BL.Services;
 
-public class BatchService
+public class BatchService 
 {
     private readonly IMapper _mapper;
     private readonly IRepository<TEntity> _repository;

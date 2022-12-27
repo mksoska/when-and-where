@@ -2,10 +2,10 @@
 
 namespace WhenAndWhere.BL.DTOs;
 
-public class UserOptionDTO : IDtoLink
+public class UserOptionDTO
 {
-    public int FirstId { get; set; }
-    public int SecondId { get; set; }
+    public int UserId { get; set; }
+    public int OptionId { get; set; }
     public DateTime TimeVoted { get; set; }
 }
 

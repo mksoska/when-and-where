@@ -17,5 +17,5 @@ using (var scope = _ioc.Container.BeginLifetimeScope())
 
     Console.WriteLine("Line");
 
-    users.ForEach(um => Console.WriteLine(meetupService.GetById(um.SecondId).Result.Name));
+    users.ForEach(um => Console.WriteLine(meetupService.GetById(um.MeetupId).Result.Name));
 }

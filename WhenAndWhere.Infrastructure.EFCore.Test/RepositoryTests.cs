@@ -12,7 +12,7 @@ public class RepositoryTests : TestContextInitializer
         var result = efrepository.GetById(2, 1).Result;
 
         var ExpectedResult = unitOfWork.Context.UserMeetup
-            .First(um => um.FirstId == 2 && um.SecondId == 1);
+            .First(um => um.UserId == 2 && um.MeetupId == 1);
 
         Assert.Equal(ExpectedResult, result);
     }

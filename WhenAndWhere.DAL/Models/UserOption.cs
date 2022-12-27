@@ -2,16 +2,16 @@
 
 namespace WhenAndWhere.DAL.Models;
 
-public class UserOption : IEntityLink
+public class UserOption
 {
-    public int FirstId { get; set; }
+    public int UserId { get; set; }
     
-    [ForeignKey(nameof(FirstId))]
+    [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; }
     
-    public int SecondId { get; set; }
+    public int OptionId { get; set; }
     
-    [ForeignKey(nameof(SecondId))]
+    [ForeignKey(nameof(OptionId))]
     public virtual Option Option { get; set; }
     
     public DateTime TimeVoted { get; set; }

@@ -35,9 +35,9 @@ public class TestContextInitializer
 
         var meetupSlopanie = new Meetup { Id = 1, Name = "Slopanie", OptionsFrom = new DateTime(2022, 10, 9), OptionsTo = new DateTime(2022, 10, 18), Owner = userJohan, Type = MeetupType.Drinking, Options = new List<Option> { option1 }, Logo = new byte[] { 0xFE, 0xDC, 0xEA } };
 
-        var johanSlopanie = new UserMeetup { FirstId = userJohan.Id, SecondId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
-        var matysSlopanie = new UserMeetup { FirstId = userMatys.Id, SecondId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
-        var davidSlopanie = new UserMeetup { FirstId = userDavid.Id, SecondId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
+        var johanSlopanie = new UserMeetup { UserId = userJohan.Id, MeetupId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
+        var matysSlopanie = new UserMeetup { UserId = userMatys.Id, MeetupId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
+        var davidSlopanie = new UserMeetup { UserId = userDavid.Id, MeetupId = meetupSlopanie.Id, State = StateEnum.Accepted, DateInvited = DateTime.Now };
 
         meetupSlopanie.InvitedUsers = new List<UserMeetup> { johanSlopanie, matysSlopanie, davidSlopanie };
 
