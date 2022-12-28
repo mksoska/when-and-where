@@ -61,7 +61,7 @@
 
     private async Task DeleteMeetup()
     {
-        await MeetupService.Delete(meetup);
+        await MeetupService.Delete(meetup.Id);
         NavigationManager.NavigateTo($"/meetups");
     }
 }

@@ -44,7 +44,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ShowPolicy", policy =>
         policy.Requirements.Add(new OperationAuthorizationRequirement()));
 });
-builder.Services.AddSingleton<IAuthorizationHandler, OwnerAuthHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, MeetupOwnerAuthHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, MeetupAdminAuthHandler>();
+
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared"));
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());

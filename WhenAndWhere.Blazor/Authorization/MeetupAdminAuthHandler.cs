@@ -4,19 +4,17 @@ using WhenAndWhere.BL.Services;
 
 namespace WhenAndWhere.Blazor.Authorization;
 
-public class MeetupAdminAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, MeetupDTO>
+public class MeetupAdminAuthHandler : AuthorizationHandler<OperationAuthorizationRequirement, MeetupDTO>
 {
     private readonly UserService _userService;
     private readonly UserRoleService _userRoleService;
     private readonly RoleService _roleService;
-    private readonly MeetupService _meetupService;
 
-    public MeetupAdminAuthorizationHandler(UserService userService, UserRoleService userRoleService, RoleService roleService, MeetupService meetupService)
+    public MeetupAdminAuthHandler(UserService userService, UserRoleService userRoleService, RoleService roleService)
     {
         _userService = userService;
-        _userService = userService;
+        _userRoleService = userRoleService;
         _roleService = roleService;
-        _meetupService = meetupService;
     }
     
     protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,

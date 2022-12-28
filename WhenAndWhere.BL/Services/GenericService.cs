@@ -71,27 +71,27 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         await _repository.Save();
     }
 
-    public async Task Update(TDto entityDto)
+    public virtual async Task Update(TDto entityDto)
     {
         var entity = _mapper.Map<TEntity>(entityDto);
         _repository.Update(entity);
         await _repository.Save();
     }
 
-    public async Task Delete(int id)
+    public virtual async Task Delete(int id)
     {
         _repository.Delete(id);
         await _repository.Save();
     }
 
-    public async Task Delete(TDto entityDto)
+    public virtual async Task Delete(TDto entityDto)
     {
         var entity = _mapper.Map<TEntity>(entityDto);
         _repository.Delete(entity);
         await _repository.Save();
     }
     
-    public async Task Delete(int firstId, int secondId)
+    public virtual async Task Delete(int firstId, int secondId)
     {
         _repository.Delete(firstId, secondId);
         await _repository.Save();

@@ -24,7 +24,7 @@ public class RoleService : GenericService<RoleDTO, Role>
         };
         return ExecuteQuery(query).Items.First();
     }
-
+    
     public async Task<MeetupDTO> GetMeetup(int id)
     {
         return await GetProperty<MeetupDTO>(id, "Meetup");

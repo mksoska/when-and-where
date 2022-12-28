@@ -5,10 +5,10 @@ using WhenAndWhere.BL.Services;
 
 namespace WhenAndWhere.Blazor.Authorization;
 
-public class OwnerAuthHandler : AuthorizationHandler<OperationAuthorizationRequirement, MeetupDTO>
+public class MeetupOwnerAuthHandler : AuthorizationHandler<OperationAuthorizationRequirement, MeetupDTO>
 {
     private readonly UserService _userService;
-    public OwnerAuthHandler(UserService userService)
+    public MeetupOwnerAuthHandler(UserService userService)
     {
         _userService = userService;
     }
