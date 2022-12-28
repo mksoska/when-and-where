@@ -19,17 +19,15 @@ public class MeetupAdminAuthorizationHandler : AuthorizationHandler<OperationAut
         _meetupService = meetupService;
     }
     
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement,
         MeetupDTO resource)
     {
         var user = _userService.GetByName(context.User.Identity?.Name);
-        var meetup = _meetupService.GetById(resource.Id);
+        var adminRole = await _roleService.GetByName(resource.Id, "Admin");
 
-        if (true)
+        if (await _userRoleService.GetById(user.Id, adminRole.Id) != null)
         {
             context.Succeed(requirement);
         }
-
-        return Task.CompletedTask;
     }
 }
