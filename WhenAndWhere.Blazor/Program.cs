@@ -15,6 +15,7 @@ using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
+using WhenAndWhere.Blazor.Authorization;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,13 @@ builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<WhenAndWhereDBContext>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ShowPolicy", policy =>
+        policy.Requirements.Add(new OperationAuthorizationRequirement()));
+});
+builder.Services.AddSingleton<IAuthorizationHandler, AuthMeetupsHandler>();
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared"));
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
