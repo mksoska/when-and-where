@@ -24,11 +24,6 @@ public class OptionService : GenericService<OptionDTO, Option>
         return await GetProperty<UserDTO>(id, "Owner");
     }
 
-    public async Task<AddressDTO> GetAddress(int id)
-    {
-        return await GetProperty<AddressDTO>(id, "Address");
-    }
-    
     public async Task<List<UserOptionDTO>> GetVoters(int id)
     {
         return await GetProperty<List<UserOptionDTO>>(id, "Voters");

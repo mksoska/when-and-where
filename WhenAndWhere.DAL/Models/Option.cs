@@ -18,9 +18,14 @@ public class Option : IEntity
     [ForeignKey(nameof(UserId))]
     public virtual User Owner { get; set; }
     
-    public virtual Address Address { get; set; }
-
     public string Label { get; set; }
+    
+    public string State { get; set; }
+    public string City { get; set; }
+    public string Street { get; set; }
+    public string Number { get; set; }
+    public string ZipCode { get; set; }
+    
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
     public virtual List<UserOption> Voters { get; set; }

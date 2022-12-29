@@ -11,7 +11,6 @@ namespace WhenAndWhere.BL
     {
         public EFCoreProfile()
         {
-            CreateMap<AddressDTO, Address>().ReverseMap();
             CreateMap<MeetupDTO, Meetup>().ReverseMap();
             CreateMap<OptionDTO, Option>().ReverseMap();
             CreateMap<RoleDTO, Role>().ReverseMap();

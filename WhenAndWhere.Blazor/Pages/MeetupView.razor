@@ -34,15 +34,15 @@
 
 <hr />
 
-@* <StyledRow Inner="false"> *@
-@*     <h2>Description</h2> *@
-@* </StyledRow> *@
-@* *@
-@* <StyledRow Inner="true"> *@
-@*     @meeting.Description *@
-@* </StyledRow> *@
-@* *@
-@* <hr /> *@
+<StyledRow Inner="false">
+    <h2>Description</h2>
+</StyledRow>
+
+<StyledRow Inner="true">
+    @meetup.Description
+</StyledRow>
+
+<hr />
 
 <StyledRow Inner="false">
     <h2>Participants</h2>
@@ -86,8 +86,15 @@
                 <ValidationSummary></ValidationSummary>
 
                 <div class="input-group">
-                    <InputDate class="form-control" @bind-Value="newOption.Time" />
-                    <InputText class="form-control" @bind-Value="newOption.Place" placeholder="place" />
+                    <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label" />
+                    <InputDate class="form-control" @bind-Value="newOption.Start" />
+                    <InputDate class="form-control" @bind-Value="newOption.End" />
+                    
+                    <InputText class="form-control" @bind-Value="newOption.State" placeholder="State" />
+                    <InputText class="form-control" @bind-Value="newOption.City" placeholder="City" />
+                    <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code" />
+                    <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street" />
+                    <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number" />
 
                     <div class="input-group-append">
                         <input type="submit" class="btn btn-primary" value="Add" />
@@ -103,7 +110,7 @@
         @foreach (var option in MeetupService.GetOptions(meetup.Id).Result)
         {
             <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center" @onclick="() => ToggleOptionVote(option)">
-                @option.Time | @option.Place
+                @option.Label | @option.Start - @option.End
                 <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
             </a>
         }
@@ -181,7 +188,6 @@
     {
         newOption.OwnerId = signedUser.Id;
         newOption.MeetupId = MeetupId;
-        //TODO: Delete AddressDTO and Address entity + merge its values into OptionDTO and Option entity
 
         await OptionService.Create(newOption);
     }

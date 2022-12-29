@@ -8,7 +8,6 @@ namespace WhenAndWhere.DAL;
 
 public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
-    public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
     public DbSet<Option> Option { get; set; }
     public DbSet<User> User { get; set; }
@@ -70,10 +69,7 @@ public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, Identity
             .HasOne(option => option.Meetup)
             .WithMany(meetup => meetup.Options)
             .HasForeignKey(option => option.MeetupId);
-
-        modelBuilder.Entity<Address>()
-            .HasOne(address => address.Option);
-
+        
         modelBuilder.Entity<UserRole>()
             .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
 

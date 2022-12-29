@@ -12,7 +12,6 @@ public class AdministratorFacade
     private readonly MeetupService _meetupService;
     private readonly UserOptionService _userOptionService;
     private readonly OptionService _optionService;
-    private readonly AddressService _addressService;
     private readonly UserRoleService _userRoleService;
     private readonly RoleService _roleService;
 
@@ -22,7 +21,6 @@ public class AdministratorFacade
             MeetupService meetupService,
             UserOptionService userOptionService,
             OptionService optionService,
-            AddressService addressService,
             UserRoleService userRoleService,
             RoleService roleService
         )
@@ -32,7 +30,6 @@ public class AdministratorFacade
         _meetupService = meetupService;
         _userOptionService = userOptionService;
         _optionService = optionService;
-        _addressService = addressService;
         _userRoleService = userRoleService;
         _roleService = roleService;
     }
