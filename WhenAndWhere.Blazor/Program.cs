@@ -18,6 +18,9 @@ using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
 using System.Linq;
+using WhenAndWhere.BL.Query;
+using WhenAndWhere.Infrastructure.EFCore.Query;
+using WhenAndWhere.Infrastructure.Query;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +29,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-var sqliteConnection = new SqliteConnection("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared");
+const string connectionString = "Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared";
+var sqliteConnection = new SqliteConnection(connectionString);
 sqliteConnection.Open();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -69,12 +73,34 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, PolicyAuthorizationHandler>();
 
-
-builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared"));
+builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite(connectionString));
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
 builder.Services.AddTransient<IUnitOfWork>(x => x.GetRequiredService<EFUnitOfWork>());
+
+builder.Services.AddTransient<IQuery<Meetup>, EntityFrameworkQuery<Meetup>>();
+builder.Services.AddTransient<IQuery<Option>, EntityFrameworkQuery<Option>>();
+builder.Services.AddTransient<IQuery<Role>, EntityFrameworkQuery<Role>>();
+builder.Services.AddTransient<IQuery<User>, EntityFrameworkQuery<User>>();
+builder.Services.AddTransient<IQuery<UserMeetup>, EntityFrameworkQuery<UserMeetup>>();
+builder.Services.AddTransient<IQuery<UserOption>, EntityFrameworkQuery<UserOption>>();
+builder.Services.AddTransient<IQuery<UserRole>, EntityFrameworkQuery<UserRole>>();
+
 builder.Services.AddTransient<IRepository<Meetup>, EFGenericRepository<Meetup>>();
+builder.Services.AddTransient<IRepository<Option>, EFGenericRepository<Option>>();
+builder.Services.AddTransient<IRepository<Role>, EFGenericRepository<Role>>();
+builder.Services.AddTransient<IRepository<User>, EFGenericRepository<User>>();
+builder.Services.AddTransient<IRepository<UserMeetup>, EFGenericRepository<UserMeetup>>();
+builder.Services.AddTransient<IRepository<UserOption>, EFGenericRepository<UserOption>>();
+builder.Services.AddTransient<IRepository<UserRole>, EFGenericRepository<UserRole>>();
+
 builder.Services.AddTransient<MeetupService>();
+builder.Services.AddTransient<OptionService>();
+builder.Services.AddTransient<RoleService>();
+builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<UserMeetupService>();
+builder.Services.AddTransient<UserOptionService>();
+builder.Services.AddTransient<UserRoleService>();
+
 builder.Services.AddTransient<WhenAndWhereFacade>();
 
 var app = builder.Build();

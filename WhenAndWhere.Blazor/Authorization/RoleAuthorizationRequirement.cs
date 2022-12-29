@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-using WhenAndWhere.BL.DTOs;
 
 namespace WhenAndWhere.Blazor.Authorization;
 

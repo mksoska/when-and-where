@@ -14,7 +14,7 @@
 @inject IJSRuntime JsRuntime
 
 <StyledRow Inner="false">
-    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
@@ -118,19 +118,18 @@
     <div class="list-group list-group-flush col-3 col-md-2 text-center">
         @foreach (var option in MeetupService.GetOptions(meetup.Id).Result)
         {
-            //TODO: Implement OptionOwner authorization policy
-            <AuthorizeView Policy="OptionOwner">
-                <Authorized>
-                    <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => OptionService.Delete(option)">
-                        <span>Remove</span>
-                    </a>
-                </Authorized>
-                <NotAuthorized>
-                    <a class="list-group-item list-group-item bg-transparent">
-                        <span>&zwnj;</span>
-                    </a>
-                </NotAuthorized>
-            </AuthorizeView>
+            if (IsOptionOwner(option))
+            {
+                <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => OptionService.Delete(option)">
+                    <span>Remove</span>
+                </a>
+            }
+            else
+            {
+                <a class="list-group-item list-group-item bg-transparent">
+                    <span>&zwnj;</span>
+                </a>
+            }
         }
     </div>
 </div>
@@ -192,10 +191,13 @@
         await OptionService.Create(newOption);
     }
 
+    private bool IsOptionOwner(OptionDTO option)
+    {
+        return signedUser.Id == option.OwnerId;
+    }
+
     private async Task<string> IsActiveItem(OptionDTO option)
     {
-        var user = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
-        
-        return UserOptionService.GetById(user.Id, option.Id).Result != null ? "active" : string.Empty;
+        return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
     }
 }

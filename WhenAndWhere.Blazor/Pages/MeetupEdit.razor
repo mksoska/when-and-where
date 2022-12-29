@@ -22,7 +22,7 @@
 <hr />
 
 <StyledRow Inner="true">
-    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
 
     <EditForm Model="meetup" OnSubmit="UpdateMeetup">
         <DataAnnotationsValidator />
