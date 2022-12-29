@@ -15,14 +15,14 @@ public class RoleService : GenericService<RoleDTO, Role>
     {
     }
     
-    public async Task<RoleDTO> GetByName(int meetupId, string name)
+    public RoleDTO? GetByName(int meetupId, string name)
     {
         var query = new QueryFilterDto<RoleDTO>
         {
             Values = new RoleDTO { MeetupId = meetupId, Name = name },
             WhereColumns = { "MeetupId", "Name" }
         };
-        return ExecuteQuery(query).Items.First();
+        return ExecuteQuery(query).Items.FirstOrDefault();
     }
     
     public async Task<MeetupDTO> GetMeetup(int id)

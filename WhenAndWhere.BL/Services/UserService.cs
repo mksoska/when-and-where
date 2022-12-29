@@ -16,15 +16,19 @@ public class UserService : GenericService<UserDTO, User>
     {
     }
 
-    public UserDTO GetByName(string username)
+    public UserDTO? GetByName(string? username)
     {
+        if (string.IsNullOrEmpty(username))
+        {
+            return null;
+        }
         var userFilter = new UserDTO { UserName = username };
         var query = new QueryFilterDto<UserDTO>
         {
             Values = userFilter,
             WhereColumns = { "UserName" }
         };
-        return ExecuteQuery(query).Items.First();
+        return ExecuteQuery(query).Items.FirstOrDefault();
     }
 
     public async Task<List<UserMeetupDTO>> GetInvitedMeetups(int id)

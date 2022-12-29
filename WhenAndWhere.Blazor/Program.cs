@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
@@ -16,6 +17,7 @@ using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
+using System.Linq;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,11 +43,15 @@ builder.Services.AddIdentity<User, Role>()
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("ShowPolicy", policy =>
-        policy.Requirements.Add(new OperationAuthorizationRequirement()));
+    options.AddPolicy("MeetupEdit", policy =>
+        policy.Requirements = new List<IAuthorizationRequirement>
+        {
+            Roles.Owner,
+            Roles.Administrator
+        });
 });
-builder.Services.AddSingleton<IAuthorizationHandler, MeetupOwnerAuthHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, MeetupAdminAuthHandler>();
+
+builder.Services.AddSingleton<IAuthorizationHandler, PolicyAuthorizationHandler>();
 
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite("Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared"));
