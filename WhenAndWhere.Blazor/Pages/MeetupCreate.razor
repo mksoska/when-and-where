@@ -1,5 +1,7 @@
 ﻿@page "/meetups/create"
 
+@attribute [Authorize]
+
 @using WhenAndWhere.BL.Services
 @using WhenAndWhere.BL.DTOs
 @using Microsoft.AspNetCore.Identity
@@ -55,6 +57,7 @@
         meetup.OwnerId = currentUser;
         UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = currentUser, MeetupId = meetup.Id };
         
+        //TODO: Should be merged into one transaction
         await MeetupService.Create(meetup);
         await UserMeetupService.Create(userMeetup);
 

@@ -1,305 +1,195 @@
-﻿@page "/meetups/{meetupId:int}"
-@attribute [MeetupRoleAuthorize()]
+﻿@page "/meetups/{meetupId:int}/view"
+@attribute [Authorize(Policy = "JoinedUser")]
 
 @using WhenAndWhere.BL.Services
 @using Microsoft.AspNetCore.Components
 @using WhenAndWhere.BL.DTOs
 
-@inject MeetupService MeetingService
+@inject MeetupService MeetupService
+@inject UserMeetupService UserMeetupService
 @inject OptionService OptionService
 @inject UserService UserService
+@inject UserOptionService UserOptionService
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 
-@implements IDisposable
-
 <StyledRow Inner="false">
-    <ValidationPopup IsActive="@dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, String.Empty)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
     <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetings"))" />
-    @if (IsParticipant())
-    {
-        <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeeting" />
-    }
-    else
-    {
-        <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="Home" @onclick="@(() => NavigationManager.NavigateTo("/"))" />
-    }
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup" />
 </div>
 
 <hr />
 
-@if (IsParticipant())
-{
-    @if (currentUserMeeting.UserApproved)
-    {
-        <StyledRow Inner="false">
-            <h2>Title</h2>
-        </StyledRow>
+<StyledRow Inner="false">
+    <h2>Title</h2>
+</StyledRow>
 
-        <StyledRow Inner="true">
-            @meeting.Title
-        </StyledRow>
+<StyledRow Inner="true">
+    @meetup.Name
+</StyledRow>
 
-        <hr />
+<hr />
 
-        <StyledRow Inner="false">
-            <h2>Description</h2>
-        </StyledRow>
+@* <StyledRow Inner="false"> *@
+@*     <h2>Description</h2> *@
+@* </StyledRow> *@
+@* *@
+@* <StyledRow Inner="true"> *@
+@*     @meeting.Description *@
+@* </StyledRow> *@
+@* *@
+@* <hr /> *@
 
-        <StyledRow Inner="true">
-            @meeting.Description
-        </StyledRow>
+<StyledRow Inner="false">
+    <h2>Participants</h2>
+</StyledRow>
 
-        <hr />
-
-        <StyledRow Inner="false">
-            <h2>Participants</h2>
-        </StyledRow>
-
-        <ul class="list-group row justify-content-center">
-            @foreach (var userMeeting in meeting.UserMeetings.Where(um => um.UserApproved))
+<AuthorizeView Policy="ManageParticipants">
+    <Authorized>
+        <div class="list-group row justify-content-center">
+            @foreach (var userMeetup in MeetupService.GetInvitedUsers(meetup.Id).Result)
             {
-                <li class="list-group-item col-sm-12 col-md-6 col-lg-4">@userMeeting.User.UserName</li>
+                <a @onclick="() => KickParticipant(userMeetup.UserId)" class="list-group-item col-sm-12 col-md-6 col-lg-4">@UserService.GetById(userMeetup.UserId).Result.UserName</a>
+            }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <ul class="list-group row justify-content-center">
+            @foreach (var userMeetup in MeetupService.GetInvitedUsers(meetup.Id).Result)
+            {
+                <li class="list-group-item col-sm-12 col-md-6 col-lg-4">@UserService.GetById(userMeetup.UserId).Result.UserName</li>
             }
         </ul>
+    </NotAuthorized>
+</AuthorizeView>
 
-        <hr />
+<hr />
 
-        @if (meeting.Private && IsOwner())
-        {
-            <StyledRow Inner="false">
-                <h2>Waiting</h2>
-            </StyledRow>
+<StyledRow Inner="false">
+    <h2>Options</h2>
+</StyledRow>
 
-            <div class="list-group row justify-content-center">
-                @foreach (var userMeeting in meeting.UserMeetings.Where(um => !um.UserApproved))
-                {
-                    <a @onclick="() => ApproveUser(userMeeting)" class="list-group-item col-sm-12 col-md-6 col-lg-4">@userMeeting.User.UserName</a>
-                }
-            </div>
+<StyledRow Inner="false">
+    <p>
+        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+            +
+        </button>
+    </p>
+    <div class="collapse col-12 my-2" id="collapseForm">
+        <div class="card card-body">
+            <EditForm Model="newOption" OnSubmit="CreateOption">
+                <DataAnnotationsValidator />
+                <ValidationSummary></ValidationSummary>
 
-            <hr />
-        }
+                <div class="input-group">
+                    <InputDate class="form-control" @bind-Value="newOption.Time" />
+                    <InputText class="form-control" @bind-Value="newOption.Place" placeholder="place" />
 
-        <StyledRow Inner="false">
-            <h2>Votes</h2>
-        </StyledRow>
-
-        <StyledRow Inner="false">
-            <p>
-                <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
-                    +
-                </button>
-            </p>
-            <div class="collapse col-12 my-2" id="collapseForm">
-                <div class="card card-body">
-                    <EditForm Model="newVote" OnSubmit="AddVote">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary></ValidationSummary>
-
-                        <div class="input-group">
-                            <InputDate class="form-control" @bind-Value="newVote.Time" />
-                            <InputText class="form-control" @bind-Value="newVote.Place" placeholder="place" />
-
-                            <div class="input-group-append">
-                                <input type="submit" class="btn btn-primary" value="Add" />
-                            </div>
-                        </div>
-                    </EditForm>
+                    <div class="input-group-append">
+                        <input type="submit" class="btn btn-primary" value="Add" />
+                    </div>
                 </div>
-            </div>
-        </StyledRow>
-
-        <div class="row">
-            <div class="list-group col-9 col-md-8">
-                @foreach (var vote in meeting.Votes)
-                {
-                    <a class="list-group-item list-group-item-action @IsActiveItem(vote) d-flex justify-content-between align-items-center" @onclick="() => ToggleVoteParticipant(vote)">
-                        @vote.Time | @vote.Place
-                        <span class="badge badge-primary badge-pill">@vote.Participants.Count</span>
-                    </a>
-                }
-            </div>
-            <div class="list-group list-group-flush col-3 col-md-2 text-center">
-                @foreach (var vote in meeting.Votes)
-                {
-                    @if (vote.Owner == UserService.CurrentUser)
-                    {
-                        <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => RemoveVote(vote)">
-                            <span>Remove</span>
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="list-group-item list-group-item bg-transparent">
-                            <span>&zwnj;</span>
-                        </a>
-                    }
-                }
-            </div>
+            </EditForm>
         </div>
-
-
-        <div class="container-bottom bg-dark">
-
-        </div>
-    }
-    else
-    {
-        <div class="text-center">
-            <h4>Wait until the host gives you the approval for join.</h4>
-        </div>
-    }
-}
-else
-{
-    <div class="row chase-row">
-        <Chase Center="true" Size="70px" Color="gray" />
     </div>
-}
+</StyledRow>
+
+<div class="row">
+    <div class="list-group col-9 col-md-8">
+        @foreach (var option in MeetupService.GetOptions(meetup.Id).Result)
+        {
+            <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center" @onclick="() => ToggleOptionVote(option)">
+                @option.Time | @option.Place
+                <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+            </a>
+        }
+    </div>
+    <div class="list-group list-group-flush col-3 col-md-2 text-center">
+        @foreach (var option in MeetupService.GetOptions(meetup.Id).Result)
+        {
+            //TODO: Implement OptionOwner authorization policy
+            <AuthorizeView Policy="OptionOwner">
+                <Authorized>
+                    <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => OptionService.Delete(option)">
+                        <span>Remove</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="list-group-item list-group-item bg-transparent">
+                        <span>&zwnj;</span>
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
+        }
+    </div>
+</div>
+
+
+<div class="container-bottom bg-dark"></div>
 
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    
     [Parameter]
     public int MeetupId { get; set; }
 
     private MeetupDTO meetup;
 
-    private UserMeeting currentUserMeeting;
+    private UserDTO signedUser;
+    
+    private OptionDTO newOption = new();
 
-    private Vote newVote;
-
-    private (bool, string) dataPopup;
-    private Action<string> showPopup;
-
-    protected override void OnInitialized()
+    private (bool, string) popup;
+    
+    protected override async Task OnParametersSetAsync()
     {
-        showPopup = err => dataPopup = (true, err);
-        newVote = new Vote();
-        UpdatePageService.UpdatePage += OnUpdatePage;
-        base.OnInitialized();
+        meetup = await MeetupService.GetById(MeetupId);
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    private async Task LeaveMeetup()
     {
-        if (firstRender)
-        {
-            await LoadMeeting();
-            StateHasChanged();
-        }
-        await base.OnAfterRenderAsync(firstRender);
+        await UserMeetupService.Delete(signedUser.Id, MeetupId);
     }
 
-    public void Dispose()
+    private async Task KickParticipant(int userId)
     {
-        UpdatePageService.UpdatePage -= OnUpdatePage;
+        await UserMeetupService.Delete(userId, MeetupId);
     }
 
-    public void OnUpdatePage()
+    private async Task ToggleOptionVote(OptionDTO option)
     {
-        // somehow reload vote based in VoteId stored in UpdatePageService
-        InvokeAsync(this.StateHasChanged);
-    }
-
-    private async Task LoadMeeting()
-    {
-        if (!await IsSuccess(UserService.CheckUserCurrentAsync(), showPopup))
+        var userOption = await UserOptionService.GetById(signedUser.Id, option.Id);
+        if (userOption == null)
         {
-            return;
-        }
-        meeting = await MeetingService.GetMeetingAsync(MeetingId);
-        if (meeting is null)
-        {
-            showPopup("This meeting is not accessible at the moment!");
-            return;
-        }
-        currentUserMeeting = await MeetingService.GetUserMeetingAsync(meeting, UserService.CurrentUser);
-        if (currentUserMeeting is null)
-        {
-            showPopup("To access this meeting, you have to join it first!");
-            return;
-        }
-        await ApproveCurrentUser();
-    }
-
-    private async Task LeaveMeeting()
-    {
-        if (await IsSuccess(MeetingService.RemoveParticipantAsync(currentUserMeeting), showPopup))
-        {
-            NavigationManager.NavigateTo("/meetings");
-        }
-    }
-
-    private async Task ToggleVoteParticipant(Vote vote)
-    {
-        var userVote = await VoteService.GetUserVoteAsync(vote, UserService.CurrentUser);
-
-        if (userVote is null)
-        {
-            await IsSuccess(VoteService.AddParticipantAsync(vote, UserService.CurrentUser), showPopup);
+            var newUserOption = new UserOptionDTO { UserId = signedUser.Id, OptionId = option.Id, TimeVoted = DateTime.Now };
+            await UserOptionService.Create(newUserOption);
         }
         else
         {
-            await IsSuccess(VoteService.RemoveParticipantAsync(userVote), showPopup);
-        }
-        UpdatePageService.CallUpdatePage(vote);
-    }
-
-    private async Task AddVote()
-    {
-        newVote.Owner = UserService.CurrentUser;
-        newVote.Meeting = meeting;
-
-        if (await IsSuccess(VoteService.AddVoteAsync(newVote), showPopup))
-        {
-            UpdatePageService.CallUpdatePage(newVote);
+            await UserOptionService.Delete(userOption);
         }
     }
 
-    private async Task RemoveVote(Vote vote)
+    private async Task CreateOption()
     {
-        if (await IsSuccess(VoteService.RemoveVoteAsync(vote), showPopup))
-        {
-            UpdatePageService.CallUpdatePage(vote);
-        }
+        newOption.OwnerId = signedUser.Id;
+        newOption.MeetupId = MeetupId;
+        //TODO: Delete AddressDTO and Address entity + merge its values into OptionDTO and Option entity
+
+        await OptionService.Create(newOption);
     }
 
-    private async Task CopyToClipboard(string text)
+    private async Task<string> IsActiveItem(OptionDTO option)
     {
-        await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
-    }
-
-    private async Task ApproveUser(UserMeeting userMeeting)
-    {
-        await IsSuccess(MeetingService.ApproveParticipantAsync(userMeeting), showPopup);
-    }
-
-    private async Task ApproveCurrentUser()
-    {
-        if (!currentUserMeeting.UserApproved)
-        {
-            if (!meeting.Private || IsOwner())
-            {
-                await ApproveUser(currentUserMeeting);
-            }
-        }
-    }
-
-    private string IsActiveItem(Vote vote)
-    {
-        return vote.Participants.Contains(UserService.CurrentUser) ? "active" : string.Empty;
-    }
-
-    private bool IsOwner()
-    {
-        return meeting.Owner == UserService.CurrentUser;
-    }
-
-    private bool IsParticipant()
-    {
-        return currentUserMeeting is not null;
+        var user = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+        
+        return UserOptionService.GetById(user.Id, option.Id).Result != null ? "active" : string.Empty;
     }
 }

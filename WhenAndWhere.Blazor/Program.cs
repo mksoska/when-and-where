@@ -49,6 +49,22 @@ builder.Services.AddAuthorization(options =>
             Roles.Owner,
             Roles.Administrator
         });
+    options.AddPolicy("JoinedUser", policy =>
+        policy.Requirements = new List<IAuthorizationRequirement>
+        {
+            Roles.User
+        });
+    options.AddPolicy("MeetupOwner", policy =>
+        policy.Requirements = new List<IAuthorizationRequirement>
+        {
+            Roles.Owner
+        });
+    options.AddPolicy("ManageParticipants", policy =>
+        policy.Requirements = new List<IAuthorizationRequirement>
+        {
+            Roles.Administrator,
+            Roles.Moderator
+        });
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, PolicyAuthorizationHandler>();

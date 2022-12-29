@@ -1,11 +1,14 @@
 ﻿@page "/meetups"
+@attribute [Authorize]
 
 @using WhenAndWhere.BL.Services
 @using WhenAndWhere.BL.DTOs
+@using Microsoft.AspNetCore.Authorization
+@using WhenAndWhere.BL.Facades
 
 @inject MeetupService MeetupService
 @inject UserService UserService
-@inject OptionService OptionService
+@inject WhenAndWhereFacade WhenAndWhereFacade
 @inject NavigationManager NavigationManager
 
 <StyledRow Inner="false">
@@ -17,11 +20,11 @@
 <hr />
 
 <StyledRow Inner="true">
-    <ValidationPopup IsActive="@dataPopup.Item1" ErrorMessage="@dataPopup.Item2" OnClose="() => dataPopup = (false, String.Empty)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, String.Empty)" />
 </StyledRow>
 
 
-<form @onsubmit="SearchMeetings">
+<form @onsubmit="SearchMeetups">
     <div class="form-row">
         <div class="col-sm-7 input-group my-4">
             <input type="search" @bind="searchString" class="form-control" placeholder="Search" required />
@@ -39,31 +42,32 @@
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Title</th>
-                <th scope="col">Date</th>
                 <th scope="col">Created by</th>
+                <th scope="col">Time</th>
                 <th scope="col">Participants</th>
-                <th scope="col">Votes</th>
+                <th scope="col">Options</th>
                 <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var entry in searchedMeetings
-  .Select(m => new { Meeting = m, Time = VoteService.GetTopVote(m)?.Time })
+            @foreach (var entry in searchedMeetups
+  .Select(m => new { Meetup = m, Time = m.OptionsFrom })
   .OrderBy(m => m.Time))
             {
-                <tr class="@IsActiveRow(entry.Meeting)">
-                    <th @onclick="e => NavigateToMeeting(entry.Meeting)" scope="row">@entry.Meeting.Title</th>
-                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Time</td>
-                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Owner.UserName</td>
-                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Participants.Count</td>
-                    <td @onclick="e => NavigateToMeeting(entry.Meeting)">@entry.Meeting.Votes.Count</td>
+                <tr class="@IsActiveRow(entry.Meetup)">
+                    <th @onclick="e => NavigateToMeetup(entry.Meetup)" scope="row">@entry.Meetup.Name</th>
+                    <td @onclick="e => NavigateToMeetup(entry.Meetup)">@entry.Time</td>
+                    <td @onclick="e => NavigateToMeetup(entry.Meetup)">@UserService.GetById(entry.Meetup.OwnerId).Result.UserName</td>
+                    <td @onclick="e => NavigateToMeetup(entry.Meetup)">@MeetupService.GetInvitedUsers(entry.Meetup.Id).Result.Count</td>
+                    <td @onclick="e => NavigateToMeetup(entry.Meetup)">@MeetupService.GetOptions(entry.Meetup.Id).Result.Count</td>
                     <td>
-                        @if (entry.Meeting.Owner == UserService.CurrentUser)
-                        {
-                            <a href="/meetings/@entry.Meeting.Id/edit">
-                                <input type="button" class="btn btn-primary" value="Edit" />
-                            </a>
-                        }
+                        <AuthorizeView Policy="MeetupOwner">
+                            <Authorized>
+                                 <a href="/meetings/@entry.Meetup.Id/edit">
+                                     <input type="button" class="btn btn-primary" value="Edit"/>
+                                 </a>
+                            </Authorized>
+                        </AuthorizeView>
                     </td>
                 </tr>
             }
@@ -72,59 +76,51 @@
 </div>
 
 @code {
-    private IEnumerable<MeetupDTO> myMeetings;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private UserDTO signedUser;
+    
+    private IEnumerable<MeetupDTO> myMeetups = new List<MeetupDTO>();
 
     private string searchString;
 
-    private IEnumerable<MeetupDTO> searchedMeetings;
+    private IEnumerable<MeetupDTO> searchedMeetups = new List<MeetupDTO>();
 
-    private (bool, string) dataPopup;
-    private Action<string> showPopup;
-
-    protected override void OnInitialized()
+    private (bool, string) popup;
+    
+    protected override async Task OnParametersSetAsync()
     {
-        showPopup = err => dataPopup = (true, err);
-        myMeetings = new List<Meeting>();
-        searchedMeetings = myMeetings;
-        base.OnInitialized();
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            if (!await IsSuccess(UserService.CheckUserCurrentAsync(), showPopup))
-            {
-                StateHasChanged();
-                return;
-            }
-
-            var user = UserService.CurrentUser;
-            myMeetings = user.JoinedMeetings.Union(user.CreatedMeetings);
-            searchedMeetings = myMeetings;
+            myMeetups = (await UserService.GetInvitedMeetups(signedUser!.Id)).Select(um => MeetupService.GetById(um.MeetupId)).OfType<MeetupDTO>();
+            searchedMeetups = myMeetups;
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void SearchMeetings()
+    private void SearchMeetups()
     {
-        searchedMeetings = myMeetings.Where(m => m.Title.Contains(searchString)
-            || m.Description.Contains(searchString)
-            || m.Owner.UserName.Contains(searchString));
+        searchedMeetups = myMeetups.Where(m => m.Name.Contains(searchString));
 
         StateHasChanged();
     }
 
-    private void NavigateToMeeting(Meeting meeting)
+    private void NavigateToMeetup(MeetupDTO meetup)
     {
-        NavigationManager.NavigateTo($"/meetings/{meeting.Id}/view");
+        NavigationManager.NavigateTo($"/meetings/{meetup.Id}/view");
     }
 
 
-    private string IsActiveRow(Meeting meeting)
+    private async Task<string> IsActiveRow(MeetupDTO meetup)
     {
-        return VoteService.UserVoted(meeting, UserService.CurrentUser) switch
+        return await WhenAndWhereFacade.IsAnyOptionVoted(signedUser!.Id, meetup.Id) switch
         {
             true => "table-secondary",
             _ => "table-light"
