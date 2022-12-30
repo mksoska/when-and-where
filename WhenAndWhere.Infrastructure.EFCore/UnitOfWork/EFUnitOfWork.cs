@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using System.Transactions;
+using Microsoft.EntityFrameworkCore.Storage;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.UnitOfWork;
 
@@ -7,25 +8,25 @@ namespace WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 public class EFUnitOfWork : IUnitOfWork
 {
     private WhenAndWhereDBContext _context;
-    private IDbContextTransaction _transaction;
+    private TransactionScope _scope;
 
     public WhenAndWhereDBContext Context => _context;
 
     public EFUnitOfWork(WhenAndWhereDBContext context)
     {
         _context = context;
-        _transaction = context.Database.BeginTransaction();
+        _scope = new TransactionScope();
     }
 
     public void Dispose()
     {
-        _transaction.Dispose();
+        _scope.Dispose();
         _context.Dispose();
     }
 
     public ValueTask DisposeAsync()
     {
-        _transaction.DisposeAsync();
+        _scope.Dispose();
         _context.DisposeAsync();
 
         return ValueTask.CompletedTask;
@@ -33,14 +34,13 @@ public class EFUnitOfWork : IUnitOfWork
 
     public async Task RollbackAsync()
     {
-        await _transaction.RollbackAsync();
-        _transaction = _context.Database.BeginTransaction();
+        _scope = new TransactionScope();
     }
 
     public async Task CommitAsync()
     {
-        await _transaction.CommitAsync();
+        _scope.Complete();
         await _context.SaveChangesAsync();
-        _transaction = _context.Database.BeginTransaction();
+        _scope = new TransactionScope();
     }
 }
