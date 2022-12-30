@@ -11,7 +11,6 @@
 @inject UserService UserService
 @inject UserOptionService UserOptionService
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JsRuntime
 
 <StyledRow Inner="false">
     <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
