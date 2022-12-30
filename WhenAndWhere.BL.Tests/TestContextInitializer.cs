@@ -42,6 +42,7 @@ public class TestContextInitializer
             Logo = new byte[] { 0xAA, 0xAA, 0xAA },
             OwnerId = 1,
             Type = MeetupType.Drinking,
+            Description = "blah blah blah",
             OptionsFrom = new DateTime(2022, 9, 14),
             OptionsTo = DateTime.Now
         };
