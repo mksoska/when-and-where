@@ -46,6 +46,7 @@ builder.Services.AddIdentity<User, Role>()
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("MeetupEdit", policy =>

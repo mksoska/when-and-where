@@ -1,0 +1,22 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@using WhenAndWhere.DAL.Models
+
+@attribute [IgnoreAntiforgeryToken]
+@inject SignInManager<User> SignInManager
+@functions {
+    public Task<IActionResult> OnGet()
+    {
+        return OnPost();
+    }
+
+    public async Task<IActionResult> OnPost()
+    {
+        if (SignInManager.IsSignedIn(User))
+        {
+            await SignInManager.SignOutAsync();
+        }
+
+        return Redirect("~/");
+    }
+}
