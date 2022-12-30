@@ -40,6 +40,7 @@ public class EFUnitOfWork : IUnitOfWork
     public async Task CommitAsync()
     {
         await _transaction.CommitAsync();
+        await _context.SaveChangesAsync();
         _transaction = _context.Database.BeginTransaction();
     }
 }
