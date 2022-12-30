@@ -18,6 +18,7 @@ using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
 using System.Linq;
+using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.Infrastructure.EFCore.Query;
 using WhenAndWhere.Infrastructure.Query;
@@ -92,6 +93,14 @@ builder.Services.AddTransient<IRepository<User>, EFGenericRepository<User>>();
 builder.Services.AddTransient<IRepository<UserMeetup>, EFGenericRepository<UserMeetup>>();
 builder.Services.AddTransient<IRepository<UserOption>, EFGenericRepository<UserOption>>();
 builder.Services.AddTransient<IRepository<UserRole>, EFGenericRepository<UserRole>>();
+
+builder.Services.AddTransient<QueryObjectGeneric<MeetupDTO, Meetup>>();
+builder.Services.AddTransient<QueryObjectGeneric<OptionDTO, Option>>();
+builder.Services.AddTransient<QueryObjectGeneric<RoleDTO, Role>>();
+builder.Services.AddTransient<QueryObjectGeneric<UserDTO, User>>();
+builder.Services.AddTransient<QueryObjectGeneric<UserMeetupDTO, UserMeetup>>();
+builder.Services.AddTransient<QueryObjectGeneric<UserOptionDTO, UserOption>>();
+builder.Services.AddTransient<QueryObjectGeneric<UserRoleDTO, UserRole>>();
 
 builder.Services.AddTransient<MeetupService>();
 builder.Services.AddTransient<OptionService>();
