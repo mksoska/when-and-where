@@ -26,7 +26,7 @@ public class UserService : GenericService<UserDTO, User>
         var query = new QueryFilterDto<UserDTO>
         {
             Values = userFilter,
-            WhereColumns = { "UserName" }
+            WhereColumns = new List<string> { "UserName" }
         };
         return ExecuteQuery(query).Items.FirstOrDefault();
     }
