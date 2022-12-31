@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
@@ -26,6 +27,7 @@ namespace WhenAndWhere.BL
             var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
                 .UseSqlite(_connection)
                 .UseLazyLoadingProxies()
+                .ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning))
                 .Options;
 
             builder.Register<WhenAndWhereDBContext>(ctx => new WhenAndWhereDBContext(dbContextOptions))

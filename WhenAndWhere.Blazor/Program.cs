@@ -18,6 +18,7 @@ using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.Infrastructure.EFCore.Query;
@@ -77,7 +78,11 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, PolicyAuthorizationHandler>();
 
-builder.Services.AddDbContext<WhenAndWhereDBContext>(builder => builder.UseSqlite(connectionString));
+builder.Services.AddDbContext<WhenAndWhereDBContext>(builder =>
+{
+    builder.UseSqlite(connectionString);
+    builder.ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning));
+});
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
 builder.Services.AddTransient<IUnitOfWork>(x => x.GetRequiredService<EFUnitOfWork>());
 
