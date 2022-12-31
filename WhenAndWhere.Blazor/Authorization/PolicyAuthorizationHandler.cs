@@ -67,7 +67,7 @@ public class PolicyAuthorizationHandler : IAuthorizationHandler
 
     public async Task HandleAsync(AuthorizationHandlerContext context)
     {
-        if (context.Resource is not RouteData rd || rd.RouteValues.TryGetValue("meetupId", out var meetupId))
+        if (context.Resource is not RouteData rd || !rd.RouteValues.TryGetValue("meetupId", out var meetupId))
         {
             return;
         }
