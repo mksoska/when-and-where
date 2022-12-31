@@ -28,7 +28,7 @@ public class TestContextInitializer
         var user1 = new User
         {
             Id = 1,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Bohdan",
             Email = "and@hob.it",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -50,7 +50,7 @@ public class TestContextInitializer
         var user2 = new User
         {
             Id = 2,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Patrovic",
             Email = "cerstvy@vzduch.chyba",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -59,7 +59,7 @@ public class TestContextInitializer
         var user3 = new User
         {
             Id = 3,
-            Name = "Eugen",
+            FirstName = "Eugen",
             Surname = "Patrovic",
             Email = "aj@repujem.trosku",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},

@@ -42,8 +42,9 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
     builder.RegisterAutoMapper();
 });
 
-builder.Services.AddIdentity<User, Role>()
+builder.Services.AddIdentity<User, Role>(config => config.SignIn.RequireConfirmedEmail = false)
     .AddEntityFrameworkStores<WhenAndWhereDBContext>()
+    //TODO: Remove .AddDefaultUI() and implement IEmailSender service
     .AddDefaultUI()
     .AddDefaultTokenProviders();
 

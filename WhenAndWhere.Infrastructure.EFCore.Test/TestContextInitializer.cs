@@ -24,9 +24,9 @@ public class TestContextInitializer
 
         dbContext = new WhenAndWhereDBContext(dbContextOptions);
 
-        var userJohan = new User { Id = 1, Name = "Johan", Surname = "Kovalchuck", Email = "aa@bb.cc", PhoneNumber = "1111111111", Avatar = new byte[] { 0xAB, 0xCD, 0xEF } };
-        var userMatys = new User { Id = 2, Name = "Matysku", Surname = "Popisku", Email = "dd@ee.ff", PhoneNumber = "2222222222", Avatar = new byte[] { 0xFE, 0xDC, 0xBA } };
-        var userDavid = new User { Id = 3, Name = "Davit", Surname = "Maslovich", Email = "gg@hh.ii", PhoneNumber = "3333333333", Avatar = new byte[] { 0xFE, 0xDC, 0xEA } };
+        var userJohan = new User { Id = 1, FirstName = "Johan", Surname = "Kovalchuck", Email = "aa@bb.cc", PhoneNumber = "1111111111", Avatar = new byte[] { 0xAB, 0xCD, 0xEF } };
+        var userMatys = new User { Id = 2, FirstName = "Matysku", Surname = "Popisku", Email = "dd@ee.ff", PhoneNumber = "2222222222", Avatar = new byte[] { 0xFE, 0xDC, 0xBA } };
+        var userDavid = new User { Id = 3, FirstName = "Davit", Surname = "Maslovich", Email = "gg@hh.ii", PhoneNumber = "3333333333", Avatar = new byte[] { 0xFE, 0xDC, 0xEA } };
         
         var option1 = new Option { Id = 1, Label = "Spravna volba", Start = new DateTime(2022, 10, 12), City = "Brno", Number = "9", State = "CZE", Street = "Ryšánková", ZipCode = "61300" };
 

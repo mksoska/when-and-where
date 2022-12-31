@@ -5,10 +5,11 @@ namespace WhenAndWhere.DAL.Models;
 
 public class User : IdentityUser<int>, IEntity
 {
-    public string Name { get; set; }
+    [PersonalData]
+    public string FirstName { get; set; }
+    
+    [PersonalData]
     public string Surname { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
     public byte[] Avatar { get; set; }
 
     public virtual List<Meetup> OwnedMeetups { get; set; }

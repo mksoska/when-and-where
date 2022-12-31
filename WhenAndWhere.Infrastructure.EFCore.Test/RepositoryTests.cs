@@ -46,7 +46,7 @@ public class RepositoryTests : TestContextInitializer
         var efrepository = new EFGenericRepository<User>(unitOfWork);
         var user = new User
         {
-            Name = "Marek", 
+            FirstName = "Marek", 
             Surname = "Petrovicz", 
             Email = "gg@hh.ii", 
             PhoneNumber = "3333333333", 
