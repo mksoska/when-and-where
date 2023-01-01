@@ -162,11 +162,13 @@
     private async Task LeaveMeetup()
     {
         await UserMeetupService.Delete(signedUser.Id, MeetupId);
+        NavigationManager.NavigateTo($"/meetups");
     }
 
     private async Task KickParticipant(int userId)
     {
         await UserMeetupService.Delete(userId, MeetupId);
+        StateHasChanged();
     }
 
     private async Task ToggleOptionVote(OptionDTO option)
@@ -181,6 +183,7 @@
         {
             await UserOptionService.Delete(userOption);
         }
+        StateHasChanged();
     }
 
     private async Task CreateOption()
