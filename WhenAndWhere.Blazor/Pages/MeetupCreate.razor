@@ -7,11 +7,11 @@
 @using Microsoft.AspNetCore.Identity
 @using WhenAndWhere.DAL.Models
 
+@inject UserService UserService
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
 @inject NavigationManager NavigationManager
-@inject UserManager<User> UserManager
-@inject SignInManager<User> SignInManager
+
 
 <StyledRow Inner="false">
     <h1>Create</h1>
@@ -48,9 +48,19 @@
 <hr />
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private UserDTO signedUser;
+    
     private MeetupDTO meetup;
 
     private (bool, string) popup;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+    }
 
     protected override void OnInitialized()
     {
@@ -60,12 +70,10 @@
 
     private async Task CreateMeetup()
     {
-        var currentUser = Int32.Parse(UserManager.GetUserId(SignInManager.Context.User));
-        meetup.OwnerId = currentUser;
-        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = currentUser, MeetupId = meetup.Id };
-        
-        //TODO: Should be merged into one transaction
+        meetup.OwnerId = signedUser.Id;
         await MeetupService.Create(meetup);
+        
+        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = meetup.Id };
         await UserMeetupService.Create(userMeetup);
 
         NavigationManager.NavigateTo($"/meetups/{meetup.Id}/view");
