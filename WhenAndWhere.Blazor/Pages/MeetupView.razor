@@ -106,7 +106,7 @@
 </StyledRow>
 
 <div class="row">
-    @foreach (var option in MeetupService.GetOptions(meetup.Id).Result)
+    @foreach (var option in options)
     {
         <div class="list-group col-9 col-md-8">
             <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center" @onclick="() => ToggleOptionVote(option)">
@@ -115,7 +115,7 @@
             </a>
         </div>
         <div class="list-group list-group-flush col-3 col-md-2 text-center">
-            if (IsOptionOwner(option))
+            @if (IsOptionOwner(option))
             {
                 <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => DeleteOption(option)">
                     <span>Remove</span>
@@ -148,12 +148,24 @@
     
     private OptionDTO newOption = new();
 
+    private IEnumerable<OptionDTO> options = new List<OptionDTO>();
+
     private (bool, string) popup;
     
     protected override async Task OnParametersSetAsync()
     {
         meetup = await MeetupService.GetById(MeetupId);
         signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadOptions();
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task LeaveMeetup()
@@ -189,12 +201,14 @@
         newOption.MeetupId = MeetupId;
 
         await OptionService.Create(newOption);
+        await LoadOptions();
         StateHasChanged();
     }
 
     private async Task DeleteOption(OptionDTO option)
     {
         await OptionService.Delete(option.Id);
+        await LoadOptions();
         StateHasChanged();
     }
 
@@ -206,5 +220,10 @@
     private async Task<string> IsActiveItem(OptionDTO option)
     {
         return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
+    }
+
+    private async Task LoadOptions()
+    {
+        options = await MeetupService.GetOptions(meetup.Id);
     }
 }

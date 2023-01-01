@@ -22,6 +22,7 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
         if (WherePredicate.Capacity != 0)
         {
             query = ApplyWhere(query);
+            WherePredicate.Clear();
         }
 
         if (OrderByContainer != null)
@@ -37,6 +38,7 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
         if (SelectSelector.Capacity != 0)
         {
             query = ApplySelect(query);
+            SelectSelector.Clear();
         }
 
         return query.ToList();
