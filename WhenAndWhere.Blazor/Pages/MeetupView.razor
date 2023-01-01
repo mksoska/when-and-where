@@ -120,7 +120,7 @@
         {
             if (IsOptionOwner(option))
             {
-                <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => OptionService.Delete(option)">
+                <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => DeleteOption(option)">
                     <span>Remove</span>
                 </a>
             }
@@ -189,6 +189,13 @@
         newOption.MeetupId = MeetupId;
 
         await OptionService.Create(newOption);
+        StateHasChanged();
+    }
+
+    private async Task DeleteOption(OptionDTO option)
+    {
+        await OptionService.Delete(option);
+        StateHasChanged();
     }
 
     private bool IsOptionOwner(OptionDTO option)
