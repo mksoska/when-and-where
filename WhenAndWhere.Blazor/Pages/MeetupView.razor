@@ -1,5 +1,6 @@
 ﻿@page "/meetups/{meetupId:int}/view"
-@attribute [Authorize(Policy = "JoinedUser")]
+@attribute [Authorize]
+@attribute [Authorize(Policy = "MeetupView")]
 
 @using WhenAndWhere.BL.Services
 @using Microsoft.AspNetCore.Components

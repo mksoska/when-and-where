@@ -98,7 +98,7 @@
     {
         if (firstRender)
         {
-            myMeetups = (await UserService.GetInvitedMeetups(signedUser!.Id)).Select(um => MeetupService.GetById(um.MeetupId)).OfType<MeetupDTO>();
+            myMeetups = (await UserService.GetInvitedMeetups(signedUser!.Id)).Select(um => (MeetupDTO)MeetupService.GetById(um.MeetupId).Result);
             searchedMeetups = myMeetups;
             StateHasChanged();
         }

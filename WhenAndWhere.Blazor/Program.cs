@@ -58,9 +58,10 @@ builder.Services.AddAuthorization(options =>
             Roles.Owner,
             Roles.Administrator
         });
-    options.AddPolicy("JoinedUser", policy =>
+    options.AddPolicy("MeetupView", policy =>
         policy.Requirements = new List<IAuthorizationRequirement>
         {
+            Roles.Owner,
             Roles.User
         });
     options.AddPolicy("MeetupOwner", policy =>

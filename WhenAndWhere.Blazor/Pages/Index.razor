@@ -1,7 +1,6 @@
 ﻿@page "/"
 
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="row upper-space">
     <img class="main-icon" src="/Images/chronometer.svg" alt="When"/>
@@ -10,10 +9,13 @@
 </div>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        if (AuthenticationStateProvider.GetAuthenticationStateAsync().Result.User.Identity.IsAuthenticated)
+        if (authenticationStateTask.Result.User.Identity.IsAuthenticated)
         {
             NavigationManager.NavigateTo($"/meetups");
         }

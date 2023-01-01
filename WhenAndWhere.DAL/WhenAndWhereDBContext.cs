@@ -63,7 +63,7 @@ public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, Identity
         modelBuilder.Entity<Option>()
             .HasOne(option => option.Owner)
             .WithMany(user => user.CreatedOptions)
-            .HasForeignKey(option => option.UserId);
+            .HasForeignKey(option => option.OwnerId);
         
         modelBuilder.Entity<Option>()
             .HasOne(option => option.Meetup)

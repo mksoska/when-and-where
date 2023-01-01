@@ -13,9 +13,9 @@ public class Option : IEntity
     [ForeignKey(nameof(MeetupId))]
     public virtual Meetup Meetup { get; set; }
     
-    public int UserId { get; set; }
+    public int OwnerId { get; set; }
     
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(OwnerId))]
     public virtual User Owner { get; set; }
     
     public string Label { get; set; }

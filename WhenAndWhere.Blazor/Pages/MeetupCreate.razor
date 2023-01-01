@@ -76,6 +76,6 @@
         UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = newMeetup.Id };
         await UserMeetupService.Create(userMeetup);
 
-        NavigationManager.NavigateTo($"/meetups/{meetup.Id}/view");
+        NavigationManager.NavigateTo($"/meetups/{newMeetup.Id}/view");
     }
 }
