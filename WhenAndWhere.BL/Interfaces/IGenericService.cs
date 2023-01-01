@@ -11,7 +11,7 @@ public interface IGenericService<TDto, TEntity>
 
     Task<TDto?> GetById(int firstId, int secondId);
 
-    Task Create(TDto addressDto);
+    Task<TDto> Create(TDto addressDto);
 
     Task Update(TDto addressDto);
     

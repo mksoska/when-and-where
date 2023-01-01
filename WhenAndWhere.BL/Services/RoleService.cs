@@ -20,7 +20,7 @@ public class RoleService : GenericService<RoleDTO, Role>
         var query = new QueryFilterDto<RoleDTO>
         {
             Values = new RoleDTO { MeetupId = meetupId, Name = name },
-            WhereColumns = { "MeetupId", "Name" }
+            WhereColumns = new List<string> { "MeetupId", "Name" }
         };
         return ExecuteQuery(query).Items.FirstOrDefault();
     }

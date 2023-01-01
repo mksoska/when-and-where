@@ -71,9 +71,9 @@
     private async Task CreateMeetup()
     {
         meetup.OwnerId = signedUser.Id;
-        await MeetupService.Create(meetup);
+        var newMeetup = await MeetupService.Create(meetup);
         
-        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = meetup.Id };
+        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = newMeetup.Id };
         await UserMeetupService.Create(userMeetup);
 
         NavigationManager.NavigateTo($"/meetups/{meetup.Id}/view");

@@ -64,11 +64,12 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _mapper.Map<TDto?>(entity);
     }
 
-    public virtual async Task Create(TDto entityDto)
+    public virtual async Task<TDto> Create(TDto entityDto)
     {
         var entity = _mapper.Map<TEntity>(entityDto);
         _repository.Insert(entity);
         await _repository.Save();
+        return _mapper.Map<TDto>(entity);
     }
 
     public virtual async Task Update(TDto entityDto)

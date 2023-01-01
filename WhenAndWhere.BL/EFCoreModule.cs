@@ -35,7 +35,7 @@ namespace WhenAndWhere.BL
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
 
             builder.RegisterType<EFUnitOfWork>()
-                .InstancePerLifetimeScope() // This ensures only one UoW per Repos, as SQLite does not support nested transactions
+                .InstancePerDependency()
                 .As<IUnitOfWork>()
                 //.As<IEFCoreUnitOfWork>() // This registres UnitOfWork for both interfaces. One "internal" and one "external"
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));

@@ -10,9 +10,7 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
 {
     public MeetupService(IRepository<Meetup> repository, IMapper mapper,
         QueryObjectGeneric<MeetupDTO, Meetup> queryObject) : base(repository, mapper, queryObject) { }
-
-    public override async Task Create(MeetupDTO meetupDto) { }
-
+    
     public async Task<UserDTO> GetOwner(int id)
     {
         return await GetProperty<UserDTO>(id, "Owner");
