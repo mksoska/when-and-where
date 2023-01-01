@@ -2,9 +2,8 @@
 .vs/
 bin/
 obj/
-WhenAndWhere.DAL/*.sqlite
+WhenAndWhere.DAL/*.sqlite*
 .editorconfig
-/WhenAndWhereDB.sqlite
 /WhenAndWhere.DAL/Properties
 /WhenAndWhere.DAL/Migrations
 /WhenAndWhere/Properties
