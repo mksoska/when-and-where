@@ -197,7 +197,7 @@
 
     private async Task DeleteOption(OptionDTO option)
     {
-        await OptionService.Delete(option);
+        await OptionService.Delete(option.Id);
         StateHasChanged();
     }
 
