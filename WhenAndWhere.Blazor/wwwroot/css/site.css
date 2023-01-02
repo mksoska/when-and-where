@@ -52,14 +52,9 @@ a, .btn-link {
     margin: 12px;
 }
 
-.logo-center-absolute {
-    position: absolute;
-    left: 50%;
-}
-
-.logo-center-relative {
+.logo-center-left {
     position: relative;
-    left: -50%;
+    alignment: left;
     margin-top: 10px;
     color: white;
 }
@@ -152,7 +147,7 @@ input[type=number] {
 .top-row {
     background-color: #272c31;
     border-bottom: 1px solid #d6d5d5;
-    justify-content: flex-end;
+    justify-content: space-between;
     height: 3.5rem;
     display: flex;
     align-items: center;

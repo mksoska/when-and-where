@@ -1,4 +1,4 @@
-﻿<div class="row">
+﻿<div class="row @Class">
     @if (Inner)
     {
         <div class="col-xl-11">
@@ -16,6 +16,9 @@
 @code {
     [Parameter]
     public bool Inner { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
