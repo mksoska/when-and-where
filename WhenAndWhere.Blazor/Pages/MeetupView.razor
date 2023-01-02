@@ -5,6 +5,8 @@
 @using WhenAndWhere.BL.Services
 @using Microsoft.AspNetCore.Components
 @using WhenAndWhere.BL.DTOs
+@using WhenAndWhere.BL.Facades
+@using WhenAndWhere.DAL.Enums
 
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
@@ -12,6 +14,7 @@
 @inject UserService UserService
 @inject UserOptionService UserOptionService
 @inject NavigationManager NavigationManager
+@inject WhenAndWhereFacade WhenAndWhereFacade
 
 <StyledRow Inner="false">
     <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
@@ -19,6 +22,9 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
     <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetups"))" />
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-success" value="Accept" @onclick="AcceptInvitation" />
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-info" value="Maybe" @onclick="MaybeInvitation" />
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Decline" @onclick="DeclineInvitation" />
     <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup" />
 </div>
 
@@ -166,6 +172,24 @@
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task AcceptInvitation()
+    {
+        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Accepted);
+        StateHasChanged();
+    }
+    
+    private async Task MaybeInvitation()
+    {
+        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Maybe);
+        StateHasChanged();
+    }
+    
+    private async Task DeclineInvitation()
+    {
+        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Declined);
+        StateHasChanged();
     }
 
     private async Task LeaveMeetup()
