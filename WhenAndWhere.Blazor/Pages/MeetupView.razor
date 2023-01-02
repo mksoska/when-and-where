@@ -153,8 +153,12 @@
     private MeetupDTO meetup;
 
     private UserDTO signedUser;
-    
-    private OptionDTO newOption = new();
+
+    private OptionDTO newOption = new()
+    {
+        Start = DateTime.Now,
+        End = DateTime.Now.AddDays(1)
+    };
 
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
 
