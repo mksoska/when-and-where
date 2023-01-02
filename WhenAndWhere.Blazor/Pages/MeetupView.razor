@@ -21,11 +21,13 @@
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
-    <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-secondary" value="< Back" @onclick="@(() => NavigationManager.NavigateTo("/meetups"))" />
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-success" value="Accept" @onclick="AcceptInvitation" />
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-info" value="Maybe" @onclick="MaybeInvitation" />
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Decline" @onclick="DeclineInvitation" />
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup" />
+    <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary" role="button">Back</a>
+    <div class="col-7 btn-group">
+        <input type="button" class="btn btn-success" value="Accept" @onclick="AcceptInvitation"/>
+        <input type="button" class="btn btn-info" value="Maybe" @onclick="MaybeInvitation"/>
+        <input type="button" class="btn btn-danger" value="Decline" @onclick="DeclineInvitation"/>
+    </div>
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup"/>
 </div>
 
 <hr />
