@@ -23,9 +23,9 @@
 <div class="row justify-content-between my-2 p-1 bg-dark rounded">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary" role="button">Back</a>
     <div class="col-7 btn-group">
-        <input type="button" class="btn btn-success" value="Accept" @onclick="AcceptInvitation"/>
-        <input type="button" class="btn btn-info" value="Maybe" @onclick="MaybeInvitation"/>
-        <input type="button" class="btn btn-danger" value="Decline" @onclick="DeclineInvitation"/>
+        <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
+        <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
+        <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
     </div>
     <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup"/>
 </div>
@@ -246,6 +246,11 @@
     private string IsActiveItem(OptionDTO option)
     {
         return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
+    }
+
+    private string IsOutlineButton(StateEnum state, string button)
+    {
+        return UserMeetupService.GetById(signedUser.Id, MeetupId).Result.State == state ? $"btn-{button}" : $"btn-outline-{button}";
     }
 
     private async Task LoadOptions()
