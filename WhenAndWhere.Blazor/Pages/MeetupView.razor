@@ -190,7 +190,7 @@
         }
         else
         {
-            await UserOptionService.Delete(userOption);
+            await UserOptionService.Delete(userOption.UserId, userOption.OptionId);
         }
         StateHasChanged();
     }
@@ -217,7 +217,7 @@
         return signedUser.Id == option.OwnerId;
     }
 
-    private async Task<string> IsActiveItem(OptionDTO option)
+    private string IsActiveItem(OptionDTO option)
     {
         return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
     }
