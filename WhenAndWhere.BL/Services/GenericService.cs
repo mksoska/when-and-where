@@ -31,36 +31,22 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         return _mapper.Map<List<TDto>>(entities);
     }
 
-    protected async Task<TPropertyDto> GetProperty<TPropertyDto>(int id, string property)
+    protected async Task<TPropertyDto> GetProperty<TPropertyDto>(string property, params object?[]? keyValues)
     {
-        var entity = await _repository.GetById(id);
+        var entity = await _repository.GetById(keyValues);
         Guard.Against.Null(entity);
         var propertyValue = entity.GetType().GetProperty(property).GetValue(entity);
         return _mapper.Map<TPropertyDto>(propertyValue);
     }
     
-    protected async Task<TPropertyDto> GetProperty<TPropertyDto>(int firstId, int secondId, string property)
-    {
-        var entity = await _repository.GetById(firstId, secondId);
-        Guard.Against.Null(entity);
-        var propertyValue = entity.GetType().GetProperty(property).GetValue(entity);
-        return _mapper.Map<TPropertyDto>(propertyValue);
-    }
-
     public QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto)
     {
         return _queryObject.ExecuteQuery(filterDto);
     }
 
-    public async Task<TDto?> GetById(int id)
+    public async Task<TDto?> GetById(params object?[]? keyValues)
     {
-        var entity = await _repository.GetById(id);
-        return _mapper.Map<TDto?>(entity);
-    }
-
-    public async Task<TDto?> GetById(int firstId, int secondId)
-    {
-        var entity = await _repository.GetById(firstId, secondId);
+        var entity = await _repository.GetById(keyValues);
         return _mapper.Map<TDto?>(entity);
     }
 
@@ -79,9 +65,9 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
         await _repository.Save();
     }
 
-    public virtual async Task Delete(int id)
+    public virtual async Task Delete(params object?[]? keyValues)
     {
-        _repository.Delete(id);
+        _repository.Delete(keyValues);
         await _repository.Save();
     }
 
@@ -89,12 +75,6 @@ public class GenericService<TDto, TEntity> : IGenericService<TDto, TEntity> wher
     {
         var entity = _mapper.Map<TEntity>(entityDto);
         _repository.Delete(entity);
-        await _repository.Save();
-    }
-    
-    public virtual async Task Delete(int firstId, int secondId)
-    {
-        _repository.Delete(firstId, secondId);
         await _repository.Save();
     }
 }

@@ -7,17 +7,13 @@ public interface IGenericService<TDto, TEntity>
 {
     Task<List<TDto>> GetAll();
 
-    Task<TDto?> GetById(int id);
-
-    Task<TDto?> GetById(int firstId, int secondId);
+    Task<TDto?> GetById(params object?[]? keyValues);
 
     Task<TDto> Create(TDto addressDto);
 
     Task Update(TDto addressDto);
     
-    Task Delete(int id);
-
-    Task Delete(int firstId, int secondId);
+    Task Delete(params object?[]? keyValues);
 
     QueryResultDto<TDto> ExecuteQuery(QueryFilterDto<TDto> filterDto);
 }

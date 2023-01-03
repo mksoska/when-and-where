@@ -72,6 +72,8 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("ManageParticipants", policy =>
         policy.Requirements = new List<IAuthorizationRequirement>
         {
+            // Maybe exclude Owner role
+            Roles.Owner,
             Roles.Administrator,
             Roles.Moderator
         });

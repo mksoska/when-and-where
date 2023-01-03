@@ -25,13 +25,13 @@ public class RoleService : GenericService<RoleDTO, Role>
         return ExecuteQuery(query).Items.FirstOrDefault();
     }
     
-    public async Task<MeetupDTO> GetMeetup(int id)
+    public async Task<MeetupDTO> GetMeetup(params object?[]? keyValues)
     {
-        return await GetProperty<MeetupDTO>(id, "Meetup");
+        return await GetProperty<MeetupDTO>("Meetup", keyValues);
     }
 
-    public async Task<List<UserRoleDTO>> GetAssignedUsers(int id)
+    public async Task<List<UserRoleDTO>> GetAssignedUsers(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserRoleDTO>>(id, "AssignedUsers");
+        return await GetProperty<List<UserRoleDTO>>("AssignedUsers", keyValues);
     }
 }

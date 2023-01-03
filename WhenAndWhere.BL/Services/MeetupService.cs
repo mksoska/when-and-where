@@ -11,23 +11,23 @@ public class MeetupService : GenericService<MeetupDTO, Meetup>
     public MeetupService(IRepository<Meetup> repository, IMapper mapper,
         QueryObjectGeneric<MeetupDTO, Meetup> queryObject) : base(repository, mapper, queryObject) { }
     
-    public async Task<UserDTO> GetOwner(int id)
+    public async Task<UserDTO> GetOwner(params object?[]? keyValues)
     {
-        return await GetProperty<UserDTO>(id, "Owner");
+        return await GetProperty<UserDTO>("Owner", keyValues);
     }
 
-    public async Task<List<OptionDTO>> GetOptions(int id)
+    public async Task<List<OptionDTO>> GetOptions(params object?[]? keyValues)
     {
-        return await GetProperty<List<OptionDTO>>(id, "Options");
+        return await GetProperty<List<OptionDTO>>("Options", keyValues);
     }
 
-    public async Task<List<UserMeetupDTO>> GetInvitedUsers(int id)
+    public async Task<List<UserMeetupDTO>> GetInvitedUsers(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserMeetupDTO>>(id, "InvitedUsers");
+        return await GetProperty<List<UserMeetupDTO>>("InvitedUsers", keyValues);
     }
 
-    public async Task<List<RoleDTO>> GetRoles(int id)
+    public async Task<List<RoleDTO>> GetRoles(params object?[]? keyValues)
     {
-        return await GetProperty<List<RoleDTO>>(id, "Roles");
+        return await GetProperty<List<RoleDTO>>("Roles", keyValues);
     }
 }

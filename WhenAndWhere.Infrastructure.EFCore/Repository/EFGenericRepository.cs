@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
@@ -14,14 +15,9 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         this.Uow = (EFUnitOfWork) uow;
     }
 
-    public virtual async Task<TEntity?> GetById(object id)
+    public virtual async Task<TEntity?> GetById(params object?[]? keyValues)
     {
-        return await Uow.Context.Set<TEntity>().FindAsync(id);
-    }
-
-    public virtual async Task<TEntity?> GetById(object firstId, object secondId)
-    {
-        return await Uow.Context.Set<TEntity>().FindAsync(firstId, secondId);
+        return await Uow.Context.Set<TEntity>().FindAsync(keyValues);
     }
 
     public virtual Task<List<TEntity>> GetAll()
@@ -34,15 +30,9 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         Uow.Context.Set<TEntity>().Add(entity);
     }
 
-    public virtual void Delete(object id)
+    public virtual void Delete(params object?[]? keyValues)
     {
-        var entityToDelete = Uow.Context.Set<TEntity>().Find(id);
-        Delete(entityToDelete);
-    }
-
-    public virtual void Delete(object firstId, object secondId)
-    {
-        var entityToDelete = Uow.Context.Set<TEntity>().Find(firstId, secondId);
+        var entityToDelete = Uow.Context.Set<TEntity>().Find(keyValues);
         Delete(entityToDelete);
     }
 
@@ -58,6 +48,13 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual void Update(TEntity entityToUpdate)
     {
+        var idProperties = entityToUpdate.GetType().GetProperties()
+            .Where(pi => pi.Name.Contains("Id"))
+            .Select(pi => pi.GetValue(entityToUpdate));
+
+        var entity = GetById(idProperties.ToArray()).Result;
+        //Uow.Context.Entry(entity).State = EntityState.Detached;
+        Uow.Context.Set<TEntity>().Remove(entity);
         Uow.Context.Set<TEntity>().Attach(entityToUpdate);
         Uow.Context.Entry(entityToUpdate).State = EntityState.Modified;
     }

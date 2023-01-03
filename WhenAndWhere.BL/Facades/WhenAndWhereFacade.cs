@@ -60,12 +60,5 @@ public class WhenAndWhereFacade
 
         return false;
     }
-    
-    public async Task SetUserInvitationStateAsync(int userId, int meetupId, StateEnum state)
-    {
-        var invitation = await _userMeetupService.GetById(userId, meetupId);
-        invitation.State = state;
-        await _userMeetupService.Update(invitation);
-    }
 }
 

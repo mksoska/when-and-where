@@ -7,6 +7,7 @@
 @using WhenAndWhere.BL.DTOs
 @using WhenAndWhere.BL.Facades
 @using WhenAndWhere.DAL.Enums
+@using System.Linq;
 
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
@@ -56,24 +57,25 @@
     <h2>Participants</h2>
 </StyledRow>
 
-<AuthorizeView Policy="ManageParticipants">
-    <Authorized>
-        <div class="list-group row justify-content-center">
-            @foreach (var userMeetup in MeetupService.GetInvitedUsers(meetup.Id).Result)
-            {
-                <a @onclick="() => KickParticipant(userMeetup.UserId)" class="list-group-item col-sm-12 col-md-6 col-lg-4">@UserService.GetById(userMeetup.UserId).Result.UserName</a>
-            }
-        </div>
-    </Authorized>
-    <NotAuthorized>
-        <ul class="list-group row justify-content-center">
-            @foreach (var userMeetup in MeetupService.GetInvitedUsers(meetup.Id).Result)
-            {
-                <li class="list-group-item col-sm-12 col-md-6 col-lg-4">@UserService.GetById(userMeetup.UserId).Result.UserName</li>
-            }
-        </ul>
-    </NotAuthorized>
-</AuthorizeView>
+@* TODO: Add + button with form to invite a user *@
+
+<ul class="list-group row justify-content-center">
+    @foreach (var invitation in invitations)
+    {
+        <li class="list-group-item col-sm-12 col-md-6 col-lg-4">
+            @UserService.GetById(invitation.UserId).Result.UserName
+            <AuthorizeView Policy="ManageParticipants">
+                <Authorized>
+                    Delete
+                    <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
+                </Authorized>
+                <NotAuthorized>
+                    NotAuthorized
+                </NotAuthorized>
+            </AuthorizeView>
+        </li>
+    }
+</ul>
 
 <hr />
 
@@ -151,12 +153,16 @@
     public int MeetupId { get; set; }
 
     private MeetupDTO meetup;
-
+    
     private UserDTO signedUser;
     
     private OptionDTO newOption = new();
 
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
+
+    private IEnumerable<UserMeetupDTO> invitations = new List<UserMeetupDTO>();
+
+    private UserMeetupDTO myInvitation;
 
     private (bool, string) popup;
     
@@ -171,6 +177,7 @@
         if (firstRender)
         {
             await LoadOptions();
+            await LoadInvitations();
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -178,19 +185,25 @@
 
     private async Task AcceptInvitation()
     {
-        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Accepted);
+        myInvitation.State = StateEnum.Accepted;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
         StateHasChanged();
     }
     
     private async Task MaybeInvitation()
     {
-        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Maybe);
+        myInvitation.State = StateEnum.Maybe;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
         StateHasChanged();
     }
     
     private async Task DeclineInvitation()
     {
-        await WhenAndWhereFacade.SetUserInvitationStateAsync(signedUser.Id, MeetupId, StateEnum.Declined);
+        myInvitation.State = StateEnum.Declined;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
         StateHasChanged();
     }
 
@@ -256,5 +269,11 @@
     private async Task LoadOptions()
     {
         options = await MeetupService.GetOptions(meetup.Id);
+    }
+
+    private async Task LoadInvitations()
+    {
+        invitations = await MeetupService.GetInvitedUsers(meetup.Id);
+        myInvitation = invitations.First(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
     }
 }

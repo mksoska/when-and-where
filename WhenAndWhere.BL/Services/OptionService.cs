@@ -14,19 +14,19 @@ public class OptionService : GenericService<OptionDTO, Option>
     {
     }
 
-    public async Task<MeetupDTO> GetMeetup(int id)
+    public async Task<MeetupDTO> GetMeetup(params object?[]? keyValues)
     {
-        return await GetProperty<MeetupDTO>(id, "Meetup");
+        return await GetProperty<MeetupDTO>("Meetup", keyValues);
     }
     
-    public async Task<UserDTO> GetOwner(int id)
+    public async Task<UserDTO> GetOwner(params object?[]? keyValues)
     {
-        return await GetProperty<UserDTO>(id, "Owner");
+        return await GetProperty<UserDTO>("Owner", keyValues);
     }
 
-    public async Task<List<UserOptionDTO>> GetVoters(int id)
+    public async Task<List<UserOptionDTO>> GetVoters(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserOptionDTO>>(id, "Voters");
+        return await GetProperty<List<UserOptionDTO>>("Voters", keyValues);
     }
 }
 

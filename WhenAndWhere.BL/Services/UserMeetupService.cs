@@ -16,5 +16,12 @@ public class UserMeetupService : GenericService<UserMeetupDTO, UserMeetup>
         QueryObjectGeneric<UserMeetupDTO, UserMeetup> queryObject) : base(repository, mapper, queryObject)
     {
     }
+    
+    public async Task SetUserInvitationState(int userId, int meetupId, StateEnum state)
+    {
+        var invitation = await GetById(userId, meetupId);
+        invitation.State = state;
+        await Update(invitation);
+    }
 }
 

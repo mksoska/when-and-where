@@ -31,29 +31,29 @@ public class UserService : GenericService<UserDTO, User>
         return ExecuteQuery(query).Items.FirstOrDefault();
     }
 
-    public async Task<List<UserMeetupDTO>> GetInvitedMeetups(int id)
+    public async Task<List<UserMeetupDTO>> GetInvitedMeetups(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserMeetupDTO>>(id, "InvitedMeetups");
+        return await GetProperty<List<UserMeetupDTO>>("InvitedMeetups", keyValues);
     }
 
-    public async Task<List<MeetupDTO>> GetOwnedMeetups(int id)
+    public async Task<List<MeetupDTO>> GetOwnedMeetups(params object?[]? keyValues)
     {
-        return await GetProperty<List<MeetupDTO>>(id, "OwnedMeetups");
+        return await GetProperty<List<MeetupDTO>>("OwnedMeetups", keyValues);
     }
 
-    public async Task<List<OptionDTO>> GetCreatedOptions(int id)
+    public async Task<List<OptionDTO>> GetCreatedOptions(params object?[]? keyValues)
     {
-        return await GetProperty<List<OptionDTO>>(id, "CreatedOptions");
+        return await GetProperty<List<OptionDTO>>("CreatedOptions", keyValues);
     }
 
-    public async Task<List<UserOptionDTO>> GetVotedOptions(int id)
+    public async Task<List<UserOptionDTO>> GetVotedOptions(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserOptionDTO>>(id, "VotedOptions");
+        return await GetProperty<List<UserOptionDTO>>("VotedOptions", keyValues);
     }
 
-    public async Task<List<UserRoleDTO>> GetAssignedRoles(int id)
+    public async Task<List<UserRoleDTO>> GetAssignedRoles(params object?[]? keyValues)
     {
-        return await GetProperty<List<UserRoleDTO>>(id, "AssignedRoles");
+        return await GetProperty<List<UserRoleDTO>>("AssignedRoles", keyValues);
     }
 }
 
