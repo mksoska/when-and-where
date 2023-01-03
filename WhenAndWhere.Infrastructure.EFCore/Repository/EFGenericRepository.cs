@@ -52,8 +52,7 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
             .Where(pi => pi.Name.Contains("Id"))
             .Select(pi => pi.GetValue(entityToUpdate));
 
-        var entity = GetById(idProperties.ToArray()).Result;
-        //Uow.Context.Entry(entity).State = EntityState.Detached;
+        var entity = Uow.Context.Set<TEntity>().Find(idProperties.ToArray());
         Uow.Context.Set<TEntity>().Remove(entity);
         Uow.Context.Set<TEntity>().Attach(entityToUpdate);
         Uow.Context.Entry(entityToUpdate).State = EntityState.Modified;
