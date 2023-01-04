@@ -201,8 +201,8 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender) {
-            await LoadOptions();
-            await LoadInvitations();
+            await LoadOptions(false);
+            await LoadInvitations(false);
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -213,7 +213,6 @@
         myInvitation.State = StateEnum.Accepted;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
-        StateHasChanged();
     }
 
     private async Task MaybeInvitation()
@@ -221,7 +220,6 @@
         myInvitation.State = StateEnum.Maybe;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
-        StateHasChanged();
     }
 
     private async Task DeclineInvitation()
@@ -229,7 +227,6 @@
         myInvitation.State = StateEnum.Declined;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
-        StateHasChanged();
     }
 
     private async Task InviteParticipant()
@@ -240,21 +237,19 @@
             //TODO: If not registered, configure IEmailService to send invitation to this meetup via email
             return;
         }
-        if (await UserMeetupService.GetById(user.Id, MeetupId) != null)
+        if (await IsInvitedUser(user))
         {
             return;
         }
         
         await UserMeetupService.Create(new UserMeetupDTO { UserId = user.Id, MeetupId = MeetupId, State = StateEnum.Pending });
         await LoadInvitations();
-        StateHasChanged();
     }
 
     private async Task KickParticipant(int userId)
     {
         await UserMeetupService.Delete(userId, MeetupId);
         await LoadInvitations();
-        StateHasChanged();
     }
 
     private async Task ToggleOptionVote(OptionDTO option)
@@ -276,19 +271,22 @@
 
         await OptionService.Create(newOption);
         await LoadOptions();
-        StateHasChanged();
     }
 
     private async Task DeleteOption(OptionDTO option)
     {
         await OptionService.Delete(option.Id);
         await LoadOptions();
-        StateHasChanged();
     }
 
     private bool IsOptionOwner(OptionDTO option)
     {
         return signedUser.Id == option.OwnerId;
+    }
+
+    private async Task<bool> IsInvitedUser(UserDTO user)
+    {
+        return await UserMeetupService.GetById(user.Id, MeetupId) != null;
     }
 
     private string IsActiveItem(OptionDTO option)
@@ -301,14 +299,22 @@
         return UserMeetupService.GetById(signedUser.Id, MeetupId).Result?.State == state ? $"btn-{button}" : $"btn-outline-{button}";
     }
 
-    private async Task LoadOptions()
+    private async Task LoadOptions(bool rerender = true)
     {
         options = await MeetupService.GetOptions(meetup.Id);
+        if (rerender)
+        {
+            StateHasChanged();
+        }
     }
 
-    private async Task LoadInvitations()
+    private async Task LoadInvitations(bool rerender = true)
     {
         invitations = await MeetupService.GetInvitedUsers(meetup.Id);
         myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
+        if (rerender)
+        {
+            StateHasChanged();
+        }
     }
 }
