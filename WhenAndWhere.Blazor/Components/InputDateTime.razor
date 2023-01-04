@@ -1,6 +1,4 @@
-﻿@using WhenAndWhere.Blazor.Components
-
-<input type="datetime-local" class="form-control w-auto d-inline" value="@(DateAndTime.ToString("yyyy-MM-ddTHH:mm"))" disabled="@IsDisabled"
+﻿<input type="datetime-local" class="form-control w-auto d-inline" value="@(DateAndTime.ToString("yyyy-MM-ddTHH:mm"))" disabled="@IsDisabled"
        @onchange="async (e) => { DateAndTime = DateTime.Parse(e.Value.ToString()); await NotifyChanged(); }"/>
 
 @code {
