@@ -6,7 +6,7 @@ using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 namespace WhenAndWhere.Blazor.Authorization;
 
-public class RoleAuthorizationHandler : IAuthorizationHandler
+public class AuthorizationHandler : IAuthorizationHandler
 {
     private readonly UserService _userService;
     private readonly UserRoleService _userRoleService;
@@ -14,7 +14,7 @@ public class RoleAuthorizationHandler : IAuthorizationHandler
     private readonly UserMeetupService _userMeetupService;
     private readonly MeetupService _meetupService;
 
-    public RoleAuthorizationHandler(UserService userService, UserRoleService userRoleService, RoleService roleService, UserMeetupService userMeetupService, MeetupService meetupService)
+    public AuthorizationHandler(UserService userService, UserRoleService userRoleService, RoleService roleService, UserMeetupService userMeetupService, MeetupService meetupService)
     {
         _userService = userService;
         _userRoleService = userRoleService;

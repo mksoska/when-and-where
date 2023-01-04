@@ -79,7 +79,7 @@ builder.Services.AddAuthorization(options =>
         });
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorizationHandler>();
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder =>
 {
