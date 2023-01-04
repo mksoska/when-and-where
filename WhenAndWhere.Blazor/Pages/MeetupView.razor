@@ -27,7 +27,6 @@
     <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
         <Authorized>
             <a href="/meetups/@meetup.Id/edit" class="col-3 col-md-2 col-lg-1 btn btn-primary rounded-pill" role="button">Edit</a>
-            <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 btn btn-primary rounded-pill" role="button">Roles</a>
         </Authorized>
         <NotAuthorized>
             <div></div>
@@ -65,10 +64,15 @@
 <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
     <Authorized>
         <StyledRow Inner="false">
-            <p>
+            <p class="row justify-content-between">
                 <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#addParticipantCollapseForm" aria-expanded="false" aria-controls="addParticipantCollapseForm">
                     + Add
                 </button>
+                <AuthorizeView Context="nestedContext" Policy="ManageRoles" Resource="@MeetupId">
+                    <Authorized>
+                        <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 btn btn-primary rounded-pill" role="button">Roles</a>
+                    </Authorized>
+                </AuthorizeView>
             </p>
             <div class="col-sm-7 collapse my-2" id="addParticipantCollapseForm">
                 <div class="card card-body">
