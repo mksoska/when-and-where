@@ -53,33 +53,18 @@ builder.Services.AddIdentity<User, Role>(config => config.SignIn.RequireConfirme
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("MeetupEdit", policy =>
-        policy.Requirements = new List<IAuthorizationRequirement>
-        {
-            Roles.Owner,
-            Roles.Administrator
-        });
+        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator")));
+    
     options.AddPolicy("MeetupView", policy =>
-        policy.Requirements = new List<IAuthorizationRequirement>
-        {
-            Roles.Owner,
-            Roles.User
-        });
-    options.AddPolicy("MeetupOwner", policy =>
-        policy.Requirements = new List<IAuthorizationRequirement>
-        {
-            Roles.Owner
-        });
+        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "User")));
+
     options.AddPolicy("ManageParticipants", policy =>
-        policy.Requirements = new List<IAuthorizationRequirement>
-        {
-            // Maybe exclude Owner role
-            Roles.Owner,
-            Roles.Administrator,
-            Roles.Moderator
-        });
+        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "Moderator")));
 });
 
-builder.Services.AddSingleton<IAuthorizationHandler, AuthorizationHandler>();
+builder.Services.AddTransient<RoleAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationContextHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationResourceHandler>();
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder =>
 {

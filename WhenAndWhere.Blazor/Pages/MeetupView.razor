@@ -63,14 +63,10 @@
     {
         <li class="list-group-item col-sm-12 col-md-6 col-lg-4 rounded-pill">
             @UserService.GetById(invitation.UserId).Result.UserName
-            <AuthorizeView Context="nested_context" Policy="ManageParticipants">
+            <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
                 <Authorized>
-                    Delete
                     <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
                 </Authorized>
-                <NotAuthorized>
-                    NotAuthorized
-                </NotAuthorized>
             </AuthorizeView>
         </li>
     }

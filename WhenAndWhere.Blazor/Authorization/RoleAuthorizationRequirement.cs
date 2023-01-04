@@ -4,7 +4,7 @@ namespace WhenAndWhere.Blazor.Authorization;
 
 public class RoleAuthorizationRequirement : IAuthorizationRequirement
 {
-    public RoleAuthorizationRequirement(string roleName) => RoleName = roleName;
+    public RoleAuthorizationRequirement(params string[] roleNames) => RoleNames = roleNames;
     
-    public string RoleName { get; }
+    public string[] RoleNames { get; }
 }
