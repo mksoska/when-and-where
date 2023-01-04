@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WhenAndWhere.BL.DTOs.ValidationAttributes;
 using WhenAndWhere.BL.Interfaces;
 
 namespace WhenAndWhere.BL.DTOs;

@@ -1,6 +1,7 @@
 ﻿using WhenAndWhere.BL.Interfaces;
 using WhenAndWhere.DAL.Enums;
 using System.ComponentModel.DataAnnotations;
+using WhenAndWhere.BL.DTOs.ValidationAttributes;
 
 namespace WhenAndWhere.BL.DTOs;
 

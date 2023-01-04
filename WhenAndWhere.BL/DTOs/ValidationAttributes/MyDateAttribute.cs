@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WhenAndWhere.BL.DTOs
+namespace WhenAndWhere.BL.DTOs.ValidationAttributes
 {
     public class MyDateAttribute : ValidationAttribute
     {
