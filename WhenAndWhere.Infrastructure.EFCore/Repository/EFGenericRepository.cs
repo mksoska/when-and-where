@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
@@ -48,12 +50,20 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual void Update(TEntity entityToUpdate)
     {
-        var idProperties = entityToUpdate.GetType().GetProperties()
-            .Where(pi => pi.Name.Contains("Id"))
-            .Select(pi => pi.GetValue(entityToUpdate));
+        IEnumerable<object?> idProperties;
+        if (entityToUpdate is IEntity iEntity)
+        {
+            idProperties = new List<object?> { iEntity.Id };
+        }
+        else
+        {
+            idProperties = entityToUpdate.GetType().GetProperties()
+                .Where(pi => pi.Name.Contains("Id"))
+                .Select(pi => pi.GetValue(entityToUpdate));
+        }
 
         var entity = Uow.Context.Set<TEntity>().Find(idProperties.ToArray());
-        Uow.Context.Set<TEntity>().Remove(entity);
+        Uow.Context.Entry(entity!).State = EntityState.Detached;
         Uow.Context.Set<TEntity>().Attach(entityToUpdate);
         Uow.Context.Entry(entityToUpdate).State = EntityState.Modified;
     }

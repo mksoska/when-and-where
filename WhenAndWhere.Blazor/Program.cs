@@ -63,6 +63,12 @@ builder.Services.AddAuthorization(options =>
     
     options.AddPolicy("ManageRoles", policy =>
         policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator")));
+    
+    options.AddPolicy("ManageOptions", policy =>
+        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "Moderator")));
+    
+    options.AddPolicy("Vote", policy =>
+        policy.Requirements.Add(new RoleAuthorizationRequirement("User")));
 });
 
 builder.Services.AddTransient<RoleAuthorizationHandler>();
