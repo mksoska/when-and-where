@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 
 <StyledRow Inner="false">
-    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
+    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)"/>
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
@@ -35,7 +35,7 @@
     </AuthorizeView>
 </div>
 
-<hr />
+<hr/>
 
 <StyledRow Inner="false">
     <h2>Title</h2>
@@ -45,7 +45,7 @@
     @meetup.Name
 </StyledRow>
 
-<hr />
+<hr/>
 
 <StyledRow Inner="false">
     <h2>Description</h2>
@@ -55,7 +55,7 @@
     @meetup.Description
 </StyledRow>
 
-<hr />
+<hr/>
 
 <StyledRow Inner="false">
     <h2>Participants</h2>
@@ -87,8 +87,7 @@
 
 
 <ul class="list-group row justify-content-center">
-    @foreach (var invitation in invitations)
-    {
+    @foreach (var invitation in invitations) {
         <li class="list-group-item col-sm-12 col-md-6 col-lg-4 rounded-pill">
             @UserService.GetById(invitation.UserId).Result.UserName
             <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
@@ -100,7 +99,7 @@
     }
 </ul>
 
-<hr />
+<hr/>
 
 <StyledRow Inner="false">
     <h2>Options</h2>
@@ -115,23 +114,23 @@
     <div class="collapse col-12 my-2" id="collapseForm">
         <div class="card card-body">
             <EditForm Model="newOption" OnSubmit="CreateOption">
-                <DataAnnotationsValidator />
+                <DataAnnotationsValidator/>
                 <ValidationSummary></ValidationSummary>
 
                 <div class="input-group">
-                    <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label" />
-                    <input id="startDateTime" class="form-control" type="datetime-local" value="@newOption.Start.ToString("s")"/>
-                    <input id="endDateTime" class="form-control" type="datetime-local" value="@newOption.End.ToString("s")"/>
-                    <InputText class="form-control" @bind-Value="newOption.State" placeholder="State" />
+                    <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label"/>
+                    <input id="Start" class="form-control" type="datetime-local" @bind="newOption.Start" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                    <input id="End" class="form-control" type="datetime-local" @bind="newOption.End" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                    <InputText class="form-control" @bind-Value="newOption.State" placeholder="State"/>
                 </div>
                 <div class="input-group">
-                    <InputText class="form-control" @bind-Value="newOption.City" placeholder="City" />
-                    <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code" />
-                    <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street" />
-                    <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number" />
+                    <InputText class="form-control" @bind-Value="newOption.City" placeholder="City"/>
+                    <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code"/>
+                    <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street"/>
+                    <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number"/>
 
                     <div class="input-group-append">
-                        <input type="submit" class="btn btn-primary" value="Add" />
+                        <input type="submit" class="btn btn-primary" value="Add"/>
                     </div>
                 </div>
             </EditForm>
@@ -140,8 +139,7 @@
 </StyledRow>
 
 <div class="row">
-    @foreach (var option in options)
-    {
+    @foreach (var option in options) {
         <div class="list-group col-9 col-md-8">
             <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
                 @option.Label | @option.Start - @option.End
@@ -149,14 +147,11 @@
             </a>
         </div>
         <div class="list-group list-group-flush col-3 col-md-2 text-center">
-            @if (IsOptionOwner(option))
-            {
+            @if (IsOptionOwner(option)) {
                 <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
                     <span>Remove</span>
                 </a>
-            }
-            else
-            {
+            } else {
                 <a class="list-group-item list-group-item bg-transparent">
                     <span>&zwnj;</span>
                 </a>
@@ -170,43 +165,43 @@
 
 
 @code {
+
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-    
+
     [Parameter]
     public int MeetupId { get; set; }
 
     private MeetupDTO meetup;
-    
+
     private UserDTO signedUser;
 
-    private OptionDTO newOption = new()
-    {
-        Start = DateTime.Now,
-        End = DateTime.Now.AddDays(1)
-    };
-    
     private string newInvitation = string.Empty;
     
+    private OptionDTO newOption;
+
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
 
     private IEnumerable<UserMeetupDTO> invitations = new List<UserMeetupDTO>();
 
     private UserMeetupDTO? myInvitation;
 
-
     private (bool, string) popup;
-    
+
     protected override async Task OnParametersSetAsync()
     {
         meetup = await MeetupService.GetById(MeetupId);
+        newOption = new OptionDTO()
+        {
+            Start = meetup.OptionsFrom,
+            End = meetup.OptionsTo
+        };
         signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
+        if (firstRender) {
             await LoadOptions();
             await LoadInvitations();
             StateHasChanged();
@@ -221,7 +216,7 @@
         await LoadInvitations();
         StateHasChanged();
     }
-    
+
     private async Task MaybeInvitation()
     {
         myInvitation.State = StateEnum.Maybe;
@@ -229,7 +224,7 @@
         await LoadInvitations();
         StateHasChanged();
     }
-    
+
     private async Task DeclineInvitation()
     {
         myInvitation.State = StateEnum.Declined;
@@ -259,13 +254,10 @@
     private async Task ToggleOptionVote(OptionDTO option)
     {
         var userOption = await UserOptionService.GetById(signedUser.Id, option.Id);
-        if (userOption == null)
-        {
-            var newUserOption = new UserOptionDTO { UserId = signedUser.Id, OptionId = option.Id, TimeVoted = DateTime.Now };
+        if (userOption == null) {
+            var newUserOption = new UserOptionDTO {UserId = signedUser.Id, OptionId = option.Id, TimeVoted = DateTime.Now};
             await UserOptionService.Create(newUserOption);
-        }
-        else
-        {
+        } else {
             await UserOptionService.Delete(userOption.UserId, userOption.OptionId);
         }
         StateHasChanged();
@@ -313,4 +305,5 @@
         invitations = await MeetupService.GetInvitedUsers(meetup.Id);
         myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
     }
+
 }
