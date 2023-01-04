@@ -12,10 +12,9 @@
 @inject OptionService OptionService
 @inject UserService UserService
 @inject UserOptionService UserOptionService
-@inject NavigationManager NavigationManager
 
 <StyledRow Inner="false">
-    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)"/>
+    <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)"/>
 </StyledRow>
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">

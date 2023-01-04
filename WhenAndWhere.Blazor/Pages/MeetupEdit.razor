@@ -22,7 +22,7 @@
 <hr />
 
 <StyledRow Inner="true">
-    <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
+    <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
 
     <EditForm Model="meetup" OnSubmit="UpdateMeetup">
         <DataAnnotationsValidator />
@@ -62,6 +62,6 @@
     private async Task DeleteMeetup()
     {
         await MeetupService.Delete(meetup.Id);
-        NavigationManager.NavigateTo($"/meetups");
+        NavigationManager.NavigateTo($"/");
     }
 }
