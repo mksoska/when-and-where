@@ -1,6 +1,83 @@
-@page "/MeetupRoles"
-<h3>MeetupRoles</h3>
+@page "/meetups/{meetupId:int}/roles"
+
+@using WhenAndWhere.BL.Services
+@using Microsoft.AspNetCore.Components
+@using WhenAndWhere.BL.DTOs
+
+@inject MeetupService MeetupService
+@inject UserMeetupService UserMeetupService
+@inject OptionService OptionService
+@inject UserService UserService
+@inject UserOptionService UserOptionService
+@inject NavigationManager NavigationManager
+
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in searchedUsers)
+            {
+                <tr>
+                    <td>@entry.UserName</td>
+                    <td>
+                        <select @onchange="DoStuff">
+                            <option selected disabled="true"></option>
+                            @foreach(var item in RoleItems) {
+                                <option title="@item.Name">@item.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
-    
+
+    public class DropdownItem
+    {
+        public string Name { get; set; }
+    }
+
+    private string selectedString { get; set; }
+
+    List<DropdownItem> RoleItems = new List<DropdownItem>
+    {
+        new DropdownItem()  { Name = "Admin"},
+    new DropdownItem()  { Name = "Owner"},
+    new DropdownItem() { Name = "Moderator"}
+    };
+
+    [Parameter]
+    public int MeetupId { get; set; }
+
+    private IEnumerable<UserDTO> searchedUsers = new List<UserDTO>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            searchedUsers = (await MeetupService.GetInvitedUsers(MeetupId))
+            .Select(user => UserService.GetById(user.UserId)
+            .Result);
+
+            StateHasChanged();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private void DoStuff(ChangeEventArgs e)
+    {
+        selectedString = e.Value.ToString();
+        Console.WriteLine("It is definitely: " + selectedString);
+    }
+
 }

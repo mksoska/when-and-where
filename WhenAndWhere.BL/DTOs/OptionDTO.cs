@@ -13,18 +13,21 @@ public class OptionDTO : IDto
     [StringLength(64)]
     public string Label { get; set; }
 
-    [StringLength(64)]
+    [StringLength(64, ErrorMessage = "Max length is 64.")]
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only for State field, please")]
     public string State { get; set; }
     [Required]
     [StringLength(64)]
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only for City field, please")]
     public string City { get; set; }
-    [StringLength(64)]
+    [Required]
+    [StringLength(64, ErrorMessage = "Max length is 64.")]
     public string Street { get; set; }
-    [StringLength(64)]
+    [Required]
+    [StringLength(64, ErrorMessage = "Max length is 64.")]
     public string Number { get; set; }
-    [StringLength(64)]
+    [Required]
+    [StringLength(64, ErrorMessage = "Max length is 64.")]
     public string ZipCode { get; set; }
     [Required]
     [DataType(DataType.Date)]

@@ -28,12 +28,14 @@
     <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
         <Authorized>
             <a href="/meetups/@meetup.Id/edit" class="col-3 col-md-2 col-lg-1 btn btn-primary rounded-pill" role="button">Edit</a>
+            <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 btn btn-primary rounded-pill" role="button">Roles</a>
         </Authorized>
         <NotAuthorized>
             <div></div>
         </NotAuthorized>
     </AuthorizeView>
 </div>
+
 
 <hr/>
 
@@ -316,5 +318,10 @@
         {
             StateHasChanged();
         }
+    }
+
+    private async Task NavigateToRoles()
+    {
+        NavigationManager.NavigateTo($"/meetups/{MeetupId}/roles");
     }
 }
