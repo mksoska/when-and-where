@@ -16,6 +16,7 @@ public class OptionDTO : IDto
     [StringLength(64)]
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only for State field, please")]
     public string State { get; set; }
+    [Required]
     [StringLength(64)]
     [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Use letters only for City field, please")]
     public string City { get; set; }
