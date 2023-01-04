@@ -5,7 +5,6 @@
 @using WhenAndWhere.BL.Services
 @using Microsoft.AspNetCore.Components
 @using WhenAndWhere.BL.DTOs
-@using WhenAndWhere.BL.Facades
 @using WhenAndWhere.DAL.Enums
 @using System.Linq;
 
@@ -91,8 +90,8 @@
 
                 <div class="input-group">
                     <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label"/>
-                    <input id="startDateTime" class="form-control" type="datetime-local" value="@newOption.Start.ToString("s")" min="@meetup.OptionsFrom.ToString("s")" max="@meetup.OptionsTo.ToString("s")"/>
-                    <input id="endDateTime" class="form-control" type="datetime-local" value="@newOption.End.ToString("s")" min="@meetup.OptionsFrom.ToString("s")" max="@meetup.OptionsTo.ToString("s")"/>
+                    <input id="Start" class="form-control" type="datetime-local" @bind="newOption.Start" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                    <input id="End" class="form-control" type="datetime-local" @bind="newOption.End" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
                     <InputText class="form-control" @bind-Value="newOption.State" placeholder="State"/>
                 </div>
                 <div class="input-group">
@@ -148,11 +147,7 @@
 
     private UserDTO signedUser;
 
-    private OptionDTO newOption = new()
-    {
-        Start = DateTime.Now,
-        End = DateTime.Now.AddDays(1)
-    };
+    private OptionDTO newOption;
 
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
 
@@ -165,6 +160,11 @@
     protected override async Task OnParametersSetAsync()
     {
         meetup = await MeetupService.GetById(MeetupId);
+        newOption = new OptionDTO()
+        {
+            Start = meetup.OptionsFrom,
+            End = meetup.OptionsTo
+        };
         signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
     }
 
