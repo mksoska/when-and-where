@@ -92,10 +92,11 @@
 
                 <div class="input-group">
                     <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label" />
-                    <InputDate class="form-control" @bind-Value="newOption.Start" />
-                    <InputDate class="form-control" @bind-Value="newOption.End" />
-                    
+                    <input id="startDateTime" class="form-control" type="datetime-local" value="@newOption.Start.ToString("s")"/>
+                    <input id="endDateTime" class="form-control" type="datetime-local" value="@newOption.End.ToString("s")"/>
                     <InputText class="form-control" @bind-Value="newOption.State" placeholder="State" />
+                </div>
+                <div class="input-group">
                     <InputText class="form-control" @bind-Value="newOption.City" placeholder="City" />
                     <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code" />
                     <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street" />
@@ -150,8 +151,12 @@
     private MeetupDTO meetup;
     
     private UserDTO signedUser;
-    
-    private OptionDTO newOption = new();
+
+    private OptionDTO newOption = new()
+    {
+        Start = DateTime.Now,
+        End = DateTime.Now.AddDays(1)
+    };
 
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
 
