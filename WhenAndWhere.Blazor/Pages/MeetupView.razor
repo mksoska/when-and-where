@@ -165,7 +165,6 @@
 
 
 @code {
-
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
@@ -243,11 +242,14 @@
         }
         
         await UserMeetupService.Create(new UserMeetupDTO { UserId = user.Id, MeetupId = MeetupId, State = StateEnum.Pending });
+        await LoadInvitations();
+        StateHasChanged();
     }
 
     private async Task KickParticipant(int userId)
     {
         await UserMeetupService.Delete(userId, MeetupId);
+        await LoadInvitations();
         StateHasChanged();
     }
 
@@ -305,5 +307,4 @@
         invitations = await MeetupService.GetInvitedUsers(meetup.Id);
         myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
     }
-
 }
