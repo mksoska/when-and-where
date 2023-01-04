@@ -15,20 +15,19 @@
 @inject UserService UserService
 @inject UserOptionService UserOptionService
 @inject NavigationManager NavigationManager
-@inject WhenAndWhereFacade WhenAndWhereFacade
 
 <StyledRow Inner="false">
     <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
 </StyledRow>
 
-<div class="row justify-content-between my-2 p-1 bg-dark rounded">
-    <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary" role="button">Back</a>
+<div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
+    <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
     <div class="col-7 btn-group">
         <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
         <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
         <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
     </div>
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger" value="Leave meetup" @onclick="LeaveMeetup"/>
+    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger rounded-pill" value="Leave meetup" @onclick="LeaveMeetup"/>
 </div>
 
 <hr />
@@ -62,9 +61,9 @@
 <ul class="list-group row justify-content-center">
     @foreach (var invitation in invitations)
     {
-        <li class="list-group-item col-sm-12 col-md-6 col-lg-4">
+        <li class="list-group-item col-sm-12 col-md-6 col-lg-4 rounded-pill">
             @UserService.GetById(invitation.UserId).Result.UserName
-            <AuthorizeView Policy="ManageParticipants">
+            <AuthorizeView Context="nested_context" Policy="ManageParticipants">
                 <Authorized>
                     Delete
                     <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
@@ -85,8 +84,8 @@
 
 <StyledRow Inner="false">
     <p>
-        <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
-            +
+        <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+            + Add
         </button>
     </p>
     <div class="collapse col-12 my-2" id="collapseForm">
@@ -119,7 +118,7 @@
     @foreach (var option in options)
     {
         <div class="list-group col-9 col-md-8">
-            <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center" @onclick="() => ToggleOptionVote(option)">
+            <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
                 @option.Label | @option.Start - @option.End
                 <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
             </a>
@@ -127,7 +126,7 @@
         <div class="list-group list-group-flush col-3 col-md-2 text-center">
             @if (IsOptionOwner(option))
             {
-                <a class="list-group-item list-group-item-danger list-group-item-action" @onclick="() => DeleteOption(option)">
+                <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
                     <span>Remove</span>
                 </a>
             }
@@ -162,7 +161,7 @@
 
     private IEnumerable<UserMeetupDTO> invitations = new List<UserMeetupDTO>();
 
-    private UserMeetupDTO myInvitation;
+    private UserMeetupDTO? myInvitation;
 
     private (bool, string) popup;
     
@@ -210,7 +209,7 @@
     private async Task LeaveMeetup()
     {
         await UserMeetupService.Delete(signedUser.Id, MeetupId);
-        NavigationManager.NavigateTo($"/meetups");
+        NavigationManager.NavigateTo($"/");
     }
 
     private async Task KickParticipant(int userId)
@@ -263,7 +262,7 @@
 
     private string IsOutlineButton(StateEnum state, string button)
     {
-        return UserMeetupService.GetById(signedUser.Id, MeetupId).Result.State == state ? $"btn-{button}" : $"btn-outline-{button}";
+        return UserMeetupService.GetById(signedUser.Id, MeetupId).Result?.State == state ? $"btn-{button}" : $"btn-outline-{button}";
     }
 
     private async Task LoadOptions()
@@ -274,6 +273,6 @@
     private async Task LoadInvitations()
     {
         invitations = await MeetupService.GetInvitedUsers(meetup.Id);
-        myInvitation = invitations.First(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
+        myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
     }
 }

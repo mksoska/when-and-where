@@ -69,6 +69,10 @@ a, .btn-link {
     font-family: 'Raleway', sans-serif;  
 }
 
+.rounded-table {
+    border-radius: 20px;
+}
+
 .nav-menu .btn {
     color: lightblue;
 }

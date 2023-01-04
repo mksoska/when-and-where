@@ -15,7 +15,7 @@
         <StyledRow Inner="false">
             <div class="row justify-content-between">
                 <h1 class="col">My</h1>
-                <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-secondary" value="Create" @onclick="@(() => NavigationManager.NavigateTo("/meetups/create"))"/>
+                <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-secondary rounded-pill" value="+ Create" @onclick="@(() => NavigationManager.NavigateTo("/meetups/create"))"/>
             </div>
            
             <h4>Meetups</h4>
@@ -45,7 +45,7 @@
             </div>
         </form>
         
-        <div class="table-responsive rounded">
+        <div class="table-responsive rounded-table">
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
@@ -58,29 +58,38 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var meetup in searchedMeetups
-                        .OrderBy(um => um.DateInvited)
-                        .Select(um => MeetupService.GetById(um.MeetupId).Result))
-                    {
-                        //TODO: All service calls get executed on each render -> optimalize using variables in @code
-                        <tr class="@IsActiveRow(meetup.Id)">
-                            <th @onclick="e => NavigateToMeetup(meetup.Id)" scope="row">@meetup.Name</th>
-                            <td @onclick="e => NavigateToMeetup(meetup.Id)">@UserService.GetById(meetup.OwnerId).Result.UserName</td>
-                            <td @onclick="e => NavigateToMeetup(meetup.Id)">@meetup.OptionsFrom - @meetup.OptionsTo</td>
-                            <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetInvitedUsers(meetup.Id).Result.Count</td>
-                            <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetOptions(meetup.Id).Result.Count</td>
-                            <td>
-                                <AuthorizeView Context="nested_context" Policy="MeetupOwner">
-                                    <Authorized>
-                                         <a href="/meetings/@meetup.Id/edit">
-                                             <input type="button" class="btn btn-primary" value="Edit"/>
-                                         </a>
-                                    </Authorized>
-                                </AuthorizeView>
-                            </td>
-                        </tr>
-                    }
+                @foreach (var meetup in searchedMeetups
+                    .OrderBy(um => um.DateInvited)
+                    .Select(um => MeetupService.GetById(um.MeetupId).Result))
+                {
+                    //TODO: All service calls get executed on each render -> optimalize using variables in @code
+                    <tr class="@IsActiveRow(meetup.Id)">
+                        <th @onclick="e => NavigateToMeetup(meetup.Id)" scope="row">@meetup.Name</th>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@UserService.GetById(meetup.OwnerId).Result.UserName</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@meetup.OptionsFrom - @meetup.OptionsTo</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetInvitedUsers(meetup.Id).Result.Count</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetOptions(meetup.Id).Result.Count</td>
+                        <td>
+                            @if (signedUser.Id == meetup.OwnerId)
+                            {
+                                <a href="/meetings/@meetup.Id/edit">
+                                    <input type="button" class="btn btn-primary rounded-pill" value="Edit"/>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Page</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </Authorized>
