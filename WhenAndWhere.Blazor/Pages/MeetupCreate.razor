@@ -26,13 +26,14 @@
     <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
 
     @* TODO: OnSubmit -> OnValidSubmit *@
-    <EditForm Model="meetup" OnSubmit="CreateMeetup">
+    <EditForm Model="meetup" OnValidSubmit="CreateMeetup">
         <DataAnnotationsValidator />
+        <ValidationSummary></ValidationSummary>
 
         <div class="form-group">
             <label class="control-label">Title:</label>
             <InputText class="form-control" @bind-Value="meetup.Name" placeholder="title" />
-            <ValidationMessage For="() => meetup.Name" />
+ @*           <ValidationMessage For="() => meetup.Name" />*@
         </div>
         
         <div class="form-group">
@@ -43,9 +44,11 @@
         
         <label class="control-label">Options from:</label>
         <input id="OptionsFrom" class="form-control" type="datetime-local" @bind="meetup.OptionsFrom"/>
+@*        <ValidationMessage For="() => meetup.OptionsFrom" />  -- nefunguje, musi to byt v blazor komponente i guess*@
         
         <label class="control-label">Options to:</label>
         <input id="OptionsTo" class="form-control" type="datetime-local" @bind="meetup.OptionsTo"/>
+        <ValidationMessage For="() => meetup.OptionsTo" />
 
         <input type="submit" class="form-control col-3 my-2 btn btn-secondary rounded-pill" value="Create" />
         <a href="/" class="form-control col-3 my-2 btn btn-danger rounded-pill" role="button">Cancel</a>
