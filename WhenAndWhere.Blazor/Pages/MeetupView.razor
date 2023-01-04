@@ -240,6 +240,10 @@
             //TODO: If not registered, configure IEmailService to send invitation to this meetup via email
             return;
         }
+        if (await UserMeetupService.GetById(user.Id, MeetupId) != null)
+        {
+            return;
+        }
         
         await UserMeetupService.Create(new UserMeetupDTO { UserId = user.Id, MeetupId = MeetupId, State = StateEnum.Pending });
         await LoadInvitations();
