@@ -20,18 +20,13 @@
            
             <h4>Meetups</h4>
         </StyledRow>
-        
-        <StyledRow>
-           
-        </StyledRow>
-        
+
         <hr />
         
         <StyledRow Inner="true">
             <ValidationPopup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
         </StyledRow>
-        
-        
+
         <form @onsubmit="SearchMeetups">
             <div class="form-row">
                 <div class="col-sm-7 input-group my-4">
@@ -54,12 +49,11 @@
                         <th scope="col">Time</th>
                         <th scope="col">Participants</th>
                         <th scope="col">Options</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach (var meetup in searchedMeetups
-                    .OrderBy(um => um.DateInvited)
+                    .OrderByDescending(um => um.DateInvited)
                     .Select(um => MeetupService.GetById(um.MeetupId).Result))
                 {
                     //TODO: All service calls get executed on each render -> optimalize using variables in @code
@@ -69,21 +63,12 @@
                         <td @onclick="e => NavigateToMeetup(meetup.Id)">@meetup.OptionsFrom - @meetup.OptionsTo</td>
                         <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetInvitedUsers(meetup.Id).Result.Count</td>
                         <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetOptions(meetup.Id).Result.Count</td>
-                        <td>
-                            @if (signedUser.Id == meetup.OwnerId)
-                            {
-                                <a href="/meetings/@meetup.Id/edit">
-                                    <input type="button" class="btn btn-primary rounded-pill" value="Edit"/>
-                                </a>
-                            }
-                        </td>
                     </tr>
                 }
                 </tbody>
                 <tfoot>
                     <tr>
                         <th>Page</th>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -136,7 +121,15 @@
 
     private void SearchMeetups()
     {
-        searchedMeetups = myMeetups.Where(um => MeetupService.GetById(um.MeetupId).Result!.Name.Contains(searchString));
+        searchedMeetups = myMeetups
+            .Select(um => new
+            {
+                um,
+                meetup = MeetupService.GetById(um.MeetupId).Result!,
+                owner = UserService.GetById(MeetupService.GetById(um.MeetupId).Result!.OwnerId).Result!
+            })
+            .Where(entry => entry.meetup.Name.Contains(searchString) || entry.owner.UserName.Contains(searchString))
+            .Select(entry => entry.um);
 
         StateHasChanged();
     }

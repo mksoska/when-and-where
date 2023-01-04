@@ -1,11 +1,9 @@
 ﻿@page "/meetups/{meetupId:int}/view"
-@attribute [Authorize]
 @attribute [Authorize(Policy = "MeetupView")]
 
 @using WhenAndWhere.BL.Services
 @using Microsoft.AspNetCore.Components
 @using WhenAndWhere.BL.DTOs
-@using WhenAndWhere.BL.Facades
 @using WhenAndWhere.DAL.Enums
 @using System.Linq;
 
@@ -27,7 +25,14 @@
         <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
         <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
     </div>
-    <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-danger rounded-pill" value="Leave meetup" @onclick="LeaveMeetup"/>
+    <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
+        <Authorized>
+            <a href="/meetups/@meetup.Id/edit" class="col-3 col-md-2 col-lg-1 btn btn-primary rounded-pill" role="button">Edit</a>
+        </Authorized>
+        <NotAuthorized>
+            <div></div>
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 <hr />
@@ -56,7 +61,30 @@
     <h2>Participants</h2>
 </StyledRow>
 
-@* TODO: Add + button with form to invite a user *@
+<AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
+    <Authorized>
+        <StyledRow Inner="false">
+            <p>
+                <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#addParticipantCollapseForm" aria-expanded="false" aria-controls="addParticipantCollapseForm">
+                    + Add
+                </button>
+            </p>
+            <div class="col-sm-7 collapse my-2" id="addParticipantCollapseForm">
+                <div class="card card-body">
+                    <form @onsubmit="InviteParticipant">
+                        <div class="input-group">
+                            <input type="search" @bind="newInvitation" class="form-control" placeholder="Username" required/>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </StyledRow>
+    </Authorized>
+</AuthorizeView>
+
 
 <ul class="list-group row justify-content-center">
     @foreach (var invitation in invitations)
@@ -157,12 +185,15 @@
         Start = DateTime.Now,
         End = DateTime.Now.AddDays(1)
     };
-
+    
+    private string newInvitation = string.Empty;
+    
     private IEnumerable<OptionDTO> options = new List<OptionDTO>();
 
     private IEnumerable<UserMeetupDTO> invitations = new List<UserMeetupDTO>();
 
     private UserMeetupDTO? myInvitation;
+
 
     private (bool, string) popup;
     
@@ -207,10 +238,16 @@
         StateHasChanged();
     }
 
-    private async Task LeaveMeetup()
+    private async Task InviteParticipant()
     {
-        await UserMeetupService.Delete(signedUser.Id, MeetupId);
-        NavigationManager.NavigateTo($"/");
+        var user = UserService.GetByName(newInvitation);
+        if (user == null)
+        {
+            //TODO: If not registered, configure IEmailService to send invitation to this meetup via email
+            return;
+        }
+        
+        await UserMeetupService.Create(new UserMeetupDTO { UserId = user.Id, MeetupId = MeetupId, State = StateEnum.Pending });
     }
 
     private async Task KickParticipant(int userId)
