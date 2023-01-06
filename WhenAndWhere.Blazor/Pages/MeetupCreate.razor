@@ -4,14 +4,14 @@
 
 @using WhenAndWhere.BL.Services
 @using WhenAndWhere.BL.DTOs
-@using Microsoft.AspNetCore.Identity
+@using WhenAndWhere.Blazor.Authorization
 @using WhenAndWhere.DAL.Enums
-@using WhenAndWhere.DAL.Models
 @using WhenAndWhere.Blazor.Components
 
 @inject UserService UserService
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
+@inject RoleService RoleService
 @inject NavigationManager NavigationManager
 
 
@@ -91,10 +91,20 @@
     {
         meetup.OwnerId = signedUser.Id;
         var newMeetup = await MeetupService.Create(meetup);
+        await CreateRoles(newMeetup.Id);
         
         UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = newMeetup.Id, State = StateEnum.Pending, DateInvited = DateTime.Now };
         await UserMeetupService.Create(userMeetup);
 
         NavigationManager.NavigateTo($"/meetups/{newMeetup.Id}/view");
+    }
+
+    private async Task CreateRoles(int meetupId)
+    {
+        RoleDTO administratorRole = new RoleDTO { Name = Roles.Administrator, MeetupId = meetupId };
+        RoleDTO moderatorRole = new RoleDTO { Name = Roles.Moderator, MeetupId = meetupId };
+
+        await RoleService.Create(administratorRole);
+        await RoleService.Create(moderatorRole);
     }
 }

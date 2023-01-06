@@ -52,23 +52,23 @@ builder.Services.AddIdentity<User, Role>(config => config.SignIn.RequireConfirme
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("MeetupEdit", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator")));
+    options.AddPolicy(nameof(Roles.MeetupEdit), policy =>
+        policy.Requirements.Add(Roles.MeetupEdit));
     
-    options.AddPolicy("MeetupView", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "User")));
+    options.AddPolicy(nameof(Roles.MeetupView), policy =>
+        policy.Requirements.Add(Roles.MeetupView));
 
-    options.AddPolicy("ManageParticipants", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "Moderator")));
+    options.AddPolicy(nameof(Roles.ManageParticipants), policy =>
+        policy.Requirements.Add(Roles.ManageParticipants));
     
-    options.AddPolicy("ManageRoles", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator")));
+    options.AddPolicy(nameof(Roles.ManageRoles), policy =>
+        policy.Requirements.Add(Roles.ManageRoles));
     
-    options.AddPolicy("ManageOptions", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("Owner", "Administrator", "Moderator")));
+    options.AddPolicy(nameof(Roles.ManageOptions), policy =>
+        policy.Requirements.Add(Roles.ManageOptions));
     
-    options.AddPolicy("Vote", policy =>
-        policy.Requirements.Add(new RoleAuthorizationRequirement("User")));
+    options.AddPolicy(nameof(Roles.Vote), policy =>
+        policy.Requirements.Add(Roles.Vote));
 });
 
 builder.Services.AddTransient<RoleAuthorizationHandler>();

@@ -46,6 +46,41 @@ public class WhenAndWhereFacade
         return result;
     }
 
+    public async Task ChangeUserRole(int userId, int meetupId, string roleName)
+    {
+        if (string.IsNullOrEmpty(roleName))
+        {
+            await DeleteUserRoles(userId, meetupId);
+            return;
+        }
+        var role = _roleService.GetByName(meetupId, roleName);
+        if (role != null)
+        {
+            await DeleteUserRoles(userId, meetupId);
+            await _userRoleService.Create(new UserRoleDTO { UserId = userId, RoleId = role.Id });
+        }
+    }
+
+    public async Task DeleteUserRoles(int userId, int meetupId)
+    {
+        var meetupRoles = _roleService.GetAllInMeetup(meetupId);
+
+        foreach (var role in meetupRoles)
+        {
+            await _userRoleService.Delete(userId, role.Id);
+        }
+    }
+    
+    public async Task<bool> HasUserRole(int userId, int meetupId, string roleName)
+    {
+        var role = _roleService.GetByName(meetupId, roleName);
+        if (role == null)
+        {
+            return false;
+        }
+        return await _userRoleService.GetById(userId, role.Id) != null;
+    }
+
     public async Task<bool> IsAnyOptionVoted(int userId, int meetupId)
     {
         var meetupOptions = await _meetupService.GetOptions(meetupId);

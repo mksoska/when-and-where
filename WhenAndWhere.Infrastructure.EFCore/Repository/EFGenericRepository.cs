@@ -35,7 +35,10 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
     public virtual void Delete(params object?[]? keyValues)
     {
         var entityToDelete = Uow.Context.Set<TEntity>().Find(keyValues);
-        Delete(entityToDelete);
+        if (entityToDelete != null)
+        {
+            Delete(entityToDelete);
+        }
     }
 
     public virtual void Delete(TEntity entityToDelete)

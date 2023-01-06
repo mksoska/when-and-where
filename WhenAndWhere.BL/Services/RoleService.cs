@@ -24,7 +24,17 @@ public class RoleService : GenericService<RoleDTO, Role>
         };
         return ExecuteQuery(query).Items.FirstOrDefault();
     }
-    
+
+    public List<RoleDTO> GetAllInMeetup(int meetupId)
+    {
+        var query = new QueryFilterDto<RoleDTO>
+        {
+            Values = new RoleDTO { MeetupId = meetupId },
+            WhereColumns = new List<string> { "MeetupId" }
+        };
+        return ExecuteQuery(query).Items.ToList();
+    }
+
     public async Task<MeetupDTO> GetMeetup(params object?[]? keyValues)
     {
         return await GetProperty<MeetupDTO>("Meetup", keyValues);
