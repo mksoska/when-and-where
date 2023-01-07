@@ -70,6 +70,11 @@ public class WhenAndWhereFacade
 
     public async Task ChangeUserRole(int userId, int meetupId, string roleName)
     {
+        if (string.IsNullOrEmpty(roleName))
+        {
+            await DeleteUserRoles(userId, meetupId);
+            return;
+        }
         var role = _roleService.GetByName(meetupId, roleName);
         if (role != null)
         {

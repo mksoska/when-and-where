@@ -6,6 +6,7 @@
 @using WhenAndWhere.BL.DTOs
 @using WhenAndWhere.BL.Facades
 @using WhenAndWhere.Blazor.Authorization
+@using WhenAndWhere.DAL.Models
 
 @inject MeetupService MeetupService
 @inject UserService UserService
@@ -30,7 +31,7 @@
             {
                 <tr>
                     <td>
-                        @user.UserName @if (IsOwner(user)) { <strong>(owner)</strong> }
+                        @user.UserName @if (user.Id == meetup.Id) { <strong>(owner)</strong> }
                     </td>
                     <td>
                         <select selected value="@GetUserRole(user)" @onchange="(e) => ChangeRole(e, user)">
@@ -81,24 +82,11 @@
     private async Task ChangeRole(ChangeEventArgs e, UserDTO user)
     {
         var roleName = e.Value!.ToString()!;
-        if (IsParticipant(roleName))
+        if (roleName == Roles.Participant)
         {
-            await WhenAndWhereFacade.DeleteUserRoles(user.Id, MeetupId);
+            roleName = string.Empty;
         }
-        else
-        {
-            await WhenAndWhereFacade.ChangeUserRole(user.Id, MeetupId, roleName); 
-        }
-    }
-
-    private bool IsOwner(UserDTO user)
-    {
-        return user.Id == meetup.OwnerId;
-    }
-
-    private bool IsParticipant(string roleName)
-    {
-        return roleName == Roles.Participant;
+        await WhenAndWhereFacade.ChangeUserRole(user.Id, MeetupId, roleName);
     }
 
     private string GetUserRole(UserDTO user)
