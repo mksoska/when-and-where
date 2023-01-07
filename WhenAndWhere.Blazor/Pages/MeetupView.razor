@@ -22,13 +22,20 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
-    @if (myInvitation != null && DateTime.Now >= meetup.VotingEnd)
+    @if (DateTime.Now >= meetup.VotingEnd)
     {
-        <div class="col-5 btn-group">
-            <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
-            <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
-            <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
-        </div>
+        @if (myInvitation != null)
+        {
+            <div class="col-5 btn-group">
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-auto text-white align-self-center">Voting ends in: @(meetup.VotingEnd - DateTime.Now)</div>
     }
     <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" value="Leave" @onclick="LeaveMeetup"/>
 </div>
@@ -94,21 +101,21 @@
 </AuthorizeView>
 
 
-<ul class="list-group">
+<div class="row justify-content-start">
     @foreach (var invitation in invitations) {
-        <li class="list-group-item col-sm-12 col-md-6 col-lg-4 my-2 rounded-pill">
+        <li class="list-group-item col-auto my-2 mx-2 rounded-pill">
             @UserService.GetById(invitation.UserId).Result.UserName
             <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
                 <Authorized>
                     @if (invitation.UserId != signedUser.Id)
                     {
-                        <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
+                        <input type="button" class="btn py-0 px-0 mx-2" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
                     }
                 </Authorized>
             </AuthorizeView>
         </li>
     }
-</ul>
+</div>
 
 <hr/>
 
