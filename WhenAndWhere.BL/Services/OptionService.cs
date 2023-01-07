@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.Repository;
@@ -12,6 +13,16 @@ public class OptionService : GenericService<OptionDTO, Option>
     public OptionService(IRepository<Option> repository, IMapper mapper, 
         QueryObjectGeneric<OptionDTO, Option> queryObject) : base(repository, mapper, queryObject)
     {
+    }
+
+    public List<OptionDTO> GetAllByUserMeetup(int userId, int meetupId)
+    {
+        var query = new QueryFilterDto<OptionDTO>
+        {
+            Values = new OptionDTO { OwnerId = userId, MeetupId = meetupId },
+            WhereColumns = new List<string> { "OwnerId", "MeetupId" }
+        };
+        return ExecuteQuery(query).Items.ToList();
     }
 
     public async Task<MeetupDTO> GetMeetup(params object?[]? keyValues)

@@ -252,6 +252,8 @@
     private async Task LeaveMeetup()
     {
         await WhenAndWhereFacade.DeleteUserRoles(signedUser.Id, MeetupId);
+        await WhenAndWhereFacade.DeleteUserVotes(signedUser.Id, MeetupId);
+        await WhenAndWhereFacade.DeleteUserOptions(signedUser.Id, MeetupId);
         await UserMeetupService.Delete(signedUser.Id, MeetupId);
         NavigationManager.NavigateTo("/");
     }

@@ -43,6 +43,19 @@ public class WhenAndWhereFacade
             result.AddRange(await _roleService.GetAssignedUsers(role.Id));
             
         }
+        
+        return result;
+    }
+
+    public async Task<List<UserOptionDTO>> GetMeetupUserVotes(int userId, int meetupId)
+    {
+        var result = new List<UserOptionDTO>();
+
+        foreach (var option in await _meetupService.GetOptions(meetupId))
+        {
+            result.AddRange(await _optionService.GetVoters(userId, option.Id));
+        }
+
         return result;
     }
 
@@ -68,6 +81,26 @@ public class WhenAndWhereFacade
         foreach (var role in meetupRoles)
         {
             await _userRoleService.Delete(userId, role.Id);
+        }
+    }
+
+    public async Task DeleteUserOptions(int userId, int meetupId)
+    {
+        var userOptions = _optionService.GetAllByUserMeetup(userId, meetupId);
+
+        foreach (var option in userOptions)
+        {
+            await _optionService.Delete(option.Id);
+        }
+    }
+
+    public async Task DeleteUserVotes(int userId, int meetupId)
+    {
+        var userVotes = await GetMeetupUserVotes(userId, meetupId);
+
+        foreach (var vote in userVotes)
+        {
+            await _userOptionService.Delete(vote.UserId, vote.OptionId);
         }
     }
     
