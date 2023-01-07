@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Services;
+using WhenAndWhere.DAL.Models;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 namespace WhenAndWhere.Blazor.Authorization;
@@ -27,21 +28,29 @@ public class RoleAuthorizationHandler
         AuthorizationHandlerContext context, RoleAuthorizationRequirement requirement, int meetupId)
     {
         var user = _userService.GetByName(context.User.Identity?.Name)!;
+        var meetup = await _meetupService.GetById(meetupId);
+        if (meetup == null)
+        {
+            return;
+        }
+        if (ReferenceEquals(requirement, Roles.Vote) && IsVotingEnd(meetup))
+        {
+            return;
+        }
 
         foreach (var roleName in requirement.RoleNames)
         {
-            if (roleName == "Owner" && await IsOwner(user, meetupId))
+            if (roleName == Roles.Owner && IsOwner(user, meetup))
             {
                 context.Succeed(requirement);
                 return;
             }
 
-            if (roleName == "User" && await IsUser(user, meetupId))
+            if (roleName == Roles.Participant && await IsParticipant(user, meetup))
             {
                 context.Succeed(requirement);
                 return;
             }
-            
 
             var role = _roleService.GetByName(meetupId, roleName);
             if (role == null)
@@ -57,14 +66,18 @@ public class RoleAuthorizationHandler
         }
     }
     
-    private async Task<bool> IsOwner(UserDTO user, int meetupId)
+    private bool IsOwner(UserDTO user, MeetupDTO meetup)
     {
-        var meetup = await _meetupService.GetById(meetupId);
-        return meetup != null && user.Id == meetup.OwnerId;
+        return user.Id == meetup.OwnerId;
     }
 
-    private async Task<bool> IsUser(UserDTO user, int meetupId)
+    private async Task<bool> IsParticipant(UserDTO user, MeetupDTO meetup)
     {
-        return await _userMeetupService.GetById(user.Id, meetupId) != null;
+        return await _userMeetupService.GetById(user.Id, meetup.Id) != null;
+    }
+
+    private bool IsVotingEnd(MeetupDTO meetup)
+    {
+        return DateTime.Now >= meetup.VotingEnd;
     }
 }

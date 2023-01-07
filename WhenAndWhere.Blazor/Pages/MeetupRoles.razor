@@ -66,7 +66,7 @@
     {
         new DropdownItem { Name = Roles.Administrator },
         new DropdownItem { Name = Roles.Moderator },
-        new DropdownItem { Name = Roles.User }
+        new DropdownItem { Name = Roles.Participant }
     };
 
     private IEnumerable<UserDTO> participants = new List<UserDTO>();
@@ -86,7 +86,7 @@
     private async Task ChangeRole(ChangeEventArgs e, UserDTO user)
     {
         var roleName = e.Value!.ToString()!;
-        if (roleName == Roles.User)
+        if (roleName == Roles.Participant)
         {
             await WhenAndWhereFacade.DeleteUserRoles(user.Id, MeetupId);
         }
@@ -103,6 +103,6 @@
 
     private async Task<bool> IsAssigned(UserDTO user, string roleName)
     {
-        return await WhenAndWhereFacade.HasUserRole(user.Id, MeetupId, roleName) || roleName == Roles.User;
+        return await WhenAndWhereFacade.HasUserRole(user.Id, MeetupId, roleName) || roleName == Roles.Participant;
     }
 }

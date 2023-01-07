@@ -13,12 +13,13 @@
 <AuthorizeView>
     <Authorized>
         <StyledRow Inner="false">
+            <h1>My</h1>
+            
             <div class="row justify-content-between">
-                <h1 class="col">My</h1>
+                <h4 class="col">Meetups</h4>
                 <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-secondary rounded-pill" value="+ Create" @onclick="@(() => NavigationManager.NavigateTo("/meetups/create"))"/>
             </div>
-           
-            <h4>Meetups</h4>
+
         </StyledRow>
 
         <hr />

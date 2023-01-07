@@ -14,6 +14,8 @@ public class Meetup : IEntity
     public string Description { get; set; }
     public DateTime OptionsFrom { get; set; }
     public DateTime OptionsTo { get; set; }
+    
+    public DateTime VotingEnd { get; set; }
     public byte[] Logo { get; set; }
     public MeetupType Type { get; set; }
 

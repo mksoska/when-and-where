@@ -26,6 +26,10 @@ public class MeetupDTO : IDto
     [DataType(DataType.Date)]
     public DateTime OptionsTo { get; set; }
     
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime VotingEnd { get; set; }
+
     public byte[] Logo { get; set; }
     public MeetupType Type { get; set; }
 }

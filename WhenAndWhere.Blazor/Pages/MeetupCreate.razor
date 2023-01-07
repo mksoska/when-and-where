@@ -44,6 +44,12 @@
         </div>
         
         <div class="form-group">
+            <label class="control-label">Voting for options ends at:</label>
+            <InputDateTime @bind-DateAndTime="@meetup.VotingEnd"/>
+            @* <ValidationMessage For="() => meetup.OptionsFrom" /> *@
+        </div>
+        
+        <div class="form-group">
             <label class="control-label">Options from:</label>
             <InputDateTime @bind-DateAndTime="@meetup.OptionsFrom"/>
             @* <ValidationMessage For="() => meetup.OptionsFrom" /> *@
@@ -81,8 +87,9 @@
     {
         meetup = new()
         {
-            OptionsFrom = DateTime.Now,
-            OptionsTo = DateTime.Now.AddDays(1)
+            VotingEnd = DateTime.Now.AddDays(1),
+            OptionsFrom = DateTime.Now.AddDays(1),
+            OptionsTo = DateTime.Now.AddDays(2)
         };
         base.OnInitialized();
     }

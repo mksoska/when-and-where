@@ -6,12 +6,15 @@
 @using WhenAndWhere.BL.DTOs
 @using WhenAndWhere.DAL.Enums
 @using System.Linq;
+@using WhenAndWhere.BL.Facades
 
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
 @inject OptionService OptionService
 @inject UserService UserService
 @inject UserOptionService UserOptionService
+@inject WhenAndWhereFacade WhenAndWhereFacade
+@inject NavigationManager NavigationManager
 
 <StyledRow Inner="false">
     <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)"/>
@@ -19,26 +22,27 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
-    <div class="col-7 btn-group">
-        <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
-        <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
-        <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
-    </div>
-    <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
-        <Authorized>
-            <a href="/meetups/@meetup.Id/edit" class="col-3 col-md-2 col-lg-1 btn btn-primary rounded-pill" role="button">Edit</a>
-        </Authorized>
-        <NotAuthorized>
-            <div></div>
-        </NotAuthorized>
-    </AuthorizeView>
+    @if (myInvitation != null)
+    {
+        <div class="col-5 btn-group">
+            <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
+            <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
+            <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
+        </div>
+    }
+    <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" value="Leave" @onclick="LeaveMeetup"/>
 </div>
-
 
 <hr/>
 
 <StyledRow Inner="false">
-    <h2>Title</h2>
+    
+    <div class="row justify-content-between">
+        <h2 class="col">Title</h2>
+        
+        
+    </div>
+    
 </StyledRow>
 
 <StyledRow Inner="true">
@@ -64,16 +68,15 @@
 <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
     <Authorized>
         <StyledRow Inner="false">
-            <p class="row justify-content-between">
-                <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#addParticipantCollapseForm" aria-expanded="false" aria-controls="addParticipantCollapseForm">
-                    + Add
-                </button>
-                <AuthorizeView Context="nestedContext" Policy="ManageRoles" Resource="@MeetupId">
-                    <Authorized>
-                        <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 btn btn-primary rounded-pill" role="button">Roles</a>
-                    </Authorized>
-                </AuthorizeView>
-            </p>
+           <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#addParticipantCollapseForm" aria-expanded="false" aria-controls="addParticipantCollapseForm">
+               + Add
+           </button>
+            <AuthorizeView Context="nestedContext" Policy="ManageRoles" Resource="@MeetupId">
+                <Authorized>
+                    <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 mx-2 btn btn-primary rounded-pill" role="button">Roles</a>
+                </Authorized>
+            </AuthorizeView>
+            
             <div class="col-sm-7 collapse my-2" id="addParticipantCollapseForm">
                 <div class="card card-body">
                     <form @onsubmit="InviteParticipant">
@@ -91,13 +94,16 @@
 </AuthorizeView>
 
 
-<ul class="list-group row justify-content-center">
+<ul class="list-group">
     @foreach (var invitation in invitations) {
-        <li class="list-group-item col-sm-12 col-md-6 col-lg-4 rounded-pill">
+        <li class="list-group-item col-sm-12 col-md-6 col-lg-4 my-2 rounded-pill">
             @UserService.GetById(invitation.UserId).Result.UserName
             <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
                 <Authorized>
-                    <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
+                    @if (invitation.UserId != signedUser.Id)
+                    {
+                        <input type="button" class="btn" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
+                    }
                 </Authorized>
             </AuthorizeView>
         </li>
@@ -146,28 +152,58 @@
 <div class="row">
     @foreach (var option in options) {
         <div class="list-group col-9 col-md-8">
-            <a class="list-group-item list-group-item-action @IsActiveItem(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
-                @option.Label | @option.Start - @option.End
-                <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
-            </a>
+            <AuthorizeView Policy="Vote" Resource="MeetupId">
+                <Authorized>
+                    <a class="list-group-item list-group-item-action @IsVoted(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
+                        @option.Label | @option.Start - @option.End
+                        <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="list-group-item disabled @IsMostVoted(option) d-flex justify-content-between align-items-center rounded-pill">
+                        @option.Label | @option.Start - @option.End
+                        <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                    </a>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
         <div class="list-group list-group-flush col-3 col-md-2 text-center">
-            @if (IsOptionOwner(option)) {
-                <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
-                    <span>Remove</span>
-                </a>
-            } else {
-                <a class="list-group-item list-group-item bg-transparent">
-                    <span>&zwnj;</span>
-                </a>
-            }
+            <AuthorizeView Policy="ManageOptions" Resource="MeetupId">
+                <Authorized>
+                    <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
+                        <span>Remove</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    @if (IsOptionOwner(option))
+                    {
+                        <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
+                            <span>Remove</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="list-group-item list-group-item bg-transparent">
+                            <span>&zwnj;</span>
+                        </a>
+                    }
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     }
 </div>
 
+<hr/>
+
+<StyledRow Inner="false">
+    <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
+        <Authorized>
+            <a href="/meetups/@meetup.Id/edit" class="col-3 btn btn-primary rounded-pill" role="button">Edit</a>
+        </Authorized>
+    </AuthorizeView>
+</StyledRow>
 
 <div class="container-bottom bg-dark"></div>
-
 
 @code {
     [CascadingParameter]
@@ -213,23 +249,30 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
+    private async Task LeaveMeetup()
+    {
+        await WhenAndWhereFacade.DeleteUserRoles(signedUser.Id, MeetupId);
+        await UserMeetupService.Delete(signedUser.Id, MeetupId);
+        NavigationManager.NavigateTo("/");
+    }
+
     private async Task AcceptInvitation()
     {
-        myInvitation.State = StateEnum.Accepted;
+        myInvitation!.State = StateEnum.Accepted;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
     }
 
     private async Task MaybeInvitation()
     {
-        myInvitation.State = StateEnum.Maybe;
+        myInvitation!.State = StateEnum.Maybe;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
     }
 
     private async Task DeclineInvitation()
     {
-        myInvitation.State = StateEnum.Declined;
+        myInvitation!.State = StateEnum.Declined;
         await UserMeetupService.Update(myInvitation);
         await LoadInvitations();
     }
@@ -256,7 +299,7 @@
         await UserMeetupService.Delete(userId, MeetupId);
         await LoadInvitations();
     }
-
+    
     private async Task ToggleOptionVote(OptionDTO option)
     {
         var userOption = await UserOptionService.GetById(signedUser.Id, option.Id);
@@ -294,9 +337,18 @@
         return await UserMeetupService.GetById(user.Id, MeetupId) != null;
     }
 
-    private string IsActiveItem(OptionDTO option)
+    private string IsVoted(OptionDTO option)
     {
         return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
+    }
+
+    private string IsMostVoted(OptionDTO option)
+    {
+        if (DateTime.Now < meetup.VotingEnd)
+        {
+            return string.Empty;
+        }
+        return option == options.MaxBy(o => OptionService.GetVoters(o.Id).Result.Count) ? "bg-success" : string.Empty;
     }
 
     private string IsOutlineButton(StateEnum state, string button)

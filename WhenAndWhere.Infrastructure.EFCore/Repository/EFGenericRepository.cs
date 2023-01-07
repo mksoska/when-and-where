@@ -31,7 +31,7 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
     {
         Uow.Context.Set<TEntity>().Add(entity);
     }
-
+    
     public virtual void Delete(params object?[]? keyValues)
     {
         var entityToDelete = Uow.Context.Set<TEntity>().Find(keyValues);
@@ -41,6 +41,7 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         }
     }
 
+    //TODO: Fix Delete and Update of TEntity 
     public virtual void Delete(TEntity entityToDelete)
     {
         if (Uow.Context.Entry(entityToDelete).State == EntityState.Detached)
