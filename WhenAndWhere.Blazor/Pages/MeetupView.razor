@@ -37,7 +37,14 @@
     {
         <div class="col-auto text-white align-self-center">Voting ends in: @(meetup.VotingEnd - DateTime.Now)</div>
     }
-    <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" value="Leave" @onclick="LeaveMeetup"/>
+    @if (IsMeetupOwner())
+    {
+        <a href="/meetups/@MeetupId/edit" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" role="button">Delete</a>
+    }
+    else
+    {
+        <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" value="Leave" @onclick="LeaveMeetup"/>
+    }
 </div>
 
 <hr/>
@@ -342,6 +349,11 @@
     private bool IsOptionOwner(OptionDTO option)
     {
         return signedUser.Id == option.OwnerId;
+    }
+
+    private bool IsMeetupOwner()
+    {
+        return signedUser.Id == meetup.OwnerId;
     }
 
     private async Task<bool> IsInvitedUser(UserDTO user)
