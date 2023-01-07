@@ -22,7 +22,7 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
-    @if (myInvitation != null)
+    @if (myInvitation != null && DateTime.Now >= meetup.VotingEnd)
     {
         <div class="col-5 btn-group">
             <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
@@ -253,7 +253,7 @@
     {
         await WhenAndWhereFacade.DeleteUserRoles(signedUser.Id, MeetupId);
         await WhenAndWhereFacade.DeleteUserVotes(signedUser.Id, MeetupId);
-        await WhenAndWhereFacade.DeleteUserOptions(signedUser.Id, MeetupId);
+        await WhenAndWhereFacade.DeleteOptions(signedUser.Id, MeetupId);
         await UserMeetupService.Delete(signedUser.Id, MeetupId);
         NavigationManager.NavigateTo("/");
     }

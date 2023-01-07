@@ -6,9 +6,11 @@
 @using WhenAndWhere.BL.DTOs
 @using WhenAndWhere.BL.Facades
 @using WhenAndWhere.Blazor.Authorization
+@using WhenAndWhere.DAL.Models
 
 @inject MeetupService MeetupService
 @inject UserService UserService
+@inject RoleService RoleService
 @inject WhenAndWhereFacade WhenAndWhereFacade
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
@@ -19,10 +21,10 @@
 <div class="table-responsive rounded-table">
     <table class="table table-hover">
         <thead class="thead-dark">
-            <tr>
-                <th scope="col">User</th>
-                <th scope="col">Role</th>
-            </tr>
+        <tr>
+            <th scope="col">User</th>
+            <th scope="col">Role</th>
+        </tr>
         </thead>
         <tbody>
             @foreach (var user in participants)
@@ -32,16 +34,10 @@
                         @user.UserName @if (IsOwner(user)) { <strong>(owner)</strong> }
                     </td>
                     <td>
-                        <select @onchange="(e) => ChangeRole(e, user)">
+                        <select selected value="@GetUserRole(user)" @onchange="(e) => ChangeRole(e, user)">
                             @foreach(var item in roleItems) {
-                                @if (IsAssigned(user, item.Name).Result)
-                                {
-                                    <option title="@item.Name">@item.Name</option>
-                                }
-                                else
-                                {
-                                    <option selected title="@item.Name">@item.Name</option>
-                                }
+                               
+                                <option title="@item.Name">@item.Name</option>
                             }
                         </select>
                     </td>
@@ -86,13 +82,13 @@
     private async Task ChangeRole(ChangeEventArgs e, UserDTO user)
     {
         var roleName = e.Value!.ToString()!;
-        if (roleName == Roles.Participant)
+        if (IsParticipant(roleName))
         {
             await WhenAndWhereFacade.DeleteUserRoles(user.Id, MeetupId);
         }
         else
         {
-            await WhenAndWhereFacade.ChangeUserRole(user.Id, MeetupId, roleName);
+            await WhenAndWhereFacade.ChangeUserRole(user.Id, MeetupId, roleName); 
         }
     }
 
@@ -101,8 +97,14 @@
         return user.Id == meetup.OwnerId;
     }
 
-    private async Task<bool> IsAssigned(UserDTO user, string roleName)
+    private bool IsParticipant(string roleName)
     {
-        return await WhenAndWhereFacade.HasUserRole(user.Id, MeetupId, roleName) || roleName == Roles.Participant;
+        return roleName == Roles.Participant;
+    }
+
+    private string GetUserRole(UserDTO user)
+    {
+        var userRole = WhenAndWhereFacade.GetMeetupUserRoles(user.Id, MeetupId).Result.FirstOrDefault();
+        return userRole != null ? RoleService.GetById(userRole.RoleId).Result!.Name : Roles.Participant;
     }
 }

@@ -41,31 +41,35 @@ public class WhenAndWhereFacade
         foreach (var role in await _meetupService.GetRoles(meetupId))
         {
             result.AddRange(await _roleService.GetAssignedUsers(role.Id));
-            
         }
         
         return result;
     }
 
-    public async Task<List<UserOptionDTO>> GetMeetupUserVotes(int userId, int meetupId)
+    public async Task<List<UserOptionDTO>> GetMeetupUserVotes(int meetupId)
     {
         var result = new List<UserOptionDTO>();
 
         foreach (var option in await _meetupService.GetOptions(meetupId))
         {
-            result.AddRange(await _optionService.GetVoters(userId, option.Id));
+            result.AddRange(await _optionService.GetVoters(option.Id));
         }
 
         return result;
     }
 
+    public async Task<List<UserRoleDTO>> GetMeetupUserRoles(int userId, int meetupId)
+    {
+        return (await GetMeetupUserRoles(meetupId)).Where(ur => ur.UserId == userId).ToList();
+    }
+    
+    public async Task<List<UserOptionDTO>> GetMeetupUserVotes(int userId, int meetupId)
+    {
+        return (await GetMeetupUserVotes(meetupId)).Where(uo => uo.UserId == userId).ToList();
+    }
+
     public async Task ChangeUserRole(int userId, int meetupId, string roleName)
     {
-        if (string.IsNullOrEmpty(roleName))
-        {
-            await DeleteUserRoles(userId, meetupId);
-            return;
-        }
         var role = _roleService.GetByName(meetupId, roleName);
         if (role != null)
         {
@@ -76,7 +80,7 @@ public class WhenAndWhereFacade
 
     public async Task DeleteUserRoles(int userId, int meetupId)
     {
-        var meetupRoles = _roleService.GetAllInMeetup(meetupId);
+        var meetupRoles = _roleService.GetAllByMeetup(meetupId);
 
         foreach (var role in meetupRoles)
         {
@@ -84,7 +88,7 @@ public class WhenAndWhereFacade
         }
     }
 
-    public async Task DeleteUserOptions(int userId, int meetupId)
+    public async Task DeleteOptions(int userId, int meetupId)
     {
         var userOptions = _optionService.GetAllByUserMeetup(userId, meetupId);
 

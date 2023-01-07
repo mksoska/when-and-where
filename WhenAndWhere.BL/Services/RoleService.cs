@@ -25,7 +25,7 @@ public class RoleService : GenericService<RoleDTO, Role>
         return ExecuteQuery(query).Items.FirstOrDefault();
     }
 
-    public List<RoleDTO> GetAllInMeetup(int meetupId)
+    public List<RoleDTO> GetAllByMeetup(int meetupId)
     {
         var query = new QueryFilterDto<RoleDTO>
         {
