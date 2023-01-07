@@ -255,6 +255,9 @@
         await WhenAndWhereFacade.DeleteUserVotes(signedUser.Id, MeetupId);
         await WhenAndWhereFacade.DeleteOptions(signedUser.Id, MeetupId);
         await UserMeetupService.Delete(signedUser.Id, MeetupId);
+        //TODO: Fix MeetupView is re-rendered on NavigateTo("/")
+        await LoadOptions();
+        await LoadInvitations();
         NavigationManager.NavigateTo("/");
     }
 

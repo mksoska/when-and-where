@@ -40,22 +40,32 @@ public class RoleAuthorizationHandler
 
         foreach (var roleName in requirement.RoleNames)
         {
-            if (roleName == Roles.Owner && IsOwner(user, meetup))
+            ////////// Handle roles which are not present in AspNetRoles table //////////////////
+            if (roleName == Roles.Owner)
             {
-                context.Succeed(requirement);
-                return;
+                if (IsOwner(user, meetup))
+                {
+                    context.Succeed(requirement);
+                    return;
+                }
+                continue;
             }
 
-            if (roleName == Roles.Participant && await IsParticipant(user, meetup))
+            if (roleName == Roles.Participant)
             {
-                context.Succeed(requirement);
-                return;
+                if (await IsParticipant(user, meetup))
+                {
+                    context.Succeed(requirement);
+                    return;
+                }
+                continue;
             }
-
+            /////////////////////////////////////////////////////////////////////////////////////
+            
             var role = _roleService.GetByName(meetupId, roleName);
             if (role == null)
             {
-                return;
+                continue;
             }
 
             if (await _userRoleService.GetById(user.Id, role.Id) != null)
