@@ -11,10 +11,10 @@ public class MeetupDTO : IDto
     public int OwnerId { get; set; }
 
     [Required]
-    [StringLength(20, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 1)]
+    [StringLength(64, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 1)]
     public string Name { get; set; }
     
-    [StringLength(200, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 0)]
+    [StringLength(1024, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 0)]
     public string Description { get; set; }
     
     [Required]
