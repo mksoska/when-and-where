@@ -7,6 +7,7 @@
 @using WhenAndWhere.DAL.Enums
 @using System.Linq;
 @using WhenAndWhere.BL.Facades
+@using WhenAndWhere.Blazor.Components
 
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
@@ -35,7 +36,7 @@
     }
     else
     {
-        <div class="col-auto text-white align-self-center">Voting ends in: @(meetup.VotingEnd - DateTime.Now)</div>
+        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="TimerOutCallback"/></div>
     }
     @if (IsMeetupOwner())
     {
@@ -241,6 +242,8 @@
     private UserMeetupDTO? myInvitation;
 
     private (bool, string) popup;
+    
+    protected Countdown timer;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -258,9 +261,20 @@
         if (firstRender) {
             await LoadOptions(false);
             await LoadInvitations(false);
+            
+            if (firstRender)
+            {
+                timer.Start(10);
+            }
+            
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+    
+    private void TimerOutCallback()
+    {
+        StateHasChanged();
     }
 
     private async Task LeaveMeetup()
