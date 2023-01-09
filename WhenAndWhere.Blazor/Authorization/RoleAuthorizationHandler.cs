@@ -33,10 +33,6 @@ public class RoleAuthorizationHandler
         {
             return;
         }
-        if (ReferenceEquals(requirement, Roles.Vote) && IsVotingEnd(meetup))
-        {
-            return;
-        }
 
         foreach (var roleName in requirement.RoleNames)
         {
@@ -84,10 +80,5 @@ public class RoleAuthorizationHandler
     private async Task<bool> IsParticipant(UserDTO user, MeetupDTO meetup)
     {
         return await _userMeetupService.GetById(user.Id, meetup.Id) != null;
-    }
-
-    private bool IsVotingEnd(MeetupDTO meetup)
-    {
-        return DateTime.Now >= meetup.VotingEnd;
     }
 }

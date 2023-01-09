@@ -23,7 +23,11 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
-    @if (!votingOngoing)
+    @if (votingOngoing)
+    {
+        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div>
+    }
+    else
     {
         @if (myInvitation != null)
         {
@@ -34,10 +38,7 @@
             </div>
         }
     }
-    else
-    {
-        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div>
-    }
+    
     @if (IsMeetupOwner())
     {
         <a href="/meetups/@MeetupId/edit" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" role="button">Delete</a>
@@ -161,20 +162,20 @@
 <div class="row">
     @foreach (var option in options) {
         <div class="list-group col-9 col-md-8">
-            <AuthorizeView Policy="Vote" Resource="MeetupId">
-                <Authorized>
-                    <a class="list-group-item list-group-item-action @IsVoted(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
-                        @option.Label | @option.Start - @option.End
-                        <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
-                    </a>
-                </Authorized>
-                <NotAuthorized>
-                    <a class="list-group-item disabled @IsMostVoted(option) d-flex justify-content-between align-items-center rounded-pill">
-                        @option.Label | @option.Start - @option.End
-                        <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
-                    </a>
-                </NotAuthorized>
-            </AuthorizeView>
+            @if (votingOngoing)
+            {
+                <a class="list-group-item list-group-item-action @IsVoted(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
+                    @option.Label | @option.Start - @option.End
+                    <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                </a>
+            }
+            else
+            {
+                <a class="list-group-item disabled @IsMostVoted(option) d-flex justify-content-between align-items-center rounded-pill">
+                    @option.Label | @option.Start - @option.End
+                    <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                </a>
+            }
         </div>
         <div class="list-group list-group-flush col-3 col-md-2 text-center">
             <AuthorizeView Policy="ManageOptions" Resource="MeetupId">
@@ -376,10 +377,6 @@
 
     private string IsMostVoted(OptionDTO option)
     {
-        if (DateTime.Now < meetup.VotingEnd)
-        {
-            return string.Empty;
-        }
         return option == options.MaxBy(o => OptionService.GetVoters(o.Id).Result.Count) ? "bg-success" : string.Empty;
     }
 
