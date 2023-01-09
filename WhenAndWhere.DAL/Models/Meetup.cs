@@ -11,7 +11,7 @@ public class Meetup : IEntity
 
     public string Name { get; set; }
     
-    public string Description { get; set; }
+    public string? Description { get; set; }
     public DateTime OptionsFrom { get; set; }
     public DateTime OptionsTo { get; set; }
     

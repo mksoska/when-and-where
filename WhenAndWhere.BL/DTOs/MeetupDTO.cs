@@ -15,7 +15,7 @@ public class MeetupDTO : IDto
     public string Name { get; set; }
     
     [StringLength(1024, ErrorMessage = "{0} length must be between {2} and {1}.", MinimumLength = 0)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
     
     [Required]
     [DataType(DataType.Date)]
