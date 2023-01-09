@@ -23,7 +23,7 @@
 
 <div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
-    @if (DateTime.Now >= meetup.VotingEnd)
+    @if (!votingOngoing)
     {
         @if (myInvitation != null)
         {
@@ -36,7 +36,7 @@
     }
     else
     {
-        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="TimerOutCallback"/></div>
+        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div>
     }
     @if (IsMeetupOwner())
     {
@@ -236,8 +236,10 @@
     private UserMeetupDTO? myInvitation;
 
     private (bool, string) popup;
+
+    private bool votingOngoing;
     
-    protected Countdown timer;
+    protected Countdown? timer;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -247,6 +249,7 @@
             Start = meetup.OptionsFrom,
             End = meetup.OptionsTo
         };
+        votingOngoing = meetup.VotingEnd > DateTime.Now;
         signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
     }
 
@@ -255,20 +258,12 @@
         if (firstRender) {
             await LoadOptions(false);
             await LoadInvitations(false);
-            
-            if (firstRender)
-            {
-                timer.Start(10);
-            }
+
+            timer?.Start((long)(meetup.VotingEnd - DateTime.Now).TotalSeconds);
             
             StateHasChanged();
         }
         await base.OnAfterRenderAsync(firstRender);
-    }
-    
-    private void TimerOutCallback()
-    {
-        StateHasChanged();
     }
 
     private async Task LeaveMeetup()
@@ -352,6 +347,11 @@
     {
         await OptionService.Delete(option.Id);
         await LoadOptions();
+    }
+
+    private void TimerOutCallback()
+    {
+        StateHasChanged();
     }
 
     private bool IsOptionOwner(OptionDTO option)
