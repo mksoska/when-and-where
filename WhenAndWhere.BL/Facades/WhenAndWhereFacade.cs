@@ -1,5 +1,6 @@
 ﻿using System;
 using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL.Enums;
 
@@ -121,6 +122,37 @@ public class WhenAndWhereFacade
             return false;
         }
         return await _userRoleService.GetById(userId, role.Id) != null;
+    }
+
+    public List<MeetupDTO> SearchMeetups(int userId, string searchString, int requestedPageNumber, int pageSize, out int totalItemsCount)
+    {
+        var query = new QueryFilterDto<UserMeetupDTO>
+        {
+            Values = new UserMeetupDTO { UserId = userId },
+            WhereColumns = new List<string> { "UserId" },
+            SortAscending = false,
+            SortCriteria = "DateInvited",
+            RequestedPageNumber = requestedPageNumber,
+            PageSize = pageSize
+        };
+        var queryResult = _userMeetupService.ExecuteQuery(query);
+
+        totalItemsCount = queryResult.TotalItemsCount;
+        
+        var userMeetups = queryResult.Items
+            .Select(um => _meetupService.GetById(um.MeetupId).Result!)
+            .ToList();
+
+        return userMeetups
+            .Select(m => new { m, u = _userService.GetById(m.OwnerId).Result! })
+            .Where(i =>
+                i.m.Name.Contains(searchString) ||
+                i.m.Description.Contains(searchString) ||
+                i.u.UserName.Contains(searchString) ||
+                i.u.FirstName.Contains(searchString) ||
+                i.u.Surname.Contains(searchString))
+            .Select(i => i.m)
+            .ToList();
     }
 
     public async Task<bool> IsAnyOptionVoted(int userId, int meetupId)

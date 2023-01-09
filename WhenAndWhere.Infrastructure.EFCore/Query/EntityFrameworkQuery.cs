@@ -25,6 +25,8 @@ public class EntityFrameworkQuery<TEntity> : Query<TEntity> where TEntity : clas
             WherePredicate.Clear();
         }
 
+        FilteredCount = query.Count();
+
         if (OrderByContainer != null)
         {
             query = OrderBy(query);
