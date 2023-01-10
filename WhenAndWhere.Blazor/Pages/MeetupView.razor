@@ -350,11 +350,6 @@
         await LoadOptions();
     }
 
-    private void TimerOutCallback()
-    {
-        StateHasChanged();
-    }
-
     private bool IsOptionOwner(OptionDTO option)
     {
         return signedUser.Id == option.OwnerId;

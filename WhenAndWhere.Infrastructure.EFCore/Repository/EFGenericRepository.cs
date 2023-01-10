@@ -41,35 +41,35 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
         }
     }
 
-    //TODO: Fix Delete and Update of TEntity 
     public virtual void Delete(TEntity entityToDelete)
     {
-        if (Uow.Context.Entry(entityToDelete).State == EntityState.Detached)
-        {
-            Uow.Context.Attach(entityToDelete);
-        }
-        Uow.Context.Remove(entityToDelete);
-        Uow.Context.Entry(entityToDelete).State = EntityState.Deleted;
+        var entity = FindAsync(entityToDelete);
+        Uow.Context.Remove(entity!);
     }
 
     public virtual void Update(TEntity entityToUpdate)
     {
+        var entity = FindAsync(entityToUpdate);
+        Uow.Context.Entry(entity!).CurrentValues.SetValues(entityToUpdate);
+        Uow.Context.Update(entity!);
+    }
+
+    private TEntity? FindAsync(TEntity entity)
+    {
+        if (Uow.Context.Entry(entity).State != EntityState.Detached) return entity;
+        
         IEnumerable<object?> idProperties;
-        if (entityToUpdate is IEntity iEntity)
+        if (entity is IEntity iEntity)
         {
             idProperties = new List<object?> { iEntity.Id };
         }
         else
         {
-            idProperties = entityToUpdate.GetType().GetProperties()
+            idProperties = entity.GetType().GetProperties()
                 .Where(pi => pi.Name.Contains("Id"))
-                .Select(pi => pi.GetValue(entityToUpdate));
+                .Select(pi => pi.GetValue(entity));
         }
-
-        var entity = Uow.Context.Set<TEntity>().Find(idProperties.ToArray());
-        Uow.Context.Entry(entity!).State = EntityState.Detached;
-        Uow.Context.Set<TEntity>().Attach(entityToUpdate);
-        Uow.Context.Entry(entityToUpdate).State = EntityState.Modified;
+        return Uow.Context.Set<TEntity>().Find(idProperties.ToArray());
     }
 
     public virtual async Task Save()
