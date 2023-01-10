@@ -126,38 +126,41 @@
     <h2>Options</h2>
 </StyledRow>
 
-<StyledRow Inner="false">
-    <p>
-        <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
-            + Add
-        </button>
-    </p>
-    <div class="collapse col-12 my-2" id="collapseForm">
-        <div class="card card-body">
-            <EditForm Model="newOption" OnValidSubmit="CreateOption">
-                <DataAnnotationsValidator/>
-                <ValidationSummary></ValidationSummary>
+@if (votingOngoing)
+{
+    <StyledRow Inner="false">
+        <p>
+            <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+                + Add
+            </button>
+        </p>
+        <div class="collapse col-12 my-2" id="collapseForm">
+            <div class="card card-body">
+                <EditForm Model="newOption" OnValidSubmit="CreateOption">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary></ValidationSummary>
 
-                <div class="input-group">
-                    <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label"/>
-                    <input id="Start" class="form-control" type="datetime-local" @bind="newOption.Start" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
-                    <input id="End" class="form-control" type="datetime-local" @bind="newOption.End" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
-                    <InputText class="form-control" @bind-Value="newOption.State" placeholder="State"/>
-                </div>
-                <div class="input-group">
-                    <InputText class="form-control" @bind-Value="newOption.City" placeholder="City"/>
-                    <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code"/>
-                    <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street"/>
-                    <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number"/>
-
-                    <div class="input-group-append">
-                        <input type="submit" class="btn btn-primary" value="Add"/>
+                    <div class="input-group">
+                        <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label"/>
+                        <input id="Start" class="form-control" type="datetime-local" @bind="newOption.Start" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <input id="End" class="form-control" type="datetime-local" @bind="newOption.End" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <InputText class="form-control" @bind-Value="newOption.State" placeholder="State"/>
                     </div>
-                </div>
-            </EditForm>
+                    <div class="input-group">
+                        <InputText class="form-control" @bind-Value="newOption.City" placeholder="City"/>
+                        <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code"/>
+                        <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street"/>
+                        <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number"/>
+
+                        <div class="input-group-append">
+                            <input type="submit" class="btn btn-primary" value="Add"/>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
         </div>
-    </div>
-</StyledRow>
+    </StyledRow>
+}
 
 <div class="row">
     @foreach (var option in options) {
