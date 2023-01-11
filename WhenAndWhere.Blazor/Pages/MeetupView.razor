@@ -110,7 +110,7 @@
             @UserService.GetById(invitation.UserId).Result.UserName
             <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
                 <Authorized>
-                    @if (invitation.UserId != signedUser.Id)
+                    @if (invitation.UserId != signedUser.Id && invitation.UserId != meetup.OwnerId)
                     {
                         <input type="button" class="btn py-0 px-0 mx-2" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
                     }
