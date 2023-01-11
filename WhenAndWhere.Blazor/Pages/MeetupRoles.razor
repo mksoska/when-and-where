@@ -31,15 +31,19 @@
             {
                 <tr>
                     <td>
-                        @user.UserName @if (user.Id == meetup.Id) { <strong>(owner)</strong> }
+                        @user.UserName
                     </td>
                     <td>
-                        <select selected value="@GetUserRole(user)" @onchange="(e) => ChangeRole(e, user)">
-                            @foreach(var item in roleItems) {
-                               
-                                <option title="@item.Name">@item.Name</option>
-                            }
-                        </select>
+                        @if (user.Id == meetup.OwnerId) {
+                            <strong>Owner</strong>
+                        } else {
+                            <select selected value="@GetUserRole(user)" @onchange="(e) => ChangeRole(e, user)">
+                                @foreach (var item in roleItems) {
+
+                                    <option title="@item.Name">@item.Name</option>
+                                }
+                            </select>
+                        }
                     </td>
                 </tr>
             }
