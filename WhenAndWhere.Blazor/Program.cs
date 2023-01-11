@@ -72,8 +72,8 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddTransient<RoleAuthorizationHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationContextHandler>();
-builder.Services.AddSingleton<IAuthorizationHandler, RoleAuthorizationResourceHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, RoleAuthorizationContextHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, RoleAuthorizationResourceHandler>();
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder =>
 {
