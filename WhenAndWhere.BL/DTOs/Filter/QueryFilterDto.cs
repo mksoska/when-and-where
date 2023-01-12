@@ -2,6 +2,7 @@
 
 public class QueryFilterDto<TDto>
 {
+    //WhereValues
     public TDto Values { get; set; }
     public List<string> WhereColumns { get; set; }
     public int? RequestedPageNumber { get; set; }

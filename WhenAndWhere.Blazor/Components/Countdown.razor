@@ -1,0 +1,58 @@
+﻿@using System.Timers
+
+@Time
+
+@code {
+    private Timer _timer = null!;
+    private long _secondsToRun = 0;
+
+    protected string Time { get; set; } = "000 00:00:00";
+
+    [Parameter] public EventCallback TimerOut { get; set; }
+
+    public void Start(long secondsToRun)
+    {
+        _secondsToRun = secondsToRun;
+
+        if (_secondsToRun > 0)
+        {
+            Time = TimeSpan.FromSeconds(_secondsToRun).ToString(@"ddd\ hh\:mm\:ss");
+            StateHasChanged();
+            _timer.Start();
+        }
+    }
+
+    public void Stop()
+    {
+        _timer.Stop();
+    }
+
+    protected override void OnInitialized()
+    {
+        _timer = new Timer(1000);
+        _timer.Elapsed += OnTimedEvent;
+        _timer.AutoReset = true;
+        base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_secondsToRun <= 0)
+        {
+            _timer.Stop();
+            await TimerOut.InvokeAsync();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async void OnTimedEvent(object? sender, ElapsedEventArgs e)
+    {
+        _secondsToRun--;
+        
+        await InvokeAsync(() =>
+        {
+            Time = TimeSpan.FromSeconds(_secondsToRun).ToString(@"ddd\ hh\:mm\:ss");
+            StateHasChanged();
+        });
+    }
+}

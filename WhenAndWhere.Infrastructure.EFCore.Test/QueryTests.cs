@@ -14,7 +14,7 @@ public class QueryTests : TestContextInitializer
 
         Assert.True(result.Count() == 1);
 
-        Assert.True(result.First().Name == "Johan");
+        Assert.True(result.First().FirstName == "Johan");
     }
 
     [Fact]

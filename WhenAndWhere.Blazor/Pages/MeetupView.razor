@@ -1,0 +1,404 @@
+﻿@page "/meetups/{meetupId:int}/view"
+@attribute [Authorize(Policy = "MeetupView")]
+
+@using WhenAndWhere.BL.Services
+@using Microsoft.AspNetCore.Components
+@using WhenAndWhere.BL.DTOs
+@using WhenAndWhere.DAL.Enums
+@using System.Linq;
+@using WhenAndWhere.BL.Facades
+@using WhenAndWhere.Blazor.Components
+
+@inject MeetupService MeetupService
+@inject UserMeetupService UserMeetupService
+@inject OptionService OptionService
+@inject UserService UserService
+@inject UserOptionService UserOptionService
+@inject WhenAndWhereFacade WhenAndWhereFacade
+@inject NavigationManager NavigationManager
+
+<StyledRow Inner="false">
+    <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)"/>
+</StyledRow>
+
+<div class="row justify-content-between my-2 p-1 bg-dark rounded-pill">
+    <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
+    @if (votingOngoing)
+    {
+        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div>
+    }
+    else
+    {
+        @if (myInvitation != null)
+        {
+            <div class="col-5 btn-group">
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Accepted, "success")" value="Accept" @onclick="AcceptInvitation"/>
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Maybe, "warning")" value="Maybe" @onclick="MaybeInvitation"/>
+                <input type="button" class="btn @IsOutlineButton(StateEnum.Declined, "danger")" value="Decline" @onclick="DeclineInvitation"/>
+            </div>
+        }
+    }
+    
+    @if (IsMeetupOwner())
+    {
+        <a href="/meetups/@MeetupId/edit" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" role="button">Delete</a>
+    }
+    else
+    {
+        <input type="button" class="col-3 col-md-2 col-lg-1 btn btn-danger rounded-pill" value="Leave" @onclick="LeaveMeetup"/>
+    }
+</div>
+
+<hr/>
+
+<StyledRow Inner="false">
+    <h2>Title</h2>
+</StyledRow>
+
+<StyledRow Inner="true">
+    @meetup.Name
+</StyledRow>
+
+<hr/>
+
+<StyledRow Inner="false">
+    <h2>Description</h2>
+</StyledRow>
+
+<StyledRow Inner="true">
+    @meetup.Description
+</StyledRow>
+
+<hr/>
+
+<StyledRow Inner="false">
+    <h2>Participants</h2>
+</StyledRow>
+
+<AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
+    <Authorized>
+        <StyledRow Inner="false">
+           <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#addParticipantCollapseForm" aria-expanded="false" aria-controls="addParticipantCollapseForm">
+               + Add
+           </button>
+            <AuthorizeView Context="nestedContext" Policy="ManageRoles" Resource="@MeetupId">
+                <Authorized>
+                    <a href="/meetups/@meetup.Id/roles" class="col-2 col-md-1 col-lg-1 mx-2 btn btn-primary rounded-pill" role="button">Roles</a>
+                </Authorized>
+            </AuthorizeView>
+            
+            <div class="col-sm-7 collapse my-2" id="addParticipantCollapseForm">
+                <div class="card card-body">
+                    <form @onsubmit="InviteParticipant">
+                        <div class="input-group">
+                            <input type="search" @bind="newInvitation" class="form-control" placeholder="username" required/>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </StyledRow>
+    </Authorized>
+</AuthorizeView>
+
+
+<div class="row justify-content-start">
+    @foreach (var invitation in invitations) {
+        <li class="list-group-item col-auto my-2 mx-2 rounded-pill">
+            @UserService.GetById(invitation.UserId).Result.UserName
+            <AuthorizeView Policy="ManageParticipants" Resource="@MeetupId">
+                <Authorized>
+                    @if (invitation.UserId != signedUser.Id && invitation.UserId != meetup.OwnerId)
+                    {
+                        <input type="button" class="btn py-0 px-0 mx-2" value="x" @onclick="() => KickParticipant(invitation.UserId)"/>
+                    }
+                </Authorized>
+            </AuthorizeView>
+        </li>
+    }
+</div>
+
+<hr/>
+
+<StyledRow Inner="false">
+    <h2>Options</h2>
+</StyledRow>
+
+@if (votingOngoing)
+{
+    <StyledRow Inner="false">
+        <p>
+            <button class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" type="button" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+                + Add
+            </button>
+        </p>
+        <div class="collapse col-12 my-2" id="collapseForm">
+            <div class="card card-body">
+                <EditForm Model="newOption" OnValidSubmit="CreateOption">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary></ValidationSummary>
+
+                    <div class="input-group">
+                        <InputText class="form-control" @bind-Value="newOption.Label" placeholder="Label"/>
+                        <input id="Start" class="form-control" type="datetime-local" @bind="newOption.Start" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <input id="End" class="form-control" type="datetime-local" @bind="newOption.End" min="@meetup.OptionsFrom.ToString("yyyy-MM-ddTHH:mm")" max="@meetup.OptionsTo.ToString("yyyy-MM-ddTHH:mm")"/>
+                        <InputText class="form-control" @bind-Value="newOption.State" placeholder="State"/>
+                    </div>
+                    <div class="input-group">
+                        <InputText class="form-control" @bind-Value="newOption.City" placeholder="City"/>
+                        <InputText class="form-control" @bind-Value="newOption.ZipCode" placeholder="Zip code"/>
+                        <InputText class="form-control" @bind-Value="newOption.Street" placeholder="Street"/>
+                        <InputText class="form-control" @bind-Value="newOption.Number" placeholder="Number"/>
+
+                        <div class="input-group-append">
+                            <input type="submit" class="btn btn-primary" value="Add"/>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </StyledRow>
+}
+
+<div class="row">
+    @foreach (var option in options) {
+        <div class="list-group col-9 col-md-8">
+            @if (votingOngoing)
+            {
+                <a class="list-group-item list-group-item-action @IsVoted(option) d-flex justify-content-between align-items-center rounded-pill" @onclick="() => ToggleOptionVote(option)">
+                    @option.Label | @option.Start - @option.End
+                    <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                </a>
+            }
+            else
+            {
+                <a class="list-group-item disabled @IsMostVoted(option) d-flex justify-content-between align-items-center rounded-pill">
+                    @option.Label | @option.Start - @option.End
+                    <span class="badge badge-primary badge-pill">@OptionService.GetVoters(option.Id).Result.Count</span>
+                </a>
+            }
+        </div>
+        <div class="list-group list-group-flush col-3 col-md-2 text-center">
+            <AuthorizeView Policy="ManageOptions" Resource="MeetupId">
+                <Authorized>
+                    <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
+                        <span>Remove</span>
+                    </a>
+                </Authorized>
+                <NotAuthorized>
+                    @if (IsOptionOwner(option))
+                    {
+                        <a class="list-group-item list-group-item-danger list-group-item-action rounded-pill" @onclick="() => DeleteOption(option)">
+                            <span>Remove</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="list-group-item list-group-item bg-transparent">
+                            <span>&zwnj;</span>
+                        </a>
+                    }
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+    }
+</div>
+
+<hr/>
+
+<StyledRow Inner="false">
+    <AuthorizeView Policy="MeetupEdit" Resource="MeetupId">
+        <Authorized>
+            <a href="/meetups/@meetup.Id/edit" class="col-3 btn btn-primary rounded-pill" role="button">Edit</a>
+        </Authorized>
+    </AuthorizeView>
+</StyledRow>
+
+<div class="container-bottom bg-dark"></div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Parameter]
+    public int MeetupId { get; set; }
+
+    private MeetupDTO meetup;
+
+    private UserDTO signedUser;
+
+    private string newInvitation = string.Empty;
+    
+    private OptionDTO newOption;
+
+    private IEnumerable<OptionDTO> options = new List<OptionDTO>();
+
+    private IEnumerable<UserMeetupDTO> invitations = new List<UserMeetupDTO>();
+
+    private UserMeetupDTO? myInvitation;
+
+    private (bool, string) popup;
+
+    private bool votingOngoing;
+    
+    protected Countdown? timer;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        meetup = await MeetupService.GetById(MeetupId);
+        newOption = new OptionDTO()
+        {
+            Start = meetup.OptionsFrom,
+            End = meetup.OptionsTo
+        };
+        votingOngoing = meetup.VotingEnd > DateTime.Now;
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) {
+            await LoadOptions(false);
+            await LoadInvitations(false);
+
+            timer?.Start((long)(meetup.VotingEnd - DateTime.Now).TotalSeconds);
+            
+            StateHasChanged();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LeaveMeetup()
+    {
+        await WhenAndWhereFacade.DeleteUserRoles(signedUser.Id, MeetupId);
+        await WhenAndWhereFacade.DeleteUserVotes(signedUser.Id, MeetupId);
+        await WhenAndWhereFacade.DeleteOptions(signedUser.Id, MeetupId);
+        await UserMeetupService.Delete(signedUser.Id, MeetupId);
+        //TODO: Fix MeetupView is re-rendered on NavigateTo("/")
+        await LoadOptions();
+        await LoadInvitations();
+        NavigationManager.NavigateTo("/");
+    }
+
+    private async Task AcceptInvitation()
+    {
+        myInvitation!.State = StateEnum.Accepted;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
+    }
+
+    private async Task MaybeInvitation()
+    {
+        myInvitation!.State = StateEnum.Maybe;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
+    }
+
+    private async Task DeclineInvitation()
+    {
+        myInvitation!.State = StateEnum.Declined;
+        await UserMeetupService.Update(myInvitation);
+        await LoadInvitations();
+    }
+
+    private async Task InviteParticipant()
+    {
+        var user = UserService.GetByName(newInvitation);
+        if (user == null)
+        {
+            //TODO: If not registered, configure IEmailService to send invitation to this meetup via email
+            return;
+        }
+        if (await IsInvitedUser(user))
+        {
+            return;
+        }
+        
+        await UserMeetupService.Create(new UserMeetupDTO { UserId = user.Id, MeetupId = MeetupId, State = StateEnum.Pending });
+        await LoadInvitations();
+    }
+
+    private async Task KickParticipant(int userId)
+    {
+        await UserMeetupService.Delete(userId, MeetupId);
+        await LoadInvitations();
+    }
+    
+    private async Task ToggleOptionVote(OptionDTO option)
+    {
+        var userOption = await UserOptionService.GetById(signedUser.Id, option.Id);
+        if (userOption == null) {
+            var newUserOption = new UserOptionDTO {UserId = signedUser.Id, OptionId = option.Id, TimeVoted = DateTime.Now};
+            await UserOptionService.Create(newUserOption);
+        } else {
+            await UserOptionService.Delete(userOption.UserId, userOption.OptionId);
+        }
+        StateHasChanged();
+    }
+
+    private async Task CreateOption()
+    {
+        newOption.OwnerId = signedUser.Id;
+        newOption.MeetupId = MeetupId;
+
+        await OptionService.Create(newOption);
+        await LoadOptions();
+    }
+
+    private async Task DeleteOption(OptionDTO option)
+    {
+        await OptionService.Delete(option.Id);
+        await LoadOptions();
+    }
+
+    private bool IsOptionOwner(OptionDTO option)
+    {
+        return signedUser.Id == option.OwnerId;
+    }
+
+    private bool IsMeetupOwner()
+    {
+        return signedUser.Id == meetup.OwnerId;
+    }
+
+    private async Task<bool> IsInvitedUser(UserDTO user)
+    {
+        return await UserMeetupService.GetById(user.Id, MeetupId) != null;
+    }
+
+    private string IsVoted(OptionDTO option)
+    {
+        return UserOptionService.GetById(signedUser.Id, option.Id).Result != null ? "active" : string.Empty;
+    }
+
+    private string IsMostVoted(OptionDTO option)
+    {
+        return option == options.MaxBy(o => OptionService.GetVoters(o.Id).Result.Count) ? "bg-success" : string.Empty;
+    }
+
+    private string IsOutlineButton(StateEnum state, string button)
+    {
+        return UserMeetupService.GetById(signedUser.Id, MeetupId).Result?.State == state ? $"btn-{button}" : $"btn-outline-{button}";
+    }
+
+    private async Task LoadOptions(bool rerender = true)
+    {
+        options = await MeetupService.GetOptions(meetup.Id);
+        if (rerender)
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadInvitations(bool rerender = true)
+    {
+        invitations = await MeetupService.GetInvitedUsers(meetup.Id);
+        myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
+        if (rerender)
+        {
+            StateHasChanged();
+        }
+    }
+}

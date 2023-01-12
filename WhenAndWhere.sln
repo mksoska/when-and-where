@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhenAndWhere", "WhenAndWher
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.BL.Tests", "WhenAndWhere.BL.Tests\WhenAndWhere.BL.Tests.csproj", "{5DB90544-D0EB-4B7A-B659-D2FC685BA504}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.API", "WhenAndWhere.API\WhenAndWhere.API.csproj", "{C9877AAA-D235-4CFA-978C-66A2EA751083}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.Blazor", "WhenAndWhere.Blazor\WhenAndWhere.Blazor.csproj", "{8D579B59-7AF2-4564-9963-A7BC0608D672}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,10 @@ Global
 		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DB90544-D0EB-4B7A-B659-D2FC685BA504}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C9877AAA-D235-4CFA-978C-66A2EA751083}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

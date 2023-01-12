@@ -9,7 +9,7 @@ namespace WhenAndWhere.BL.Services;
 
 public class UserRoleService : GenericService<UserRoleDTO, UserRole>
 {
-    public UserRoleService(IRepository<UserRole> repository, IMapper mapper, 
+    public UserRoleService(IRepository<UserRole> repository, IMapper mapper,
         QueryObjectGeneric<UserRoleDTO, UserRole> queryObject) : base(repository, mapper, queryObject)
     {
     }

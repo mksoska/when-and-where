@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using WhenAndWhere.DAL.Data;
 using WhenAndWhere.DAL.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace WhenAndWhere.DAL;
 
-public class WhenAndWhereDBContext : DbContext
+public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
-    public DbSet<Address> Address { get; set; }
     public DbSet<Meetup> Meetup { get; set; }
     public DbSet<Option> Option { get; set; }
     public DbSet<User> User { get; set; }
@@ -25,18 +26,20 @@ public class WhenAndWhereDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.Entity<UserMeetup>()
-            .HasKey(userMeetup => new {userMeetup.FirstId, userMeetup.SecondId});
+            .HasKey(userMeetup => new {userMeetup.UserId, userMeetup.MeetupId});
 
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.User)
             .WithMany(user => user.InvitedMeetups)
-            .HasForeignKey(um => um.FirstId);
+            .HasForeignKey(um => um.UserId);
         
         modelBuilder.Entity<UserMeetup>()
             .HasOne(um => um.Meetup)
             .WithMany(meetup => meetup.InvitedUsers)
-            .HasForeignKey(um => um.SecondId);
+            .HasForeignKey(um => um.MeetupId);
 
         modelBuilder.Entity<Meetup>()
             .HasOne(meetup => meetup.Owner)
@@ -44,52 +47,47 @@ public class WhenAndWhereDBContext : DbContext
             .HasForeignKey(meetup => meetup.OwnerId);
 
         modelBuilder.Entity<UserOption>()
-            .HasKey(userOption => new { userOption.FirstId, userOption.SecondId });
+            .HasKey(userOption => new { userOption.UserId, userOption.OptionId });
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.User)
             .WithMany(user => user.VotedOptions)
-            .HasForeignKey(userOption => userOption.FirstId);
+            .HasForeignKey(userOption => userOption.UserId);
 
 
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
             .WithMany(option => option.Voters)
-            .HasForeignKey(userOption => userOption.SecondId);
+            .HasForeignKey(userOption => userOption.OptionId);
 
         modelBuilder.Entity<Option>()
             .HasOne(option => option.Owner)
             .WithMany(user => user.CreatedOptions)
-            .HasForeignKey(option => option.UserId);
+            .HasForeignKey(option => option.OwnerId);
         
         modelBuilder.Entity<Option>()
             .HasOne(option => option.Meetup)
             .WithMany(meetup => meetup.Options)
             .HasForeignKey(option => option.MeetupId);
-
-        modelBuilder.Entity<Address>()
-            .HasOne(address => address.Option);
-
+        
         modelBuilder.Entity<UserRole>()
-            .HasKey(userRole => new { userRole.FirstId, userRole.SecondId });
+            .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
 
         modelBuilder.Entity<UserRole>()
             .HasOne(um => um.User)
             .WithMany(user => user.AssignedRoles)
-            .HasForeignKey(um => um.FirstId);
+            .HasForeignKey(um => um.UserId);
 
         modelBuilder.Entity<UserRole>()
             .HasOne(um => um.Role)
             .WithMany(meetup => meetup.AssignedUsers)
-            .HasForeignKey(um => um.SecondId);
+            .HasForeignKey(um => um.RoleId);
 
         modelBuilder.Entity<Role>()
             .HasOne(role => role.Meetup)
             .WithMany(meetup => meetup.Roles)
             .HasForeignKey(meetup => meetup.MeetupId);
 
-        modelBuilder.Seed();
-
-        base.OnModelCreating(modelBuilder);
+        //modelBuilder.Seed();
     }
 }

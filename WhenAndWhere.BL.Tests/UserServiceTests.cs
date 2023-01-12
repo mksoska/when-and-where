@@ -30,7 +30,7 @@ public class UserServiceTests
                 new()
                 {
                     Id = 9,
-                    Name = "Jozo",
+                    FirstName = "Jozo",
                     Surname = "Beznadejny",
                     Email = "jozko@coso.mnou",
                     PhoneNumber = "1234567890",
@@ -39,7 +39,7 @@ public class UserServiceTests
                 new()
                 {
                     Id = 10,
-                    Name = "Milan",
+                    FirstName = "Milan",
                     Surname = "Beznadejny",
                     Email = "milanko@byvaloaj.lepsie",
                     PhoneNumber = "1234567891",
@@ -61,7 +61,7 @@ public class UserServiceTests
         var user = new User
         {
             Id = 3,
-            Name = "Pepek",
+            FirstName = "Pepek",
             Surname = "Bezlepek",
             Email = "laktoza@akoze.vobec",
             PhoneNumber = "1234567892",
@@ -70,7 +70,7 @@ public class UserServiceTests
         var expected = new UserDTO
         {
             Id = 3,
-            Name = "Pepek",
+            FirstName = "Pepek",
             Surname = "Bezlepek",
             Email = "laktoza@akoze.vobec",
             PhoneNumber = "1234567892",

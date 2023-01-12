@@ -1,10 +1,10 @@
-﻿using WhenAndWhere.DAL.Enums;
+﻿using WhenAndWhere.BL.Interfaces;
 
 namespace WhenAndWhere.BL.DTOs;
 
-public class RoleDTO
+public class RoleDTO : IDto
 {
     public int Id { get; set; }
     public int MeetupId { get; set; }
-    public RoleEnum RoleName { get; set; }
+    public string Name { get; set; }
 }

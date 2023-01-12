@@ -1,0 +1,27 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page min-vh-100 d-flex flex-column">
+    <header class="top-row px-4">
+        <a href="/">
+            <h3 class="logo-center-left">When&Where</h3>
+        </a>
+
+        <div class="sign-menu">
+            <LoginDisplay/>
+        </div>
+    </header>
+    
+    <main class="main container flex-grow-1">
+        <div class="content px-4">
+            @Body
+        </div>
+    </main>   
+    
+    <footer>
+        <hr />
+
+        <div class="container my-3">
+            <span>&#169 When&Where - 2022</span>
+        </div>
+    </footer>
+</div>

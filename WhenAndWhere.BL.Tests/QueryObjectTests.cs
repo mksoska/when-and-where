@@ -15,7 +15,7 @@ public class QueryObjectTests : TestContextInitializer
         var userDto = new UserDTO
         {
             Id = 3,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Bohdan",
             Email = "and@hob.it",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -67,7 +67,7 @@ public class QueryObjectTests : TestContextInitializer
         var userDto = new UserDTO
         {
             Id = 3,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Bohdan",
             Email = "and@hob.it",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -90,7 +90,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 3,
-                Name = "Eugen",
+                FirstName = "Eugen",
                 Surname = "Patrovic",
                 Email = "aj@repujem.trosku",
                 Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -99,7 +99,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 1,
-                Name = "Jozef",
+                FirstName = "Jozef",
                 Surname = "Bohdan",
                 Email = "and@hob.it",
                 Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -108,7 +108,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 2,
-                Name = "Jozef",
+                FirstName = "Jozef",
                 Surname = "Patrovic",
                 Email = "cerstvy@vzduch.chyba",
                 Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -128,7 +128,7 @@ public class QueryObjectTests : TestContextInitializer
         var userDto = new UserDTO
         {
             Id = 3,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Bohdan",
             Email = "and@hob.it",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -151,7 +151,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 3,
-                Name = "Eugen",
+                FirstName = "Eugen",
                 Surname = "Patrovic",
                 Email = "aj@repujem.trosku",
                 Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -171,7 +171,7 @@ public class QueryObjectTests : TestContextInitializer
         var userDto = new UserDTO
         {
             Id = 3,
-            Name = "Jozef",
+            FirstName = "Jozef",
             Surname = "Bohdan",
             Email = "and@hob.it",
             Avatar = new byte[] {0xAA, 0xAA, 0xAA},
@@ -194,7 +194,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 1,
-                Name = "Jozef",
+                FirstName = "Jozef",
                 Surname = "Bohdan",
                 Email = null,
                 Avatar = Array.Empty<byte>(),
@@ -203,7 +203,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 2,
-                Name = "Jozef",
+                FirstName = "Jozef",
                 Surname = "Patrovic",
                 Email = null,
                 Avatar = Array.Empty<byte>(),
@@ -212,7 +212,7 @@ public class QueryObjectTests : TestContextInitializer
             new()
             {
                 Id = 3,
-                Name = "Eugen",
+                FirstName = "Eugen",
                 Surname = "Patrovic",
                 Email = null,
                 Avatar = Array.Empty<byte>(),

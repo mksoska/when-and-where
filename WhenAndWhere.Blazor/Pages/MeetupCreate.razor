@@ -1,0 +1,117 @@
+﻿@page "/meetups/create"
+
+@attribute [Authorize]
+
+@using WhenAndWhere.BL.Services
+@using WhenAndWhere.BL.DTOs
+@using WhenAndWhere.Blazor.Authorization
+@using WhenAndWhere.DAL.Enums
+@using WhenAndWhere.Blazor.Components
+
+@inject UserService UserService
+@inject MeetupService MeetupService
+@inject UserMeetupService UserMeetupService
+@inject RoleService RoleService
+@inject NavigationManager NavigationManager
+
+
+<StyledRow Inner="false">
+    <h1>Create</h1>
+
+    <h4>Meetup</h4>
+</StyledRow>
+
+<hr />
+
+<StyledRow Inner="true">
+    <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
+
+    @* TODO: Make ValidationMessage work for InputDateTime *@
+    <EditForm Model="meetup" OnValidSubmit="CreateMeetup">
+        <DataAnnotationsValidator />
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-group">
+            <label class="control-label">Title:</label>
+            <InputText class="form-control" @bind-Value="meetup.Name" placeholder="title" />
+            @* <ValidationMessage For="() => meetup.Name" /> *@
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label">Description:</label>
+            <InputTextArea class="form-control" @bind-Value="meetup.Description" placeholder="description" />
+            @* <ValidationMessage For="() => meetup.Description" /> *@
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label">Voting ends at:</label>
+            <InputDateTime @bind-DateAndTime="@meetup.VotingEnd"/>
+            @* <ValidationMessage For="() => meetup.OptionsFrom" /> *@
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label">Options from:</label>
+            <InputDateTime @bind-DateAndTime="@meetup.OptionsFrom"/>
+            @* <ValidationMessage For="() => meetup.OptionsFrom" /> *@
+        </div>
+        
+        <div class="form-group">
+            <label class="control-label">Options to:</label>
+            <InputDateTime @bind-DateAndTime="@meetup.OptionsTo"/>
+            @* <ValidationMessage For="() => meetup.OptionsTo" /> *@
+        </div>
+
+        <input type="submit" class="form-control col-3 my-2 btn btn-secondary rounded-pill" value="Create" />
+        <a href="/" class="form-control col-3 my-2 btn btn-danger rounded-pill" role="button">Cancel</a>
+    </EditForm>
+</StyledRow>
+
+<hr />
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private UserDTO signedUser;
+    
+    private MeetupDTO meetup;
+
+    private (bool, string) popup;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+    }
+
+    protected override void OnInitialized()
+    {
+        meetup = new()
+        {
+            VotingEnd = DateTime.Now.AddDays(1),
+            OptionsFrom = DateTime.Now.AddDays(1),
+            OptionsTo = DateTime.Now.AddDays(2)
+        };
+        base.OnInitialized();
+    }
+
+    private async Task CreateMeetup()
+    {
+        meetup.OwnerId = signedUser.Id;
+        var newMeetup = await MeetupService.Create(meetup);
+        await CreateRoles(newMeetup.Id);
+        
+        UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = newMeetup.Id, State = StateEnum.Pending, DateInvited = DateTime.Now };
+        await UserMeetupService.Create(userMeetup);
+
+        NavigationManager.NavigateTo($"/meetups/{newMeetup.Id}/view");
+    }
+
+    private async Task CreateRoles(int meetupId)
+    {
+        RoleDTO administratorRole = new RoleDTO { Name = Roles.Administrator, MeetupId = meetupId };
+        RoleDTO moderatorRole = new RoleDTO { Name = Roles.Moderator, MeetupId = meetupId };
+
+        await RoleService.Create(administratorRole);
+        await RoleService.Create(moderatorRole);
+    }
+}

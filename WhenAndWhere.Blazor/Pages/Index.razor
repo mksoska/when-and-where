@@ -1,0 +1,147 @@
+﻿@page "/"
+
+@using WhenAndWhere.BL.Services
+@using WhenAndWhere.BL.DTOs
+@using WhenAndWhere.BL.Facades
+@using WhenAndWhere.Blazor.Components
+
+@inject MeetupService MeetupService
+@inject UserService UserService
+@inject UserMeetupService UserMeetupService
+@inject WhenAndWhereFacade WhenAndWhereFacade
+@inject NavigationManager NavigationManager
+
+<AuthorizeView>
+    <Authorized>
+        <StyledRow Inner="false">
+            <h1>My</h1>
+            
+            <div class="row justify-content-between">
+                <h4 class="col">Meetups</h4>
+                <input type="button" class="col-4 col-md-3 col-lg-2 btn btn-secondary rounded-pill" value="+ Create" @onclick="@(() => NavigationManager.NavigateTo("/meetups/create"))"/>
+            </div>
+
+        </StyledRow>
+
+        <hr />
+        
+        <StyledRow Inner="true">
+            <Popup IsActive="@popup.Item1" ErrorMessage="@popup.Item2" OnClose="() => popup = (false, string.Empty)" />
+        </StyledRow>
+
+        <form @onsubmit="SearchMeetups">
+            <div class="form-row">
+                <div class="col-sm-7 input-group my-4">
+                    <input type="search" @bind="searchString" class="form-control" placeholder="search" />
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <img src="Images/search.svg" alt="Search" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        
+        <div class="table-responsive rounded-table">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Created by</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Participants</th>
+                    <th scope="col">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var meetup in searchedMeetups)
+                {
+                    <tr class="@IsActiveRow(meetup.Id)">
+                        <th @onclick="e => NavigateToMeetup(meetup.Id)" scope="row">@meetup.Name</th>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@UserService.GetById(meetup.OwnerId).Result!.UserName</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@meetup.OptionsFrom - @meetup.OptionsTo</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetInvitedUsers(meetup.Id).Result.Count</td>
+                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetOptions(meetup.Id).Result.Count</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+       
+        <div class="row justify-content-between">
+            <Pager CurrentPage="_page.requestedPageNumber" PageCount="_page.pageCount" OnPageChanged="async e => { _page.requestedPageNumber = e; SearchMeetups(); }"></Pager>
+
+            <form class="col-auto form-inline" @onsubmit="SearchMeetups">
+                <div class="form-group">
+                    <label for="quantity">Results per page:</label>
+                    <input type="number" id="quantity" class="form-control" name="quantity" @bind="_page.pageSize">
+                    <button type="submit" class="btn btn-secondary">Submit</button>
+                </div>
+            </form>
+        </div>
+        
+    </Authorized>
+    <NotAuthorized>
+        <div class="row upper-space">
+            <img class="main-icon" src="/Images/chronometer.svg" alt="When"/>
+            <img class="main-icon" src="/Images/meeting-point.svg" alt="Where"/>
+            <img class="main-icon" src="/Images/question-mark.svg" alt="Question mark"/>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private UserDTO signedUser;
+    
+    private string searchString = string.Empty;
+
+    private List<MeetupDTO> searchedMeetups = new();
+
+    private (bool, string) popup;
+
+    private (int requestedPageNumber, int pageSize, int pageCount) _page = (1, 20, 0);
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        signedUser = UserService.GetByName((await authenticationStateTask).User.Identity?.Name);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && authenticationStateTask.Result.User.Identity.IsAuthenticated)
+        {
+            SearchMeetups();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    
+    private void SearchMeetups()
+    {
+        searchedMeetups = WhenAndWhereFacade.SearchMeetups(signedUser.Id, searchString, _page.requestedPageNumber, _page.pageSize, out var totalItemsCount);
+        _page.pageCount = totalItemsCount / _page.pageSize;
+        if (totalItemsCount % _page.pageSize != 0)
+        {
+            _page.pageCount++;
+        }
+        StateHasChanged();
+    }
+
+    private void NavigateToMeetup(int meetupId)
+    {
+        NavigationManager.NavigateTo($"/meetups/{meetupId}/view");
+    }
+
+    private async Task<string> IsActiveRow(int meetupId)
+    {
+        return await WhenAndWhereFacade.IsAnyOptionVoted(signedUser!.Id, meetupId) switch
+        {
+            true => "table-secondary",
+            _ => "table-light"
+        };
+    }
+}

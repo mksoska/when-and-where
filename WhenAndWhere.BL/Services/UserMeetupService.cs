@@ -5,6 +5,7 @@ using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.DAL.Enums;
 using Ardalis.GuardClauses;
 using WhenAndWhere.BL.DTOs;
+using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Query;
 
 

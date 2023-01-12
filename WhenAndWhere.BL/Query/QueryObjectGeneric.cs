@@ -40,9 +40,14 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
                 .MakeGenericMethod(propType)
                 .Invoke(query, new object[] {lambdaExpr, col});
         }
+        
+        if (!string.IsNullOrWhiteSpace(filter.SortCriteria))
+        {
+            var sortCriteriaType = typeof(TEntityDto).GetProperty(filter.SortCriteria).PropertyType;
 
-        if (!string.IsNullOrWhiteSpace(filter.SortCriteria)) {
-            query = query.OrderBy<string>(filter.SortCriteria, filter.SortAscending);
+            query = (IQuery<TEntity>?)query.GetType().GetMethod("OrderBy")
+                .MakeGenericMethod(sortCriteriaType)
+                .Invoke(query, new object[] { filter.SortCriteria, filter.SortAscending });
         }
 
         if (filter.RequestedPageNumber.HasValue) {
@@ -60,7 +65,7 @@ public class QueryObjectGeneric<TEntityDto, TEntity> where TEntity : class, new(
             Items = items,
             PageSize = filter.PageSize,
             RequestedPageNumber = filter.RequestedPageNumber,
-            TotalItemsCount = items.Count()
+            TotalItemsCount = ((Query<TEntity>)query).FilteredCount
         };
     }
 }

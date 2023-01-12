@@ -71,7 +71,7 @@ public static class DataInitializer
         {
             Id = 1,
             MeetupId = 2,
-            RoleName = RoleEnum.JoinedUser
+            Name = "JoinedUser"
         });
     }
 }

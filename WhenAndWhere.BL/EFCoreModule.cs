@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
@@ -26,6 +27,7 @@ namespace WhenAndWhere.BL
             var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
                 .UseSqlite(_connection)
                 .UseLazyLoadingProxies()
+                .ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning))
                 .Options;
 
             builder.Register<WhenAndWhereDBContext>(ctx => new WhenAndWhereDBContext(dbContextOptions))
@@ -33,7 +35,7 @@ namespace WhenAndWhere.BL
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));
 
             builder.RegisterType<EFUnitOfWork>()
-                .InstancePerLifetimeScope() // This ensures only one UoW per Repos, as SQLite does not support nested transactions
+                .InstancePerLifetimeScope()
                 .As<IUnitOfWork>()
                 //.As<IEFCoreUnitOfWork>() // This registres UnitOfWork for both interfaces. One "internal" and one "external"
                 .OnActivated(e => Console.WriteLine($"Build {e.Instance.GetType().Name}"));

@@ -1,4 +1,5 @@
-﻿using WhenAndWhere.DAL.Enums;
+﻿using WhenAndWhere.BL.Interfaces;
+using WhenAndWhere.DAL.Enums;
 
 namespace WhenAndWhere.BL.DTOs;
 

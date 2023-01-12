@@ -1,16 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace WhenAndWhere.DAL.Models;
 
-public class User : IEntity
+public class User : IdentityUser<int>, IEntity
 {
-    [Key]
-    public int Id { get; set; }
-
-    public string Name { get; set; }
+    [PersonalData]
+    public string FirstName { get; set; }
+    
+    [PersonalData]
     public string Surname { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
     public byte[] Avatar { get; set; }
 
     public virtual List<Meetup> OwnedMeetups { get; set; }

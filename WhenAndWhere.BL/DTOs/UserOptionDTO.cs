@@ -1,4 +1,6 @@
-﻿namespace WhenAndWhere.BL.DTOs;
+﻿using WhenAndWhere.BL.Interfaces;
+
+namespace WhenAndWhere.BL.DTOs;
 
 public class UserOptionDTO
 {

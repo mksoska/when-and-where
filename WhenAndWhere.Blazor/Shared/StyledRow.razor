@@ -1,0 +1,26 @@
+﻿<div class="row @Class">
+    @if (Inner)
+    {
+        <div class="col-xl-11">
+            @ChildContent
+        </div>
+    }
+    else
+    {
+        <div class="col-xl-12">
+            @ChildContent
+        </div>
+    }
+</div> 
+
+@code {
+    [Parameter]
+    public bool Inner { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}
+

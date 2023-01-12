@@ -1,0 +1,42 @@
+﻿@if (IsActive)
+{
+    if (string.IsNullOrEmpty(ErrorMessage))
+    {
+        if (SuccessMessage is not null)
+        {
+            <div class="row justify-content-between alert alert-info">
+                <div class="col-11">
+                    <span><i>@SuccessMessage</i></span>
+                </div>
+                <div class="col-1 align-self-center">
+                    <a class="exit-sign" @onclick="OnClose">X</a>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row justify-content-between alert alert-danger">
+            <div class="col-11">
+                <span><i>@ErrorMessage</i></span>
+            </div>
+            <div class="col-1 align-self-center">
+                <a class="exit-sign" @onclick="OnClose">X</a>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public bool IsActive { get; set; }
+
+    [Parameter]
+    public string ErrorMessage { get; set; }
+
+    [Parameter]
+    public string SuccessMessage { get; set; }
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+}

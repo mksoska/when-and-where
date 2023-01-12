@@ -3,16 +3,16 @@ using WhenAndWhere.DAL.Enums;
 
 namespace WhenAndWhere.DAL.Models;
 
-public class UserMeetup : IEntityLink
+public class UserMeetup
 {
-    public int FirstId { get; set; }
+    public int UserId { get; set; }
     
-    [ForeignKey(nameof(FirstId))]
+    [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; }
 
-    public int SecondId { get; set; }
+    public int MeetupId { get; set; }
     
-    [ForeignKey(nameof(SecondId))]
+    [ForeignKey(nameof(MeetupId))]
     public virtual Meetup Meetup { get; set; }
     
     public StateEnum State { get; set; }
