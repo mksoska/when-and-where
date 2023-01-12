@@ -1,5 +1,6 @@
 ﻿.idea/
 .vs/
+.vscode/
 bin/
 obj/
 WhenAndWhere.DAL/*.sqlite*
