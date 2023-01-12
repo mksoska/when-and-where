@@ -1,26 +1,39 @@
 # When & Where
+
 **Marek Šoška, Dominik Kozubík, Marek Kadlečík**
 
 ## A user is able to:
 - register via the register form
-- view the meetup details (meetup initiator, meetup options (place and date))
+- login via the login form
+- view homepage
 
 ## A registered user is able to:
+
+- view list of participating meetups
+- view the meetup details (meetup title, description, other meetup participants, meetup options (place and date))
 - create new meetup
 - create new meetup options
-- vote for meetup options
-- respond to a meetup invitation (accept / decline / maybe)
-- view the meetup details (meetup owner, meetup options (place and date))
+- delete his own meetup options
+- vote for any meetup option (multiple can be voted)
+- respond to a selected meetup option (accept / maybe / decline)
+- leave meetup
 - change personal information (name, surname, email, phone number, avatar)
 
-## The meetup initiator is able to:
+## The meetup owner/administrator is able to:
+
 - add meetup participants by sending an invitation
-- manage meetup parameters (label, icon)
-- cancel meetup and its options
+- kick participants from meetup
+- manage meetup parameters (title, description)
+- delete any meetup option
+- delete entire meetup
 
-## The admin is able to:
-- view and delete meetups he does not own/he is not participating 
-- view global meetup statistics  
+## The meetup moderator is able to:
 
-![ERD diagram](https://github.com/mksoska/when-and-where/blob/dal/WhenAndWhere_DAL_ERD.svg)
+- add meetup participants by sending an invitation
+
+- kick participants from meetup
+
+  
+
+![ERD diagram](https://github.com/mksoska/when-and-where/blob/main/WhenAndWhere_DAL_ERD.svg)
 
