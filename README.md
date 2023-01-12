@@ -34,6 +34,10 @@
 - kick participants from meetup
 
   
+  
+  ---
+
+
 
 ![ERD diagram](https://github.com/mksoska/when-and-where/blob/main/WhenAndWhere_DAL_ERD.svg)
 
