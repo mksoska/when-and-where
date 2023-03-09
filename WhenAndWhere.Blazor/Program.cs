@@ -18,6 +18,7 @@ using WhenAndWhere.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
 using System.Linq;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Query;
@@ -26,20 +27,18 @@ using WhenAndWhere.Infrastructure.Query;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("WhenAndWhereDBContextConnection") ?? throw new InvalidOperationException("Connection string 'WhenAndWhereDBContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("AzureSqlServerConnection") ?? throw new InvalidOperationException("Connection string 'AzureSqlServerConnection' not found.");
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-//const string connectionString = "Data Source=../WhenAndWhere.DAL/WhenAndWhere.sqlite;Cache=Shared";
-var sqliteConnection = new SqliteConnection(connectionString);
-sqliteConnection.Open();
+var sqlServerConnection = new SqlConnection(connectionString);
+sqlServerConnection.Open();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
-    builder.RegisterModule(new EFCoreModule(sqliteConnection));
+    builder.RegisterModule(new EFCoreModule(sqlServerConnection));
     builder.RegisterAutoMapper();
 });
 

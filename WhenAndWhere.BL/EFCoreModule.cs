@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using AutoMapper;
-using Microsoft.Data.Sqlite;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using WhenAndWhere.DAL;
@@ -8,7 +8,6 @@ using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
-using WhenAndWhere.DAL.Models;
 using WhenAndWhere.Infrastructure.EFCore.Query;
 using WhenAndWhere.Infrastructure.Query;
 
@@ -16,8 +15,8 @@ namespace WhenAndWhere.BL
 {
     public class EFCoreModule : Module
     {
-        private SqliteConnection _connection;
-        public EFCoreModule(SqliteConnection connection)
+        private readonly SqlConnection _connection;
+        public EFCoreModule(SqlConnection connection)
         {
             _connection = connection;
         }
@@ -25,7 +24,7 @@ namespace WhenAndWhere.BL
         protected override void Load(ContainerBuilder builder)
         {
             var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
-                .UseSqlite(_connection)
+                .UseSqlServer(_connection)
                 .UseLazyLoadingProxies()
                 .ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning))
                 .Options;
