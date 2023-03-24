@@ -3,6 +3,7 @@ using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Filter;
 using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL.Enums;
+using System.Linq.Expressions;
 
 namespace WhenAndWhere.BL.Facades;
 
@@ -141,13 +142,13 @@ public class WhenAndWhereFacade
         
         var userMeetups = queryResult.Items
             .Select(um => _meetupService.GetById(um.MeetupId).Result!)
-            .ToList();
-
+            .ToArray();
+        
         return userMeetups
             .Select(m => new { m, u = _userService.GetById(m.OwnerId).Result! })
             .Where(i =>
                 i.m.Name.Contains(searchString) ||
-                i.m.Description.Contains(searchString) ||
+                (i.m.Description?.Contains(searchString) ?? false) ||
                 i.u.UserName.Contains(searchString) ||
                 i.u.FirstName.Contains(searchString) ||
                 i.u.Surname.Contains(searchString))

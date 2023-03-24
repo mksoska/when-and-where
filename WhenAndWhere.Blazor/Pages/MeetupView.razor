@@ -25,7 +25,7 @@
     <a href="/" class="col-3 col-md-2 col-lg-1 btn btn-secondary rounded-pill" role="button">&#60; Back</a>
     @if (votingOngoing)
     {
-        <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div>
+        @* <div class="col-auto text-white align-self-center">Voting ends in: <Countdown @ref="timer" TimerOut="() => votingOngoing = false"/></div> *@
     }
     else
     {
@@ -243,7 +243,7 @@
 
     private bool votingOngoing;
     
-    protected Countdown? timer;
+    // protected Countdown? timer;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -263,7 +263,7 @@
             await LoadOptions(false);
             await LoadInvitations(false);
 
-            timer?.Start((long)(meetup.VotingEnd - DateTime.Now).TotalSeconds);
+            // timer?.Start((long)(meetup.VotingEnd - DateTime.Now).TotalSeconds);
             
             StateHasChanged();
         }

@@ -19,7 +19,7 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
 
     public virtual async Task<TEntity?> GetById(params object?[]? keyValues)
     {
-        return await Uow.Context.Set<TEntity>().FindAsync(keyValues);
+        return Uow.Context.Set<TEntity>().Find(keyValues);
     }
 
     public virtual Task<List<TEntity>> GetAll()

@@ -4,7 +4,6 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper.Contrib.Autofac.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using WhenAndWhere.BL;
 using WhenAndWhere.BL.Facades;
@@ -20,6 +19,7 @@ using WhenAndWhere.Blazor.Authorization;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Npgsql;
 using WhenAndWhere.BL.DTOs;
 using WhenAndWhere.BL.Query;
 using WhenAndWhere.Infrastructure.EFCore.Query;
@@ -27,18 +27,18 @@ using WhenAndWhere.Infrastructure.Query;
 using RouteData = Microsoft.AspNetCore.Components.RouteData;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("AzureSqlServerConnection") ?? throw new InvalidOperationException("Connection string 'AzureSqlServerConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("AzurePostgresConnection") ?? throw new InvalidOperationException("Connection string 'AzurePostgresConnection' not found.");
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-var sqlServerConnection = new SqlConnection(connectionString);
-sqlServerConnection.Open();
+var postgresConnection = new NpgsqlConnection(connectionString);
+postgresConnection.Open();
 
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
-    builder.RegisterModule(new EFCoreModule(sqlServerConnection));
+    builder.RegisterModule(new EFCoreModule(postgresConnection));
     builder.RegisterAutoMapper();
 });
 
@@ -76,9 +76,9 @@ builder.Services.AddTransient<IAuthorizationHandler, RoleAuthorizationResourceHa
 
 builder.Services.AddDbContext<WhenAndWhereDBContext>(builder =>
 {
-    builder.UseSqlite(connectionString);
+    builder.UseNpgsql(connectionString);
     builder.ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning));
-});
+}, ServiceLifetime.Transient);
 builder.Services.AddTransient<DbContext>(x => x.GetRequiredService<WhenAndWhereDBContext>());
 builder.Services.AddTransient<IUnitOfWork>(x => x.GetRequiredService<EFUnitOfWork>());
 
@@ -117,6 +117,8 @@ builder.Services.AddTransient<UserRoleService>();
 builder.Services.AddTransient<WhenAndWhereFacade>();
 
 var app = builder.Build();
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

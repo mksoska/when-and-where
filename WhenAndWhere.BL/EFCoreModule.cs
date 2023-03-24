@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using AutoMapper;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Npgsql;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
@@ -15,8 +15,8 @@ namespace WhenAndWhere.BL
 {
     public class EFCoreModule : Module
     {
-        private readonly SqlConnection _connection;
-        public EFCoreModule(SqlConnection connection)
+        private readonly NpgsqlConnection _connection;
+        public EFCoreModule(NpgsqlConnection connection)
         {
             _connection = connection;
         }
@@ -24,7 +24,7 @@ namespace WhenAndWhere.BL
         protected override void Load(ContainerBuilder builder)
         {
             var dbContextOptions = new DbContextOptionsBuilder<WhenAndWhereDBContext>()
-                .UseSqlServer(_connection)
+                .UseNpgsql(_connection)
                 .UseLazyLoadingProxies()
                 .ConfigureWarnings(x => x.Ignore(RelationalEventId.AmbientTransactionWarning))
                 .Options;

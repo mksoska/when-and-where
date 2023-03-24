@@ -54,7 +54,6 @@ public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, Identity
             .WithMany(user => user.VotedOptions)
             .HasForeignKey(userOption => userOption.UserId);
 
-
         modelBuilder.Entity<UserOption>()
             .HasOne(userOption => userOption.Option)
             .WithMany(option => option.Voters)
@@ -64,12 +63,12 @@ public class WhenAndWhereDBContext : IdentityDbContext<User, Role, int, Identity
             .HasOne(option => option.Owner)
             .WithMany(user => user.CreatedOptions)
             .HasForeignKey(option => option.OwnerId);
-        
+
         modelBuilder.Entity<Option>()
             .HasOne(option => option.Meetup)
             .WithMany(meetup => meetup.Options)
             .HasForeignKey(option => option.MeetupId);
-        
+
         modelBuilder.Entity<UserRole>()
             .HasKey(userRole => new { userRole.UserId, userRole.RoleId });
 
