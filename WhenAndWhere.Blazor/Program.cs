@@ -14,10 +14,7 @@ using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
 using WhenAndWhere.Infrastructure.Repository;
 using WhenAndWhere.Infrastructure.UnitOfWork;
-using Microsoft.AspNetCore.Components;
 using WhenAndWhere.Blazor.Authorization;
-using System.Linq;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
 using WhenAndWhere.BL.DTOs;
@@ -113,6 +110,7 @@ builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<UserMeetupService>();
 builder.Services.AddTransient<UserOptionService>();
 builder.Services.AddTransient<UserRoleService>();
+builder.Services.AddTransient<TableMeetupService>();
 
 builder.Services.AddTransient<WhenAndWhereFacade>();
 

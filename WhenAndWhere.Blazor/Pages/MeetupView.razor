@@ -7,10 +7,10 @@
 @using WhenAndWhere.DAL.Enums
 @using System.Linq;
 @using WhenAndWhere.BL.Facades
-@using WhenAndWhere.Blazor.Components
 
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
+@inject TableMeetupService TableMeetupService
 @inject OptionService OptionService
 @inject UserService UserService
 @inject UserOptionService UserOptionService
@@ -386,6 +386,11 @@
     private async Task LoadOptions(bool rerender = true)
     {
         options = await MeetupService.GetOptions(meetup.Id);
+        
+        var tableMeetup = TableMeetupService.GetMeetup(signedUser.Id, meetup.Id);
+        tableMeetup.OptionsCount = options.Count();
+        TableMeetupService.SetMeetup(tableMeetup);
+        
         if (rerender)
         {
             StateHasChanged();
@@ -396,6 +401,12 @@
     {
         invitations = await MeetupService.GetInvitedUsers(meetup.Id);
         myInvitation = invitations.FirstOrDefault(um => um.UserId == signedUser.Id && um.MeetupId == MeetupId);
+
+        var tableMeetup = TableMeetupService.GetMeetup(signedUser.Id, meetup.Id);
+        tableMeetup.ParticipantsCount = invitations.Count();
+        tableMeetup.State = myInvitation!.State;
+        TableMeetupService.SetMeetup(tableMeetup);
+        
         if (rerender)
         {
             StateHasChanged();

@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.BL.Tests", "Wh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.Blazor", "WhenAndWhere.Blazor\WhenAndWhere.Blazor.csproj", "{8D579B59-7AF2-4564-9963-A7BC0608D672}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhenAndWhere.FunctionApp", "WhenAndWhere.FunctionApp\WhenAndWhere.FunctionApp.csproj", "{ED74B0EF-33BF-4AA9-A19C-7B5D871B6197}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D579B59-7AF2-4564-9963-A7BC0608D672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED74B0EF-33BF-4AA9-A19C-7B5D871B6197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED74B0EF-33BF-4AA9-A19C-7B5D871B6197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED74B0EF-33BF-4AA9-A19C-7B5D871B6197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED74B0EF-33BF-4AA9-A19C-7B5D871B6197}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

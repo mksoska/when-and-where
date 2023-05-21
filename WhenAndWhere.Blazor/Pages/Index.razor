@@ -4,11 +4,12 @@
 @using WhenAndWhere.BL.DTOs
 @using WhenAndWhere.BL.Facades
 @using WhenAndWhere.Blazor.Components
+@using WhenAndWhere.DAL.Enums
 
 @inject MeetupService MeetupService
 @inject UserService UserService
-@inject UserMeetupService UserMeetupService
 @inject WhenAndWhereFacade WhenAndWhereFacade
+@inject TableMeetupService TableMeetupService
 @inject NavigationManager NavigationManager
 
 <AuthorizeView>
@@ -56,14 +57,15 @@
                 <tbody>
                 @foreach (var meetup in searchedMeetups)
                 {
-                    <tr class="@IsActiveRow(meetup.Id)">
-                        <th @onclick="e => NavigateToMeetup(meetup.Id)" scope="row">@meetup.Name</th>
-                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@UserService.GetById(meetup.OwnerId).Result!.UserName</td>
-                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@meetup.OptionsFrom - @meetup.OptionsTo</td>
-                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetInvitedUsers(meetup.Id).Result.Count</td>
-                        <td @onclick="e => NavigateToMeetup(meetup.Id)">@MeetupService.GetOptions(meetup.Id).Result.Count</td>
+                    var meetupId = int.Parse(meetup.RowKey);
+                    <tr class="@IsActiveRow(meetupId)">
+                        <th @onclick="e => NavigateToMeetup(meetupId)" scope="row">@meetup.Name</th>
+                        <td @onclick="e => NavigateToMeetup(meetupId)">@UserService.GetById(meetup.OwnerId).Result!.UserName</td>
+                        <td @onclick="e => NavigateToMeetup(meetupId)">@meetup.VotingEnd</td>
+                        <td @onclick="e => NavigateToMeetup(meetupId)">@MeetupService.GetInvitedUsers(meetupId).Result.Count</td>
+                        <td @onclick="e => NavigateToMeetup(meetupId)">@MeetupService.GetOptions(meetupId).Result.Count</td>
                     </tr>
-                }
+                };
                 </tbody>
             </table>
         </div>
@@ -100,7 +102,7 @@
     
     private string searchString = string.Empty;
 
-    private List<MeetupDTO> searchedMeetups = new();
+    private List<TableMeetupDTO> searchedMeetups = new();
 
     private (bool, string) popup;
 
@@ -122,7 +124,7 @@
     
     private void SearchMeetups()
     {
-        searchedMeetups = WhenAndWhereFacade.SearchMeetups(signedUser.Id, searchString, _page.requestedPageNumber, _page.pageSize, out var totalItemsCount);
+        searchedMeetups = TableMeetupService.SearchInvited(signedUser.Id, searchString, _page.requestedPageNumber, _page.pageSize, out var totalItemsCount);
         _page.pageCount = totalItemsCount / _page.pageSize;
         if (totalItemsCount % _page.pageSize != 0)
         {

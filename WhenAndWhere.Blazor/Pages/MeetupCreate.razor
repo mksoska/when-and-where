@@ -11,6 +11,7 @@
 @inject UserService UserService
 @inject MeetupService MeetupService
 @inject UserMeetupService UserMeetupService
+@inject TableMeetupService TableMeetupService
 @inject RoleService RoleService
 @inject NavigationManager NavigationManager
 
@@ -102,8 +103,20 @@
         
         UserMeetupDTO userMeetup = new UserMeetupDTO { UserId = signedUser.Id, MeetupId = newMeetup.Id, State = StateEnum.Pending, DateInvited = DateTime.Now };
         await UserMeetupService.Create(userMeetup);
+        TableMeetupService.SetMeetup(new TableMeetupDTO()
+        {
+            PartitionKey = signedUser.Id.ToString(),
+            RowKey = newMeetup.Id.ToString(),
+            OwnerId = newMeetup.OwnerId,
+            Name = newMeetup.Name,
+            VotingEnd = newMeetup.VotingEnd,
+            State = userMeetup.State,
+            DateInvited = userMeetup.DateInvited,
+            OptionsCount = 0,
+            ParticipantsCount = 1
+        });
 
-        NavigationManager.NavigateTo($"/meetups/{newMeetup.Id}/view");
+        NavigationManager.NavigateTo($"/");
     }
 
     private async Task CreateRoles(int meetupId)

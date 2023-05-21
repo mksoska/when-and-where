@@ -1,8 +1,11 @@
 ﻿using Autofac;
 using AutoMapper;
+using Azure.Data.Tables;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Npgsql;
+using WhenAndWhere.BL.Services;
 using WhenAndWhere.DAL;
 using WhenAndWhere.Infrastructure.EFCore.Repository;
 using WhenAndWhere.Infrastructure.EFCore.UnitOfWork;
@@ -51,6 +54,16 @@ namespace WhenAndWhere.BL
             builder.RegisterType<EFCoreProfile>()
                 .As<Profile>()
                 .AutoActivate();
+
+            builder.Register<TableClient>(ctx => new TableClient(
+                new Uri("https://485607.table.core.windows.net/WhenAndWhere"),
+                "WhenAndWhere",
+                new TableSharedKeyCredential("485607", "wOX2fcfPw5x6lGNI1x1rV5XR+b8eEgLRkWXH6en+qNIU36xxRBOcK8fd7aX1PkVXJcux5O63KiBu+AStpHj7mA==")));
+
+            builder.Register<QueueClient>(ctx => new QueueClient(
+                "Endpoint=sb://whenandwhere.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6igbXdA0kfjpbocv1l3htB5OwoT4eCQLX+ASbHqz3XI=",
+                "meetup-table-queue"
+            ));
         }
     }
 }
