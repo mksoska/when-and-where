@@ -30,7 +30,7 @@ public class TableMeetupService
         totalItemsCount = meetups.Count();
         return meetups.AsPages(null, pageSize)
             .ElementAt(requestedPageNumber - 1).Values
-            .OrderBy(i => i.RowKey)
+            .OrderByDescending(i => i.DateInvited)
             .ToList();
     }
 
