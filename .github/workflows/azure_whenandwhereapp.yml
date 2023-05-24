@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'whenandwhereapp'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2ED981F0B61541B5805675AAAC9C34F5 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BA28D8A5844240D59E59346E72150EB8 }}
           package: .
